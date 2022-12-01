@@ -1,21 +1,79 @@
-LESSON NAME
-===========
+Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT
+============================================================================
 
-Intro
+In recent years, computing technologies underlying materials modelling and 
+electronic structure calculation have evolved rapidly. High-performance 
+computing (HPC) is transitioning from petascale to exascale, while individual 
+compute nodes are increasingly based on heterogeneous architectures that every 
+year become more diversified due to different vendor choices. In this environment, 
+electronic structure codes also have to evolve fast in order to adapt to new 
+hardware facilities. Nowadays, state-of-the-art electronic structure codes based 
+on modern density functional theory (DFT) methods allow treating realistic 
+molecular systems with a very high accuracy. However, due to the increased 
+complexity of the codes, some extra skills are required from users in order to 
+fully exploit their potential.  
 
+This training material gives a broad overview of important fundamental concepts 
+for molecular and materials modelling on HPC, with a focus on three of the most 
+modern codes for electronic structure calculations (QUANTUM ESPRESSO, Yambo and 
+BigDFT). Theory sections are interleaved with practical demonstrations and 
+hands-on exercises.
+
+`QUANTUM ESPRESSO <https://www.quantum-espresso.org/>`__ is one of the most 
+popular suites of computer codes for electronic-structure calculations and 
+materials modelling at the nanoscale, based on density-functional theory, plane 
+waves, and pseudopotentials. It is able to predict and give fundamental insights 
+about many properties of materials, molecular systems, micro and nanodevices, 
+biological systems, in many fields, providing a huge amount of data for 
+data-driven science applications.
+
+`YAMBO <http://www.yambo-code.eu/>`__ is an open-source code implementing 
+first-principles methods based on Green’s function (GF) theory to describe 
+excited-state properties of realistic materials. These methods include the GW 
+approximation, the Bethe Salpeter equation, nonequilibrium GF (NEGF) and TDDFT, 
+allowing for the prediction of accurate quasiparticle energies (e.g. ARPES band 
+structures), linear and non-linear optical properties, capturing the physics of 
+excitons, plasmons, and magnons. It is also possible to calculate 
+temperature-dependent electronic and optical properties via electron-phonon 
+coupling and nonequilibrium and non-linear optical properties via NEGF real-time 
+simulations (pump-probe experiments, etc).
+
+`BigDFT <http://www.bigdft.org/>`__ is an open source density functional theory 
+code which uses a Daubechies wavelet basis set which facilitates optimal features 
+of flexibility, performance and precision. In addition to the traditional 
+cubic-scaling DFT approach, BigDFT also contains an approach which scales 
+linearly with the number of atoms, enabling DFT calculations of large systems 
+containing many thousands of atoms which were impractical to simulate even very 
+recently. BigDFT consists of a package suite with a wide variety of features, 
+from ground-state quantities to excited state quantities based on time-dependent 
+DFT and constrained DFT, to potential energy surface exploration techniques. 
+It uses dual space Gaussian type norm-conserving pseudopotentials including those 
+with non-linear core corrections, which have proven to deliver all-electron 
+precision. Its flexible Poisson solver can handle a number of different boundary 
+conditions including free, wire, surface, and fully periodic, while it is also 
+possible to simulate implicit solvents as well as external electric fields. 
+Finally, BigDFT has been designed to exploit HPC from the outset, with a hybrid 
+MPI/OpenMP approach, as well as efficient exploitation of GPUs for hybrid 
+functional calculations.
+
+`MAX (MAterials design at the eXascale) <http://www.max-centre.eu/>`__ is a 
+European Centre of Excellence which enables materials modelling, simulations, 
+discovery and design at the frontiers of the current and future High-Performance 
+Computing (HPC), High Throughput Computing (HTC) and data analytics technologies.  
+MaX's challenge lies in bringing the most successful and widely used open-source, 
+community codes in quantum simulations of materials towards exascale and extreme 
+scaling performance and make them available for a large and growing base of 
+researchers in the materials' domain.
 
 
 .. prereq::
 
-   prerequisites
+   - Some familiarity with density functional theory (DFT), self-consistent 
+     field (SCF) calculations and plane wave basis sets is desirable as the 
+     workshop will not cover the fundamental theory of these topics.
+   - Familiarity with working in a Linux environment and some experience with 
+     working on an HPC system is needed to participate in the hands-on exercises.
 
-
-
-.. csv-table::
-   :widths: auto
-   :delim: ;
-
-   20 min ; :doc:`filename`
 
 
 .. toctree::
@@ -37,13 +95,23 @@ Intro
 Who is the course for?
 ----------------------
 
-
-
+This workshop is aimed towards researchers and engineers who already have some 
+previous experience with materials modelling and electronic structure calculations.
 
 
 About the course
 ----------------
 
+In this workshop, participants will learn how to launch the most common 
+types of calculations  (e.g. scf, phonons, quasi-particle energies, 
+time-dependent properties) using QE, Yambo and BigDFT, how to prepare input 
+files and how to read output files in order to extract the desired properties.
+
+Best practices for efficient exploitation of HPC resources will be discussed, 
+with particular emphasis on how to use the different schemes of data 
+distribution (e.g. plane waves, pools, images) in combination with the different 
+parallelization and acceleration schemes (MPI, OpenMP, GPU-offload) available in 
+QE. 
 
 
 
