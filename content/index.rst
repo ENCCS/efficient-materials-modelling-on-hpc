@@ -196,6 +196,29 @@ See also
 Credits
 -------
 
+Contributors to this workshop:
+
+- Daniele Varsano, CNR-NANO
+- Andrea Ferretti, CNR-NANO
+- Pietro Delugas, SISSA
+- Ivan Carnimeo, SISSA 
+- Fabrizio Ferrari Ruffino, CNR-IOM
+- Stefano Baroni, SISSA
+- Iurii Timrov, EPFL CH
+- Laura Bellentani, CINECA
+- Oscar Baseggio, SISSA
+- Tommaso Gorni, CINECA
+- Francisco Ramirez, EPFL
+- Davide Sangalli CNR-ISM
+- Fulvio Paleari, CNR-NANO
+- Ignacio Alliati, Univ. Bellfast
+- Martina Stella, ICTP
+- Nicola Spallanzani, CNR-NANO
+- Laura Ratcliff, Univ. of Bristol
+- Luigi Genovese, CEA Grenoble
+- Louis Beal, CEA Grenoble
+- Samuel Dechamps, CEA Grenoble 
+
 The lesson file structure and browsing layout is inspired by and derived from
 `work <https://github.com/coderefinery/sphinx-lesson>`__ by `CodeRefinery
 <https://coderefinery.org/>`__ licensed under the `MIT license
