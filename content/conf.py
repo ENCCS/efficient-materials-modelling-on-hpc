@@ -37,6 +37,7 @@ extensions = [
     # remove once sphinx_rtd_theme updated for contrast and accessibility:
     "sphinx_rtd_theme_ext_color_contrast",
     "sphinx.ext.todo",
+    "sphinx.ext.graphviz" 
 ]
 
 # Settings for myst_nb:

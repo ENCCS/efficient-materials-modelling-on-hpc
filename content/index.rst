@@ -80,6 +80,7 @@ researchers in the materials' domain.
    :maxdepth: 1
    :caption: The lesson
 
+   yambo-tutorial
 
 .. toctree::
    :maxdepth: 1
@@ -189,8 +190,9 @@ See also
 - ENCCS: https://enccs.se/
 - MAX-CoE: http://www.max-centre.eu/
 - Follow ENCCS on `LinkedIn <https://www.linkedin.com/company/enccs>`__, or `Twitter <https://twitter.com/EuroCC_Sweden>`__
-- Follow MAX-CoE on `LinkedIn <https://www.linkedin.com/company/max-centre/>`__, or `Twitter <https://twitter.com/max_center2`__.
+- Follow MAX-CoE on `LinkedIn <https://www.linkedin.com/company/max-centre/>`__, or `Twitter <https://twitter.com/max_center2>`__.
 
+.. math::
 
 
 Credits
