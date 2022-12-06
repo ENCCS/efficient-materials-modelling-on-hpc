@@ -78,9 +78,30 @@ researchers in the materials' domain.
 
 .. toctree::
    :maxdepth: 1
-   :caption: The lesson
+   :caption: Day 1 - MAX-CoE and Quantum ESPRESSO
 
+   lectures-1
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Day 2 - Quantum ESPRESSO and AiiDA
+
+   lectures-2
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Day 3 - Yambo
+
+   lectures-3
    yambo-tutorial
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Day 4 - BigDFT
+
+   lectures-4
 
 .. toctree::
    :maxdepth: 1
