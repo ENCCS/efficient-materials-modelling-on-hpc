@@ -7,72 +7,59 @@
 - Check the table of contents below for the planned sections of the tutorial.
 - There is an additional page [here](https://hackmd.io/@palful/HkU0xblHj) containing the various scripts and files (inputs, submissions, postprocessing)
 
-`````{tabs}
-
-````{tab} gw.in
-
-      ```{literalinclude} code/yambo/gw.in
-      ```
-
+````{solution} Yambo input gw.in
+```{literalinclude} code/yambo/gw.in
+:language: bash
+```
 ````
 
-````{tab} run_first_job.sh
-
-      ```{literalinclude} code/yambo/run_first_job.sh
-      :language: bash
-      ```
+````{solution} Batch script run_first_job.sh
+```{literalinclude} code/yambo/run_first_job.sh
+:language: bash
+```
 ````
 
-````{tab} gpu_job.sh
-
-      ```{literalinclude} code/yambo/gpu_job.sh
-      :language: bash
-      ```
+````{solution} Batch script gpu_job.sh
+```{literalinclude} code/yambo/gpu_job.sh
+:language: bash
+```
 ````
 
-````{tab} run01_converge_pol.sh
-
-      ```{literalinclude} code/yambo/run01_converge_pol.sh 
-      :language: bash
-      ```
+````{solution} Batch script run01_converge_pol.sh
+```{literalinclude} code/yambo/run01_converge_pol.sh 
+:language: bash
+```
 ````
 
-````{tab} job_parallel.sh
-
-      ```{literalinclude} code/yambo/job_parallel.sh
-      :language: bash
-      ```
+````{solution} Batch script job_parallel.sh
+```{literalinclude} code/yambo/job_parallel.sh
+:language: bash
+```
 ````
 
-````{tab} plot-01.py
-
-      ```{literalinclude} code/yambo/plot-01.py
-      :language: python
-      ```
+````{solution} Plotting script plot-01.py
+```{literalinclude} code/yambo/plot-01.py
+:language: Python
+```
 ````
 
-````{tab} plot-02.py
-
-      ```{literalinclude} code/yambo/plot-02.py
-      :language: python
-      ```
+````{solution} Plotting script plot-02.py
+```{literalinclude} code/yambo/plot-02.py
+:language: Python
+```
 ````
 
-````{tab} parse-ytiming.py
-
-      ```{literalinclude} code/yambo/parse-ytiming.py
-      :language: python
-      ```
+````{solution} Analysis script parse-ytiming.py
+```{literalinclude} code/yambo/parse-ytiming.py
+:language: Python
+```
 ````
 
-````{tab} plot_bands.py
-
-      ```{literalinclude} code/yambo/plot_bands.py
-      :language: python
-      ```
+````{solution} Plotting script plot_bands.py
+```{literalinclude} code/yambo/plot_bands.py
+:language: Python
+```
 ````
-
-`````
 
 - We will work in `/exa5/data/d2021-135-users`. If you didn't do it before, __please create there a directory named after your username__.
 - The tutorial is located in `/exa5/data/d2021-135-users/YAMBO_TUTORIAL`
