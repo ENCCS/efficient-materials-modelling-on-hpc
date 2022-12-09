@@ -1,70 +1,77 @@
 # Yambo tutorial: Quasiparticles in the GW approximation
 
+> This material is adapted from [work by Fulvio Paleari ](https://hackmd.io/@palful/SJrHtTJrs).
+
 **Useful info for the tutorial:**
 
 - Check the table of contents below for the planned sections of the tutorial.
 - There is an additional page [here](https://hackmd.io/@palful/HkU0xblHj) containing the various scripts and files (inputs, submissions, postprocessing)
 
 `````{tabs}
-````{tab} Yambo input
 
-```
-#  ____  ____     _       ____    ____  ______      ___
-# |_  _||_  _|   / \     |_   \  /   _||_   _ \   ."   `.
-#   \ \  / /    / _ \      |   \/   |    | |_) | /  .-.  \
-#    \ \/ /    / ___ \     | |\  /| |    |  __". | |   | |
-#    _|  |_  _/ /   \ \_  _| |_\/_| |_  _| |__) |\  `-"  /
-#   |______||____| |____||_____||_____||_______/  `.___."
-#
-#
-#
-# Version 5.1.0 Revision 21422 Hash (prev commit) fde6e2a07
-#                        Branch is
-#             MPI+OpenMP+SLK+HDF5_MPI_IO Build
-#                http://www.yambo-code.org
-#
-rim_cut                          # [R] Coulomb potential
-gw0                              # [R] GW approximation
-ppa                              # [R][Xp] Plasmon Pole Approximation for the Screened Interaction
-dyson                            # [R] Dyson Equation solver
-HF_and_locXC                     # [R] Hartree-Fock
-em1d                             # [R][X] Dynamically Screened Interaction
-FFTGvecs = 20 Ry                 # [FFT] Plane-waves
-X_Threads=0                      # [OPENMP/X] Number of threads for response functions
-DIP_Threads=0                    # [OPENMP/X] Number of threads for dipoles
-SE_Threads=0                     # [OPENMP/GW] Number of threads for self-energy
-RandQpts=1000000                   # [RIM] Number of random q-points in the BZ
-RandGvec= 100                RL    # [RIM] Coulomb interaction RS components
-CUTGeo= "slab z"                   # [CUT] Coulomb Cutoff geometry: box/cylinder/sphere/ws/slab X/Y/Z/XY..
-% CUTBox
- 0.000000 | 0.000000 | 0.000000 |        # [CUT] [au] Box sides
-%
-CUTRadius= 0.000000              # [CUT] [au] Sphere/Cylinder radius
-CUTCylLen= 0.000000              # [CUT] [au] Cylinder length
-CUTwsGvec= 0.700000              # [CUT] WS cutoff: number of G to be modified
-EXXRLvcs=  2           Ry        # [XX] Exchange    RL components
-VXCRLvcs=  2           Ry        # [XC] XCpotential RL components
-Chimod= "HARTREE"                # [X] IP/Hartree/ALDA/LRC/PF/BSfxc
-% BndsRnXp
-   1 | 300 |                     # [Xp] Polarization function bands
-%
-NGsBlkXp= 1                Ry    # [Xp] Response block size
-% LongDrXp
- 1.000000 | 1.000000 | 1.000000 |        # [Xp] [cc] Electric Field
-%
-PPAPntXp= 27.21138         eV    # [Xp] PPA imaginary energy
-XTermKind= "none"                # [X] X terminator ("none","BG" Bruneval-Gonze)
-% GbndRnge
-   1 | 300 |                         # [GW] G[W] bands range
-%
-GTermKind= "none"                # [GW] GW terminator ("none","BG" Bruneval-Gonze,"BRS" Berger-Reining-Sottile)
-DysSolver= "n"                   # [GW] Dyson Equation solver ("n","s","g")
-%QPkrange                        # [GW] QP generalized Kpoint/Band indices
-1|19|23|30|
-%
-```
+````{tab} gw.in
+
+      ```{literalinclude} code/yambo/gw.in
+      ```
 
 ````
+
+````{tab} run_first_job.sh
+
+      ```{literalinclude} code/yambo/run_first_job.sh
+      :language: bash
+      ```
+````
+
+````{tab} gpu_job.sh
+
+      ```{literalinclude} code/yambo/gpu_job.sh
+      :language: bash
+      ```
+````
+
+````{tab} run01_converge_pol.sh
+
+      ```{literalinclude} code/yambo/run01_converge_pol.sh 
+      :language: bash
+      ```
+````
+
+````{tab} job_parallel.sh
+
+      ```{literalinclude} code/yambo/job_parallel.sh
+      :language: bash
+      ```
+````
+
+````{tab} plot-01.py
+
+      ```{literalinclude} code/yambo/plot-01.py
+      :language: python
+      ```
+````
+
+````{tab} plot-02.py
+
+      ```{literalinclude} code/yambo/plot-02.py
+      :language: python
+      ```
+````
+
+````{tab} parse-ytiming.py
+
+      ```{literalinclude} code/yambo/parse-ytiming.py
+      :language: python
+      ```
+````
+
+````{tab} plot_bands.py
+
+      ```{literalinclude} code/yambo/plot_bands.py
+      :language: python
+      ```
+````
+
 `````
 
 - We will work in `/exa5/data/d2021-135-users`. If you didn't do it before, __please create there a directory named after your username__.
@@ -1156,7 +1163,7 @@ mkdir GW_bands
 mv o.spin* o.magn* GW_bands/
 ```
 
-Now we are ready to visualize the band structures. In order to do so, you can use the script [`plt_bands.py`](https://hackmd.io/h7Rfne3KR4-0W2yJX0yEfA#plot_bandspy) that should be already available in the directory.
+Now we are ready to visualize the band structures. In order to do so, you can use the script [`plot_bands.py`](code/yambo/plot_bands.py) that should be already available in the directory.
 
 We load the python module
 ```shell

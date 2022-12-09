@@ -1,0 +1,53 @@
+#  ____  ____     _       ____    ____  ______      ___
+# |_  _||_  _|   / \     |_   \  /   _||_   _ \   ."   `.
+#   \ \  / /    / _ \      |   \/   |    | |_) | /  .-.  \
+#    \ \/ /    / ___ \     | |\  /| |    |  __". | |   | |
+#    _|  |_  _/ /   \ \_  _| |_\/_| |_  _| |__) |\  `-"  /
+#   |______||____| |____||_____||_____||_______/  `.___."
+#
+#
+#
+# Version 5.1.0 Revision 21422 Hash (prev commit) fde6e2a07
+#                        Branch is
+#             MPI+OpenMP+SLK+HDF5_MPI_IO Build
+#                http://www.yambo-code.org
+#
+rim_cut                          # [R] Coulomb potential
+gw0                              # [R] GW approximation
+ppa                              # [R][Xp] Plasmon Pole Approximation for the Screened Interaction
+dyson                            # [R] Dyson Equation solver
+HF_and_locXC                     # [R] Hartree-Fock
+em1d                             # [R][X] Dynamically Screened Interaction
+FFTGvecs = 20 Ry                 # [FFT] Plane-waves
+X_Threads=0                      # [OPENMP/X] Number of threads for response functions
+DIP_Threads=0                    # [OPENMP/X] Number of threads for dipoles
+SE_Threads=0                     # [OPENMP/GW] Number of threads for self-energy
+RandQpts=1000000                   # [RIM] Number of random q-points in the BZ
+RandGvec= 100                RL    # [RIM] Coulomb interaction RS components
+CUTGeo= "slab z"                   # [CUT] Coulomb Cutoff geometry: box/cylinder/sphere/ws/slab X/Y/Z/XY..
+% CUTBox
+ 0.000000 | 0.000000 | 0.000000 |        # [CUT] [au] Box sides
+%
+CUTRadius= 0.000000              # [CUT] [au] Sphere/Cylinder radius
+CUTCylLen= 0.000000              # [CUT] [au] Cylinder length
+CUTwsGvec= 0.700000              # [CUT] WS cutoff: number of G to be modified
+EXXRLvcs=  2           Ry        # [XX] Exchange    RL components
+VXCRLvcs=  2           Ry        # [XC] XCpotential RL components
+Chimod= "HARTREE"                # [X] IP/Hartree/ALDA/LRC/PF/BSfxc
+% BndsRnXp
+   1 | 300 |                     # [Xp] Polarization function bands
+%
+NGsBlkXp= 1                Ry    # [Xp] Response block size
+% LongDrXp
+ 1.000000 | 1.000000 | 1.000000 |        # [Xp] [cc] Electric Field
+%
+PPAPntXp= 27.21138         eV    # [Xp] PPA imaginary energy
+XTermKind= "none"                # [X] X terminator ("none","BG" Bruneval-Gonze)
+% GbndRnge
+   1 | 300 |                         # [GW] G[W] bands range
+%
+GTermKind= "none"                # [GW] GW terminator ("none","BG" Bruneval-Gonze,"BRS" Berger-Reining-Sottile)
+DysSolver= "n"                   # [GW] Dyson Equation solver ("n","s","g")
+%QPkrange                        # [GW] QP generalized Kpoint/Band indices
+1|19|23|30|
+%
