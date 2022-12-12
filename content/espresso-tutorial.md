@@ -230,6 +230,8 @@ Hints:
 
 ## EXERCISE 4 - Hands on the GPUs
 
+**Files needed**:
+
 `````{tabs} 
 ````{tab} ex4-cpu.slurm
 ```{literalinclude} code/Day-1/ex4-gpu/ex4-cpu.slurm
