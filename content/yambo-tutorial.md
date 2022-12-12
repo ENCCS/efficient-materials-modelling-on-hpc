@@ -124,7 +124,7 @@ exchange->QP [label="Compute"]
 ## Set up a Yambo calculation
 
 Provided you have cloned the tutorial repository in your directory, enter it now
-```shell
+```console
 cd YAMBO_TUTORIAL
 ```
 
@@ -133,25 +133,25 @@ cd YAMBO_TUTORIAL
 First of all, we need to convert some of the data produced in a previous non-self-consistent DFT calculation (using Quantum ESPRESSO) into a convenient format for Yambo.
 
 The QE save folder for MoS$_2$ is at `00_QE-DFT`. Move inside it and then run the `p2y` executable to generate the uninitialised `SAVE`. But first, we need to load the yambo-specific modules:
-```shell
+```console
 module use /ceph/hpc/data/d2021-135-users/modules
 module load YAMBO/5.1.1-FOSS-2022a
 ```
 Then:
-```shell
+```console
 cd 00_QE-DFT/mos2.save
 p2y
 ```
 
 Now, we need to run the initialization step. Every Yambo run **must** start with this step. Just type
 
-```shell
+```console
 yambo
 ```
 
 and check the standard output. This step determins the $G$-vector shells and $k$- and $q$-point grids from the DFT calculations. If you check inside the `SAVE` you will see two types of databases. The static ones, starting with `ns.*`, are directly converted in the `p2y`, while the dynamical ones, `ndb.*` are generated during the initialisation.
 
-```shell
+```console
 ls SAVE/
 ```
 ```
@@ -164,7 +164,7 @@ ns.wf          # wave functions info
 ```
 The databases are written in netCDF format.
 Yambo has produced also a human readable output, `r_setup`, reporting relevant information such as lattice parameters, symmetries, atomic positions, k-points, DFT eigenvalues and band gaps. We can have a quick look at the sections.
-```shell
+```console
 vim r_setup
 ```
 ```
@@ -188,7 +188,7 @@ vim r_setup
 ```
 
 Finally, let us move the `SAVE` and the report file to the directory where we will run the first GW calculation.
-```shell
+```console
 mv SAVE r_setup ../../01_GW_first_run/
 cd ../../01_GW_first_run/
 ```
@@ -200,7 +200,7 @@ Now that we have a working `SAVE`, it is time to generate the input file we will
 This can be done by the `yambo` executable via command-line instructions.
 
 If you type
-```shell
+```console
 yambo -h
 ```
 You will get a list of the possibile options:
@@ -270,7 +270,7 @@ You will get a list of the possibile options:
 ```
 
 In order to build our input, we need to use the options for a GW calculation. We want to use the plasmon pole approximation for the dynamical screening, solve the quasiparticle equation with the Newton method, and add a truncation of the Coulomb potential which is useful for 2D systems. In addition, we want to set up explicitly the parameters for parallel runs. Therefore we type:
-```shell
+```console
 yambo -gw0 p -g n -r -V par -F gw.in
 ```
 
@@ -482,18 +482,18 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 srun --mpi=pmix -n ${SLURM_NTASKS} yambo -F gw.in -J job_00_first_run -C out_00_first_run
 ```
 We will ignore all details regarding parallelization, as it will be covered in the next section. Since there are no lowercase flags after `yambo`, it is not going to generate an input file, but rather, run the one specified by `-F`. Now, go ahead an submit this job
-```shell
+```console
 sbatch run_first_job.sh
 ```
 The status of the jobs can be monitored via:
-```shell
+```console
 squeue -u $USER        # to inspect the status of jobs 
                        # (hint: make a unix alias, if you like)
 scancel <jobid>        # to delete jobs in the queue
 ```
 
 The newly generated databases will be stored in the job directory, as specified by `-J`, while the report, log and output files will be stored in the communications directory (`-C`). As this is your first `yambo` run, take a moment to inspect the report and log files, which you can find inside the `-C` directory. In these report and log files, you can see the steps performed by `yambo`. For instance, the code calculates the screening at every k-point and stores it in the PPA database. By opening the report
-```shell
+```console
 vim out_00_first_run/r-job_00_first_run_HF_and_locXC_gw0_dyson_rim_cut_em1d_ppa
 ```
 you will see
@@ -519,7 +519,7 @@ Then, the actual GW section will use this screening to construct the correlation
 ```
 
 Now, inspect the output file
-```shell
+```console
 vim out_00_first_run/o-job_00_first_run.qp 
 ```
 ```
@@ -535,7 +535,7 @@ vim out_00_first_run/o-job_00_first_run.qp
 ```
 In this file, `Eo` is our starting point (DFT) while `E-Eo` shows the GW correction one should apply to obtain the quasi-particle energies. In order to calculate the gap (automatically from the command line), we'll use some simple commands. First, we get everything that is not a `#` symbol `grep -v '#'` and we pass that to another command with a "pipe" `|`. Then, `tail -n 1`/`head -n 1` will retain the first/last line, and `awk '{print $3+$4}'` will get us the sum of the third and fourth columns. Altogether, this would be as follows
 
-```shell
+```console
 grep -v '#' out_00_first_run/o-job_00_first_run.qp|head -n 1| awk '{print $3+$4}'
 -0.025594
 grep -v '#' out_00_first_run/o-job_00_first_run.qp|tail -n 1| awk '{print $3+$4}'
@@ -552,12 +552,12 @@ In this part of the tutorial, we will study convergence with respect to some of 
 Hence, we'll perform our convergence studies on top of a DFT calculation done with a 6 $\times$ 6 $\times$ 1 k-point grid and without spin-orbit coupling: the `SAVE` we generated earlier. 
 While this will speed up calculations and require few CPU cores, you should be aware that such coarse sampling of the BZ is severely underconverged and should only be used for educational purposes.
 Let's move into the appropriate directory
-```shell
+```console
 cd ../02_GW_convergence
 ```
 ### Response function {math}`\varepsilon^{-1}_{GG'}` - Bands and G-vectors
 We are now ready to start our convergence tests. We'll begin with the variables controlling the polarization function, i.e., `NGsBlkXp` for the number of G-vectors and `BndsRnXp` for the number of bands. For this, we will keep `GbndRnge` constant at a reasonably high value - you can inspect the input `i01-GW`
-```shell
+```console
 vim i01-GW
 ```
 and check that you have:
@@ -568,7 +568,7 @@ and check that you have:
 ```
 
 Since we need to run `yambo` for several values of `NGsBlkXp` and `BndsRnXp`, it makes sense to use two nested loops. That is exactly what we did in the submission script [`run01_converge_pol.sh`](https://hackmd.io/h7Rfne3KR4-0W2yJX0yEfA#Slurm-submission-for-convergence-tutorial). Since this will take a few minutes, save time by submitting it straight away and we'll have a look at it while it runs:
-```shell
+```console
 sbatch run01_converge_pol.sh
 ```
 
@@ -581,7 +581,7 @@ and also by checking the files created in your folder
 ```
 ls -ltr
 ```
-```shell
+```console
 -rw-rw-r-- 1 enccs035 enccs035  2995 15 nov 13.57 i01-GW_Xp_20_bands_6_Ry
 drwxrwxr-x 2 enccs035 enccs035  4096 15 nov 13.57 job_Xp_20_bands_6_Ry
 drwxrwxr-x 3 enccs035 enccs035  4096 15 nov 13.57 out_Xp_20_bands_6_Ry
@@ -652,7 +652,7 @@ done
 ```
 
 Inside the loops, we generate some useful labels which will come in handy to distinguish between runs. Then, we pass the variables from the loops to the `sed` command, in order to generate new files in an automated way - `sed` replaces any matching string with whatever is provided by the loop variable. Next, we run `yambo` using the labels to specify different job `-J` and communications `-C` directories every time. Finally, we get the quasiparticle energies with `grep` commands as shown before and append a new line to the summary file. So, inside each loop, we have
-```shell
+```console
 label=Xp_${POL_BANDS}_bands_${NGsBlkXp_Ry}_Ry
 jdir=job_${label}
 cdir=out_${label}
@@ -672,7 +672,7 @@ echo ${NGsBlkXp_Ry} '        ' ${E_GW_v} '        ' ${E_GW_c} >> summary_01_${PO
 ```
 
 Finally, let us plot this data. First, check that the job has finished with
-```shell
+```console
 squeue -u $USER
 ```
 ```shell
@@ -681,7 +681,7 @@ squeue -u $USER
 [$USER@vglogin0005 02_GW_convergence]$ 
 ```
 and verify that the energies were extracted correctly by inspecting the summary files. Remember to load the python module if you haven't done so yet, and then plot:
-```shell
+```console
 module purge
 module load matplotlib/3.2.1-foss-2020a-Python-3.8.2
 python plot-01.py
@@ -704,28 +704,28 @@ cp i01-GW_Xp_80_bands_10_Ry i02-GW
 ### Self-energy {math}`\Sigma^c` - Bands
 
 We will now proceed to converge the number of bands for the correlation part of the self-energy, i.e., `GbndRnge`. This step is actually simpler, since it only involves one loop. This is coded in the provided script `run02_converge_Gbnds.noBG.sh`. You can look into it
-```shell
+```console
 vim run02_converge_Gbnds.noBG.sh
 ```
 and go ahead and submit it.
-```shell
+```console
 sbatch run02_converge_Gbnds.noBG.sh
 ```
 
 ````{solution} [OPTIONAL]: Use the terminator to accelerate convergence
 While that runs, we'll have a look at the so-called Bruneval-Gonze (BG) terminator, which is a method to accelerate convergence with respect to empty bands. The variable that controls this for the bands in the correlation self-energy is `GTermKind`. This is currently set to "none" in `i02-GW`, so create a new input file `i02-GW_BG` and set this variable to "BG". We can do this in the command line by simply typing
-```shell
+```console
 sed 's/GTermKind=.*/GTermKind= "BG"/' i02-GW > i02-GW_BG
 ```
 
 Note that `XTermKind` also offers the same terminator for the sum over bands of the polarization function (we just chose not to use it in the previous section of this excercise, and we'll keep it as "none"). Now, copy the last submission script and edit it to run the same convergence test using the BG terminator.
-```shell
+```console
 cp run02_converge_Gbnds.noBG.sh run03_converge_Gbnds.BG.sh
 ```
 Try and do this yourself first, and then continue reading to check your understanding.
 You'll have to change the input file template, i.e., use `i02-GW_BG` where the terminator has been activated. Modify also the name of the newly generated input files in order to avoid overwriting. Change the name of the summary file for the same reason and, finally, modify the communications and job directories of `yambo`. Make sure you've done all the changes as outlined below.
 
-```shell
+```console
 file0='i02-GW_BG'
 summaryfile=summary_03_BG.txt
 
@@ -771,7 +771,7 @@ _Guandalini, D’Amico, Ferretti & Varsano. ArXiv:2205.11946v2_
 ````{solution} [OPTIONAL]: Use the RIM-W accelerator
 
 However you can try to get a reasonable correction via the RIM-W approach.
-```shell
+```console
 cp i02-GW_80_Gbands  i04-GW_80_Gbands_rimw
 vim i04-GW_80_Gbands_rimw
 ```
@@ -781,7 +781,7 @@ RIM_W
 RandGvecW= 15           RL
 ```
 and prepare a submission script
-```shell
+```console
 cp  run02_converge_Gbnds.noBG.sh  run04_converge_rimw.sh
 vim run04_converge_rimw.sh
 ```    
@@ -826,7 +826,7 @@ GAP_GW=`echo $E_GW_c - $E_GW_v |bc`
 echo ${E_GW_v} '        ' ${E_GW_c} '        ' ${GAP_GW} >> $summaryfile
 ```
 and then run
-```shell
+```console
 sbatch run04_converge_rimw.sh
 ```    
 How much do you get for the band gap ?
@@ -838,12 +838,12 @@ How much do you get for the band gap ?
 ### MPI parallelization
 
 For this section, let us enter the `03_GW_parallel` directory. If you were in the `02_GW_convegence` folder just do
-```shell
+```console
 cd ../03_GW_parallel
 ```
 and inspect the input `gw.in`. You will see that we set low values for most of the convergence parameters except bands:
 
-```shell
+```console
 vim gw.in
 ```
 
@@ -903,13 +903,13 @@ We start by calculating the QP corrections using 16 MPI tasks and a single openM
 #SBATCH --cpus-per-task=1
 ```
 and submit the job
-```shell
+```console
 sbatch job_parallel.sh
 ```
 
 This will create a new input file and run it. The calculation databases and the human-readable files will be put in separate directories. Check the location of the report `r-*` file and the log `l-*` files, and inspect them while the calculation runs.
 For simplicity you could just type
-```shell
+```console
 tail -f run_MPI16_OMP1.out/LOG/l-*_CPU_1
 ```
 to monitor the progress in the master thread (`Ctrl+C` to exit).
@@ -927,14 +927,14 @@ Meanwhile, we can run other jobs increasing the parallelisation. Let's employ 12
 This time the code should be much faster. Once the run is over, try to run the simulation also on 32 and 64 MPI tasks. Each time, change`ntasks-per-node` to this number. Finally, you can try to produce a scaling plot.
 
 The timings are contained in the `r-*` report files. You can already have a look at them typing
-```shell
+```console
 grep Time-Profile run_MPI*/r-*
 ```
 
 The python script [`parse_ytiming.py`](https://hackmd.io/@palful/HkU0xblHj#parse_ytiming.py) is useful for the post-processing of report files. You can already find it in the directory, together with the reports for the longer calculations with 1, 2, 4 and 8 MPI tasks which have been provided.
 
 If you didn't do so already, load the python module
-```shell
+```console
 module purge
 module load matplotlib/3.2.1-foss-2020a-Python-3.8.2
 ```
@@ -1035,12 +1035,12 @@ You may then check how speed, memory and load balance between the CPUs are affec
 ### Running on GPUs
 
 This is the final section of the tutorial, in which we want to compute the full correction to the band structure of single-layer MoS2. In order to get somewhat realistic results, we will use the larger values for the convergence parameters we have identified in the convergence section. In addition, we also increased the vacuum separation (to 30 au) and the k-point mesh (to 18x18x1) in the DFT calculation, and of course we consider spin-orbit coupling.
-```shell
+```console
 cd ../04_GW_bands
 ```
 
 Now we have a heavier calculation, and we have to do it not just for the band gap, but the entire band structure which includes 37 kpoints in the irreducible Brillouin zone, two spin-orbit-split valence bands, and two spin-orbit-split conduction bands. Let us check the new input:
-```shell
+```console
 vim gw.in
 ```
 
@@ -1050,13 +1050,13 @@ vim gw.in
 %
 ```
 This is a massive calculation, so run it right now and we'll discuss it in the meantime:
-```shell
+```console
 sbatch gpu_job.sh
 ```
 As you might have guessed from the name of the submission script, we are here using yet another capability of yambo: running on GPUs instead of CPUs. This usually leads to extreme speedups in the calculations. Fortunately, the Vega cluster also has some GPU nodes!
 
 As you can see from the submission script,
-```shell
+```console
 vim gpu_job.sh
 ```
 ```bash
@@ -1084,13 +1084,13 @@ We also have a python-based interface for advanced treatment of all the Yambo da
 ```
 
 Let us load the yambo module if needed
-```shell
+```console
 module purge
 module use /ceph/hpc/data/d2021-135-users/modules
 module load YAMBO/5.1.1-FOSS-2022a
 ```
 We can review the options with `ypp -h` and generate an input file for band structure interpolation with
-```shell
+```console
 ypp -s b -F ypp_bands.in
 ```
 Let us modify the resulting input file by selecting the 'boltztrap' approach to interpolation, the last two valence and first two conduction bands, and a path in the Brillouin zone along the the points $\Gamma$-M-K-$\Gamma$. We also set 100 points for each high-symmetry line.
@@ -1119,18 +1119,18 @@ BANDS_steps= 100                  # Number of divisions
 %
 ```
 Now, let's run ypp:
-```shell
+```console
 ypp -F ypp_bands.in
 ```
 This run will produce the file `o.bands_interpolated`. You can inspect it and see that it contains a plottable band structure, but beware: these are the DFT eigevalues! We didn't tell `ypp` where to look for the quasiparticle corrections, so it went into the `SAVE` folder and interpolated the DFT data.
 Let's rename the output:
-```shell
+```console
 mv o.bands_interpolated o.DFT_bands
 mkdir DFT_bands
 mv o.spin* o.magn* DFT_bands/
 ```
 In order to interpolate the quasiparticle database, we append its location to the `ypp` input:
-```shell
+```console
 vim ypp_bands.in
 ```
 add this line at the end
@@ -1139,12 +1139,12 @@ add this line at the end
 GfnQPdb= "E < ./GW_bnds/ndb.QP"
 ```
 and run `ypp` again. 
-```shell
+```console
 ypp -F ypp_bands.in
 ```
 
 When it's done, let's rename the new output as
-```shell
+```console
 mv o.bands_interpolated o.GW_bands
 mkdir GW_bands
 mv o.spin* o.magn* GW_bands/
@@ -1153,20 +1153,20 @@ mv o.spin* o.magn* GW_bands/
 Now we are ready to visualize the band structures. In order to do so, you can use the script [`plot_bands.py`](code/yambo/plot_bands.py) that should be already available in the directory.
 
 We load the python module
-```shell
+```console
 module purge
 module load matplotlib/3.2.1-foss-2020a-Python-3.8.2
 ```
 
 and run the script as
-```shell
+```console
 python plt_bands.py o.DFT_bands o.GW_bands 4
 ```
 It should produce a `GW_bands.png` file containing the following visualization.
 
 ![](img/GW_bands.png)
 You can copy and open it in your local machine with something like
-```shell
+```console
 #[WARNING: run this on another terminal in your local machine, fixing $USER]
 scp $USER@login.vega.izum.si:/exa5/data/d2021-135-users/$USER/YAMBO_TUTORIAL/04_GW_bands/gw_bands.png ./
 ```
