@@ -24,6 +24,7 @@ https://gitlab.com/QEF/materials-for-max-coe-enccs-workshop-2022
 ````{tab} ex0-run.slurm template
 ```{literalinclude} code/Day-1/ex0-run/ex0-run.slurm
 :language: bash
+:linenos:
 ```
 ````
 ````{tab} atom-pbe.in 
@@ -59,6 +60,7 @@ $ squeue -u YOUR_USERNAME
 ````{tab} ex0-run.slurm 
 ```{literalinclude} code/Day-1/ex0-run/reference/ex0-run.slurm
 :language: bash
+:linenos:
 ```
 ````
 ````{tab} atom-pbe.out
@@ -78,6 +80,7 @@ $ squeue -u YOUR_USERNAME
 ````{tab} ex1-pools.slurm template
 ```{literalinclude} code/Day-1/ex1-pools/ex1-pools.slurm
 :language: bash
+:linenos:
 ```
 ````
 ````{tab} pw.CuO.scf.in
@@ -132,6 +135,7 @@ pw_CuO.out:
 ````{tab} ex2-diag.slurm template
 ```{literalinclude} code/Day-1/ex2-diag/ex2-diag.slurm
 :language: bash
+:linenos:
 ```
 ````
 ````{tab} pw.CuO.scf.in
@@ -171,6 +175,17 @@ pw_CuO_4diag.out:
 
 ## EXERCISE 3 - MPI + OpenMP parallelization
 
+**Files needed**:
+
+`````{tabs} 
+````{tab} ex3-omp.slurm
+```{literalinclude} code/Day-1/ex3-omp/ex3-omp.slurm
+:language: bash
+:linenos:
+```
+````
+``````
+
 Find out how to best exploit the available CPU resources, by playing with the MPI-related parameters (number of tasks, npools) together with the number of threads.  
 Use the batch file `ex3-omp.slurm` to submit your jobs (modify it at your convenience).  
 Hints:
@@ -192,6 +207,7 @@ Hints:
 ````{tab} ex3-omp.slurm
 ```{literalinclude} code/Day-1/ex3-omp/reference/ex3-omp.slurm
 :language: bash
+:linenos:
 ```
 ````
 ````{tab} pw_run16x1.out
@@ -209,5 +225,62 @@ Hints:
 ```
 ````
 
+`````
+``````
+
+## EXERCISE 4 - Hands on the GPUs
+
+`````{tabs} 
+````{tab} ex4-cpu.slurm
+```{literalinclude} code/Day-1/ex4-gpu/ex4-cpu.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} ex4-gpu.slurm
+```{literalinclude} code/Day-1/ex4-gpu/ex4-gpu.slurm
+:language: bash
+:linenos:
+```
+````
+`````
+
+Test the power of the GPUs (roughly).
+
+0. Know the size of your node. Look at: https://doc.vega.izum.si/general-spec/  
+   How many cores? How many GPUs?
+
+1. Use the batch file `ex4-gpu.slurm` to submit a few MPI+GPU runs. You can also check what happens with more MPI tasks than GPUs.  
+   Dots at lines 7, 9, 10, 25, 27, 29.
+
+2. Enable openMP threading. Do you see any improvement?
+   
+3. Consider your best CPU run. How many GPUs were necessary to match the performance?  
+   If you don't have your optimized CPU batch file from exercise 3 you can use the one in the reference folder.
+
+### Solution
+
+``````{solution}
+`````{tabs} 
+````{tab} ex4-cpu.slurm
+```{literalinclude} code/Day-1/ex4-gpu/reference/ex4-cpu.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} ex4-gpu.slurm
+```{literalinclude} code/Day-1/ex4-gpu/reference/ex4-gpu.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} pw.CnSnI3.cpu.out
+```{literalinclude} code/Day-1/ex4-gpu/reference/pw.CnSnI3.cpu.out
+```
+````
+````{tab} pw.CnSnI3_gpu.out
+```{literalinclude} code/Day-1/ex4-gpu/reference/pw.CnSnI3_gpu.out
+```
+````
 `````
 ``````
