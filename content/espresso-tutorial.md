@@ -118,3 +118,46 @@ pw_CuO.out:
 :language: shell
 ```
 ````
+
+## EXERCISE 2 - Parallelization of the eigenvalue problem
+
+**Files needed**:
+
+`````{tabs} 
+````{tab} ex2-diag.slurm template
+```{literalinclude} code/Day-1/ex2-diag/ex2-diag.slurm
+:language: bash
+```
+````
+````{tab} pw.CuO.scf.in
+```{literalinclude} code/Day-1/inputs/pw.CuO.scf.in
+```
+````
+`````
+
+Play with the `ndiag` parameter by performing a number of runs and seeing variations in the WALL time (if any).  
+You can also change the fixed value of npools (the default value for this exercise is 4).
+
+1. Replace the dots with a list of proper values for ndiag, e.g:
+   ```bash
+   for id in 1 2 3 4 5 6     # not necessarily the right values here!
+   do
+   ```
+
+2. Submit the job file:
+   ```console
+   $ sbatch ./ex2-diag.slurm
+   ```
+
+3. Check the total WALL time at the end of the output file and plot TIME(ndiag).  
+   Which is the best `ndiag` value (if any)? Why?
+
+### Solution
+
+````{solution}
+pw_CuO_4diag.out:
+
+```{literalinclude} code/Day-1/ex2-diag/reference/pw_CuO_4diag.out
+:language: shell
+```
+````
