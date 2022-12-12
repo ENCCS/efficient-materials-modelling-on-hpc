@@ -14,6 +14,7 @@ https://gitlab.com/QEF/materials-for-max-coe-enccs-workshop-2022
 
 - Download the pseudopotentials: {download}`data/materials-for-max-coe-enccs-workshop-2022-v0.9-pseudo.tar.gz`
 
+---
 
 ## EXERCISE 0 - First serial run
 
@@ -67,6 +68,8 @@ $ squeue -u YOUR_USERNAME
 `````
 ``````
 
+---
+
 ## EXERCISE 1 - Parallelization with pools
 
 **Files needed**:
@@ -119,6 +122,8 @@ pw_CuO.out:
 ```
 ````
 
+---
+
 ## EXERCISE 2 - Parallelization of the eigenvalue problem
 
 **Files needed**:
@@ -161,3 +166,48 @@ pw_CuO_4diag.out:
 :language: shell
 ```
 ````
+
+--- 
+
+## EXERCISE 3 - MPI + OpenMP parallelization
+
+Find out how to best exploit the available CPU resources, by playing with the MPI-related parameters (number of tasks, npools) together with the number of threads.  
+Use the batch file `ex3-omp.slurm` to submit your jobs (modify it at your convenience).  
+Hints:
+
+0. Know the size of your node, e.g. the amount of cores at your disposal;
+
+1. See how the time scaling of your jobs changes just by varying the number of tasks (keep just 1 thread each at first).  
+   Adapt the `npool` parameter at each run.
+
+2. Now you can start to explore the OpenMP parallelization by varying the number of threads (avoid hyperthreading).
+
+3. Do multiple WALL_TIME plots in function of the number of MPI tasks and OpenMP threads.
+   Which is the best configuration for this exercise?
+
+### Solution
+
+``````{solution}
+`````{tabs} 
+````{tab} ex3-omp.slurm
+```{literalinclude} code/Day-1/ex3-omp/reference/ex3-omp.slurm
+:language: bash
+```
+````
+````{tab} pw_run16x1.out
+```{literalinclude} code/Day-1/ex3-omp/reference/pw_run16x1.out
+```
+````
+
+````{tab} pw_run16x2.out
+```{literalinclude} code/Day-1/ex3-omp/reference/pw_run16x2.out
+```
+````
+
+````{tab} pw_run16x4.out
+```{literalinclude} code/Day-1/ex3-omp/reference/pw_run16x4.out
+```
+````
+
+`````
+``````
