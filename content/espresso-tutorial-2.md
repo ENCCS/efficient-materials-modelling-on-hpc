@@ -172,3 +172,49 @@ Apply the Acoustic Sum Rule (ASR) with `dynmat.x`
 `````
 ``````
 
+## Multi GPU offload with pools, step 4 
+ 
+**Files needed**:
+
+`````{tabs} 
+````{tab} submit.slurm 
+```{literalinclude} code/Day-2/exercise_ph/step4/submit.slurm
+:language: bash
+:linenos:
+```
+````
+`````
+
+Perform a phonon calculation at Gamma on 2 GPUs for CnSnI3 using the `ph.x` program.
+
+1. Copy the input of step2 `../step2/ph.CnSnI3.in` in the current folder
+
+2. Copy the `../step1/out` directory in the current folder
+
+3. Modify `npools` in `submit.slurm` to distribute the calculation on 2 MPIs : GPUs with pool parallelization
+
+4. Submit the jobfile
+
+	`sbatch submit.slurm`
+
+5. Check wall time of parallel execution
+
+	`tail ph.CnSnI3.out`
+
+#### Solution
+
+``````{solution}
+`````{tabs} 
+````{tab} submit.slurm
+```{literalinclude} code/Day-2/exercise_ph/step4/reference/submit.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} ph.CnSnI3.in
+```{literalinclude} code/Day-2/exercise_ph/step4/reference/ph.CnSnI3.in
+```
+````
+`````
+``````
+
