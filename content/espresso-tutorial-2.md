@@ -117,8 +117,58 @@ Perform a phonon calculation at Gamma for CnSnI3 using the `ph.x` program.
 ```
 ````
 ````{tab} ph.CnSnI3.in
-```{literalinclude} code/Day-2/exercise_ph/step1/reference/ph.CnSnI3.in
+```{literalinclude} code/Day-2/exercise_ph/step2/reference/ph.CnSnI3.in
 ```
 ````
 `````
 ``````
+
+
+### ASR rule application, step 3
+ 
+**Files needed**:
+
+`````{tabs} 
+````{tab} submit.slurm 
+```{literalinclude} code/Day-2/exercise_ph/step3/submit.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} dyn.CnSnI3.in
+```{literalinclude} code/Day-2/exercise_ph/inputs/dyn.CnSnI3.in
+```
+````
+`````
+
+Apply the Acoustic Sum Rule (ASR) with `dynmat.x`
+
+1. Copy `../inputs/dyn.CnSnI3.in` and add the `‘crystal’` ASR rule
+
+	```
+	&input
+		asr=''
+	```
+
+2. Copy `../step2/harmdyn_support` in the current folder
+
+3. Submit the job 
+
+4. Check phonon frequencies with ASR rule applied in `dyn.CnSnI3.out`
+
+
+#### Solution
+
+``````{solution}
+`````{tabs} 
+````{tab} dyn.CnSnI3.in
+```{literalinclude} code/Day-2/exercise_ph/step3/reference/dyn.CnSnI3.in
+```
+````
+````{tab} dyn.CnSnI3.out
+```{literalinclude} code/Day-2/exercise_ph/step3/reference/dyn.CnSnI3.out
+```
+````
+`````
+``````
+
