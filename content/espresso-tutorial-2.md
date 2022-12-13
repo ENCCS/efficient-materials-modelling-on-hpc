@@ -19,7 +19,7 @@
 ```
 ````
 ````{tab} pw.CnSnI3.in 
-```{literalinclude} code/Day-2/exercise_ph/inputs/atom-pbe.in
+```{literalinclude} code/Day-2/exercise_ph/inputs/pw.CnSnI3.in 
 ```
 ````
 `````
@@ -43,7 +43,7 @@ Perform a vc-relax calculation for CnSnI3  using the `pw.x` program.
    `cp -r ./out ../step2/`
 
 
-### Solution
+#### Solution
 
 ``````{solution}
 `````{tabs} 
@@ -60,3 +60,65 @@ Perform a vc-relax calculation for CnSnI3  using the `pw.x` program.
 `````
 ``````
 
+### Phonon calculation, step2
+ 
+**Files needed**:
+
+`````{tabs} 
+````{tab} submit.slurm 
+```{literalinclude} code/Day-2/exercise_ph/step2/submit.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} ph.CnSnI3.in
+```{literalinclude} code/Day-2/exercise_ph/inputs/ph.CnSnI3.in
+```
+````
+`````
+
+Perform a phonon calculation at Gamma for CnSnI3 using the `ph.x` program.
+
+1. Copy `../inputs/ph.CnSnI3.in` in the current folder and modify the `&inputph` namelist ; add coordinates of the Gamma point
+
+	```
+   	&inputph
+		prefix=''
+		amass(1)=
+		amass(2)=
+		amass(3)=
+	/
+	X	Y	Z
+	```
+
+2. Submit the jobfile to run `ph.x` on 1 MPI : GPU
+
+3. Check the number of k points
+
+	`awk '/number of k/' ph.CnSnI3.out`
+
+4. Check the number of irreducible representations
+
+	`awk '/irreducible/' ph.CnSnI3.out`
+
+5. Check the dynamical matrix in dynmat.out
+
+	`tail -n 97 harmdyn_support`
+
+
+#### Solution
+
+``````{solution}
+`````{tabs} 
+````{tab} submit.slurm 
+```{literalinclude} code/Day-2/exercise_ph/step2/reference/submit.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} ph.CnSnI3.in
+```{literalinclude} code/Day-2/exercise_ph/step1/reference/ph.CnSnI3.in
+```
+````
+`````
+``````
