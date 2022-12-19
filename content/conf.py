@@ -38,7 +38,8 @@ extensions = [
     "sphinx_rtd_theme_ext_color_contrast",
     "sphinx.ext.todo",
     "sphinx.ext.graphviz",
-    "sphinx_tabs.tabs"
+    "sphinx_tabs.tabs",
+    "nbsphinx"
 ]
 
 # Settings for myst_nb:
