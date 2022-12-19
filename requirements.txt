@@ -6,3 +6,4 @@ sphinx-lesson
 matplotlib
 IPython
 ipykernel
+nbsphinx
