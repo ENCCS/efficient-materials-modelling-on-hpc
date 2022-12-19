@@ -1,9 +1,6 @@
-# Quantum ESPRESSO tutorial 2
-
-## Phonons for HPC and GPUs
+# Tutorial: Phonons, EELS and magnons for HPC and GPUs
 
 {download}`Slides <slides/Handson-Day2.pdf>`
-
 
 ## EXERCISE - Phonon modes of CnSnI3 at Gamma
 
@@ -271,3 +268,97 @@ Perform a phonon calculation at Gamma on 4 GPUs for CnSnI3 using the `ph.x` prog
 ````
 `````
 ``````
+
+---
+
+## EELS in bulk Silicon
+
+Calculation of the electron energy loss spectra (EELS) of bulk silicon.
+
+**Submit files needed**:
+
+`````{tabs} 
+````{tab} submit_pw.slurm 
+```{literalinclude} code/Day-2/example-eels/submit_pw.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} submit_eels.slurm 
+```{literalinclude} code/Day-2/example-eels/submit_eels.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} submit_spectrum.slurm 
+```{literalinclude} code/Day-2/example-eels/submit_spectrum.slurm
+:language: bash
+:linenos:
+```
+````
+`````
+
+**Input files needed**:
+
+`````{tabs} 
+````{tab} pw.Si.scf.in
+```{literalinclude} code/Day-2/example-eels/pw.Si.scf.in
+```
+````
+````{tab} turbo_eels.Si.tddfpt.in 
+```{literalinclude} code/Day-2/example-eels/turbo_eels.Si.tddfpt.in
+```
+````
+````{tab} turbo_spectrum.Si.pp.in
+```{literalinclude} code/Day-2/example-eels/turbo_spectrum.Si.pp.in
+```
+````
+`````
+
+Step-by-step for running the tutorial can be found in the slides linked at the top of this page!
+
+---
+
+## Calculation of the magnon spectra of bulk iron
+
+**Submit files needed**:
+
+`````{tabs} 
+````{tab} submit_pw.slurm 
+```{literalinclude} code/Day-2/example-magnon/submit_pw.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} submit_magnon.slurm 
+```{literalinclude} code/Day-2/example-magnon/submit_magnon.slurm
+:language: bash
+:linenos:
+```
+````
+````{tab} submit_spectrum.slurm 
+```{literalinclude} code/Day-2/example-magnon/submit_spectrum.slurm
+:language: bash
+:linenos:
+```
+````
+`````
+
+**Input files needed**:
+
+`````{tabs} 
+````{tab} pw.Fe.scf.in
+```{literalinclude} code/Day-2/example-magnon/pw.Fe.scf.in
+```
+````
+````{tab} turbo_magnon.Fe.tddfpt.in 
+```{literalinclude} code/Day-2/example-magnon/turbo_magnon.Fe.tddfpt.in
+```
+````
+````{tab} turbo_spectrum.Fe.pp.in
+```{literalinclude} code/Day-2/example-magnon/turbo_spectrum.Fe.pp.in
+```
+````
+`````
+
+Step-by-step for running the tutorial can be found in the slides linked at the top of this page!

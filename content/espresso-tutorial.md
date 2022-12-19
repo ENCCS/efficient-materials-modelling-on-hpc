@@ -1,11 +1,9 @@
-# Quantum ESPRESSO tutorial I
+# Tutorial: Quantum ESPRESSO on HPC systems
 
 ```{callout} Credit
 This material is adapted with permission from 
 https://gitlab.com/QEF/materials-for-max-coe-enccs-workshop-2022
 ```
-
-## Quantum ESPRESSO on HPC systems
 
 {download}`Slides <slides/Handson-Day1.pdf>`
 

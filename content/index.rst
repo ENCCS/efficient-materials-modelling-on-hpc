@@ -88,7 +88,7 @@ researchers in the materials' domain.
    :caption: Day 2 - Quantum ESPRESSO and AiiDA
 
    lectures-2
-   espresso-tutorial-2
+   espresso-tutorial-phonons
 
 
 .. toctree::
