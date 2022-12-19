@@ -104,6 +104,10 @@ researchers in the materials' domain.
    :caption: Day 4 - BigDFT
 
    lectures-4
+   code/bigdft/1.SystemGenFirstCalcs
+   code/bigdft/2.RemoteManagerInitialTutorial
+   code/bigdft/3.CubicScaling-H2O
+   code/bigdft/4.LinearScaling-H2O
 
 .. toctree::
    :maxdepth: 1
