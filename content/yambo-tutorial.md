@@ -104,21 +104,8 @@ The energy-dependent dynamical electronic screening {math}`\varepsilon^{-1}(\ome
 In this way, we can compute the "quasiparticle" corrections {math}`E^{QP}_{nk}` to the single-particle Kohn-Sham eigenvalues {math}`\epsilon_{nk}`.
 The typical workflow for a GW calculation is: 
 
-```{graphviz}
-digraph summary{
-dft [label="DFT data", style=filled, fillcolor=red]
-save [label="Yambo data", shape=box, style=filled, fillcolor=red]
-screening [label="Electronic screening", shape=box, style=filled, fillcolor=orange]
-exchange [label="Self-energy: exchange", shape=box, style=filled, fillcolor=yellow]
-correlation [label="Self-energy: correlation", shape=box, style=filled, fillcolor=yellow]
-QP [label="Quasiparticle band structure", shape=box, style=filled, fillcolor=green]
-dft->save [label="Convert & setup"]
-save->screening [label="Compute"]
-save->exchange [label="Compute"]
-screening->correlation [label="Compute"]
-correlation->QP [label="Compute"]
-exchange->QP [label="Compute"]
-}
+```{figure} img/GW_graph.png
+:scale: 40%
 ```
 
 ## Set up a Yambo calculation

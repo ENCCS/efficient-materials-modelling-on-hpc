@@ -2,7 +2,7 @@
 
 {download}`Slides <slides/Handson-Day2.pdf>`
 
-## EXERCISE - Phonon modes of CnSnI3 at Gamma
+## Phonon modes of CnSnI3 at Gamma
 
 ### pwscf simulation, step 1 
 
