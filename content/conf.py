@@ -21,7 +21,7 @@ project = "Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and
 copyright = "2022, The contributors"
 author = "MAX CoE"
 github_user = "ENCCS"
-github_repo_name = ""  # auto-detected from dirname if blank
+github_repo_name = "Efficient-materials-modelling-on-HPC"  # auto-detected from dirname if blank
 github_version = "main"
 conf_py_path = "/content/"  # with leading and trailing slash
 
