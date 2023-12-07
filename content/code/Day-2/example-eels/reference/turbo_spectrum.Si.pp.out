@@ -1,0 +1,52 @@
+ Warning: Only a single CPU will be used!
+
+     Program TDDFPT_PP v.7.1 starts on 10Nov2022 at 16:23:50 
+
+     This program is part of the open-source Quantum ESPRESSO suite
+     for quantum simulation of materials; please cite
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 21 395502 (2009);
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 29 465901 (2017);
+         "P. Giannozzi et al., J. Chem. Phys. 152 154105 (2020);
+          URL http://www.quantum-espresso.org", 
+     in publications or presentations arising from this work. More details at
+     http://www.quantum-espresso.org/quote
+
+     Parallel version (MPI & OpenMP), running on       1 processor cores
+     Number of MPI processes:                 1
+     Threads/MPI process:                     1
+
+     MPI processes distributed on     1 nodes
+     221587 MiB available memory on the printing compute node when the environment starts
+
+
+     Reading   2000 Lanczos steps
+       2000 steps will be considered
+
+     Lanczos coefficients:
+     Average =    10.08571592
+     Average oscillation amplitude =     0.03242407
+
+     Data ready, starting to calculate observables...
+
+     Broadening =      0.03500000 Ry
+
+     Output file name for the susceptibility: Sieels.plot_chi.dat 
+
+     Output file name for the inverse and direct dielectric function: Sieels.plot_eps.dat 
+
+     Functions are reported in \hbar.\omega  Energy unit is (eV)
+
+     The f-sum rule is given by Eq.(6) in Comput. Phys. Commun. 196, 460 (2015).
+     Integration in the range from   0.00 to  50.00 eV.
+     The number of valence (and semicore) electrons in the unit cell:   7.11
+     The exact number of electrons:   8.00
+     The violation of the f-sum rule:  11.10 %
+
+     TDDFPT_PP    :      1.94s CPU      2.06s WALL
+
+
+   This run was terminated on:  16:23:52  10Nov2022            
+
+=------------------------------------------------------------------------------=
+   JOB DONE.
+=------------------------------------------------------------------------------=
