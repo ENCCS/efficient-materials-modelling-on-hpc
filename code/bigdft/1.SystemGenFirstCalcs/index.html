@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introductory PyBigDFT tour - Basic functionalities and first calculations &mdash; Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/overrides.css" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../../../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script data-domain="enccs.github.io/efficient-materials-modelling-on-hpc" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="Remote manager tutorial" href="../2.RemoteManagerInitialTutorial/" />
+    <link rel="prev" title="Lectures" href="../../../lectures-4/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../" class="icon icon-home">
+            Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT
+              <img src="../../../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Day 1 - MAX-CoE and Quantum ESPRESSO</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-1/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../espresso-tutorial/">Tutorial: Quantum ESPRESSO on HPC systems</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 2 - Quantum ESPRESSO and AiiDA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-2/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../espresso-tutorial-phonons/">Tutorial: Phonons, EELS and magnons for HPC and GPUs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 3 - Yambo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-3/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../yambo-tutorial/">Yambo tutorial: Quasiparticles in the GW approximation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 4 - BigDFT</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-4/">Lectures</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introductory PyBigDFT tour - Basic functionalities and first calculations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-generation">System Generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#atom-class">1) Atom Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fragment-class">2) Fragment Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system-class">3) System Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-views">Multiple Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extended-systems">Extended Systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calculation-examples">Calculation examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../2.RemoteManagerInitialTutorial/">Remote manager tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3.CubicScaling-H2O/">Calculations with cubic-scaling BigDFT code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4.LinearScaling-H2O/">Calculations with linear-scaling BigDFT code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../">Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introductory PyBigDFT tour - Basic functionalities and first calculations</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/Efficient-materials-modelling-on-HPC/blob/main/content/code/bigdft/1.SystemGenFirstCalcs.ipynb" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introductory-pybigdft-tour-basic-functionalities-and-first-calculations">
+<h1>Introductory PyBigDFT tour - Basic functionalities and first calculations<a class="headerlink" href="#introductory-pybigdft-tour-basic-functionalities-and-first-calculations" title="Permalink to this heading"></a></h1>
+<blockquote>
+<div><p>This material is adapted from <a class="reference external" href="https://github.com/BigDFT-group/bigdft-school/">work by Luigi Genovese, Laura Ratcliff and others</a></p>
+</div></blockquote>
+<p>We start here by presenting a walkthrough overview of using the PyBigDFT library to set up and run BigDFT calculations.</p>
+<p>The main documentation of the BigDFT code can be found in the <a class="reference external" href="https://l_sim.gitlab.io/bigdft-suite/users/guide.html">User Page</a>, and informations about the PyBigDFT API can be found <a class="reference external" href="https://l_sim.gitlab.io/bigdft-suite/PyBigDFT/build/html/index.html">here</a></p>
+<p>For this tutorial, we have to ensure at least the installation of the bigdft client.</p>
+<p>The basic installation can be performed with those commands:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>pybigdft<span class="w"> </span>py3dmol<span class="w"> </span>pyfutile
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pybigdft
+  Using cached pybigdft-1.0.7-py3-none-any.whl.metadata (10.0 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting py3dmol
+  Using cached py3Dmol-2.0.4-py2.py3-none-any.whl.metadata (2.1 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pyfutile
+  Using cached pyfutile-1.9.3-py3-none-any.whl (56 kB)
+Requirement already satisfied: numpy in /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages (from pybigdft) (1.24.4)
+Requirement already satisfied: pyyaml in /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages (from pybigdft) (6.0.1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting scipy (from pybigdft)
+  Using cached scipy-1.10.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (34.5 MB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using cached pybigdft-1.0.7-py3-none-any.whl (361 kB)
+Using cached py3Dmol-2.0.4-py2.py3-none-any.whl (12 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Installing collected packages: py3dmol, scipy, pyfutile, pybigdft
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully installed py3dmol-2.0.4 pybigdft-1.0.7 pyfutile-1.9.3 scipy-1.10.1
+</pre></div>
+</div>
+</div>
+</div>
+<section id="system-generation">
+<h2>System Generation<a class="headerlink" href="#system-generation" title="Permalink to this heading"></a></h2>
+<p>In this first overview, we will introduce the data structures available in PyBigDFT for creating and manipulating the systems we want to study (whether molecular or solid state).</p>
+<section id="atom-class">
+<h3>1) Atom Class<a class="headerlink" href="#atom-class" title="Permalink to this heading"></a></h3>
+<p>Any system we want to study is going to be made up of atoms. Considering the features available in Python, the best way to store information about atoms is a dictonary (<code class="docutils literal notranslate"><span class="pre">dict</span></code>), which are serializable in human readable formats like json or yaml. For example, in BigDFT, we use yaml dictonaries.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yaml</span> <span class="kn">import</span> <span class="n">dump</span>
+<span class="n">datm</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sym&quot;</span><span class="p">:</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;angstroem&quot;</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dump</span><span class="p">(</span><span class="n">datm</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>r:
+- 1
+- 0
+- 0
+sym: H
+units: angstroem
+</pre></div>
+</div>
+</div>
+</div>
+<p>Nonetheless, just manipulating a <code class="docutils literal notranslate"><span class="pre">dict</span></code> by itself is error prone, and you might want some extra helpful subroutines. For these reasons, we’ve wrapped up a <code class="docutils literal notranslate"><span class="pre">dict</span></code> in the Atom class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">BigDFT.Atoms</span> <span class="kn">import</span> <span class="n">Atom</span>
+<span class="n">atom</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">(</span><span class="n">datm</span><span class="p">)</span>
+<span class="c1"># the following also works</span>
+<span class="n">atom</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">({</span><span class="s2">&quot;sym&quot;</span><span class="p">:</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;angstroem&quot;</span><span class="p">})</span>
+<span class="n">atom</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">({</span><span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;angstroem&quot;</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dump</span><span class="p">(</span><span class="n">atom</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>!!python/object:BigDFT.Atoms.Atom
+store:
+  H:
+  - 1
+  - 0
+  - 0
+  units: angstroem
+</pre></div>
+</div>
+</div>
+</div>
+<p>Some of in-built subroutines for Atom class manipulation are demonstrated below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">sym</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">atomic_number</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">get_position</span><span class="p">(</span><span class="s2">&quot;angstroem&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">get_position</span><span class="p">(</span><span class="s2">&quot;bohr&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>H
+1
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1.0, 0.0, 0.0]
+[1.8897261245650618, 0.0, 0.0]
+</pre></div>
+</div>
+</div>
+</div>
+<p>With this approach, we nonetheless retain the flexibility of a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">atom</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;tutorial&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">atom</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">atom</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tutorial
+H [1, 0, 0]
+units angstroem
+source tutorial
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fragment-class">
+<h3>2) Fragment Class<a class="headerlink" href="#fragment-class" title="Permalink to this heading"></a></h3>
+<p>We won’t do many calculations involving a single atom, instead we want to put together groups of atoms. In this case, we will use a list as our model data structure, with the wrapper class refered to as a <code class="docutils literal notranslate"><span class="pre">Fragment</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">atm1</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">({</span><span class="s2">&quot;sym&quot;</span><span class="p">:</span> <span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.3229430273</span><span class="p">,</span> <span class="mf">1.3229430273</span><span class="p">,</span> <span class="mf">1.7139430273</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;angstroem&quot;</span><span class="p">})</span>
+<span class="n">atm2</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">({</span><span class="s2">&quot;sym&quot;</span><span class="p">:</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.3229430273</span><span class="p">,</span> <span class="mf">2.0801430273</span><span class="p">,</span> <span class="mf">1.1274430273</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;angstroem&quot;</span><span class="p">})</span>
+<span class="n">atm3</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">({</span><span class="s2">&quot;sym&quot;</span><span class="p">:</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.3229430273</span><span class="p">,</span> <span class="mf">0.5657430273000001</span><span class="p">,</span> <span class="mf">1.1274430273</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;angstroem&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">BigDFT.Fragments</span> <span class="kn">import</span> <span class="n">Fragment</span>
+<span class="n">frag1</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">([</span><span class="n">atm1</span><span class="p">,</span> <span class="n">atm2</span><span class="p">,</span> <span class="n">atm3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frag1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">frag1</span><span class="o">.</span><span class="n">centroid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3
+[4.389726124565062, 2.5000000000000004, 2.4999999999999996]
+</pre></div>
+</div>
+</div>
+</div>
+<p>It’s also possible to build up a fragment in a more step by step process.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frag1</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">()</span>
+<span class="n">frag1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atm1</span><span class="p">)</span>
+<span class="n">frag1</span> <span class="o">+=</span> <span class="n">Fragment</span><span class="p">([</span><span class="n">atm2</span><span class="p">])</span>
+<span class="n">frag1</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Fragment</span><span class="p">([</span><span class="n">atm3</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We added features to translate and rotate a fragment.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="n">frag2</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">frag1</span><span class="p">)</span>
+<span class="n">frag2</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">frag2</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;degrees&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dump</span><span class="p">(</span><span class="n">frag2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>!!python/object:BigDFT.Fragments.Fragment
+atoms:
+- !!python/object:BigDFT.Atoms.Atom
+  store:
+    r:
+    - 14.389726124565062
+    - 1.7611170852950608
+    - 2.499999999999999
+    sym: O
+    units: bohr
+- !!python/object:BigDFT.Atoms.Atom
+  store:
+    r:
+    - 14.389726124565062
+    - 2.86944145735247
+    - 3.930900621520664
+    sym: H
+    units: bohr
+- !!python/object:BigDFT.Atoms.Atom
+  store:
+    r:
+    - 14.389726124565062
+    - 2.86944145735247
+    - 1.0690993784793343
+    sym: H
+    units: bohr
+conmat: null
+frozen: null
+q1: null
+q2: null
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="system-class">
+<h3>3) System Class<a class="headerlink" href="#system-class" title="Permalink to this heading"></a></h3>
+<p>Many electronic structure codes top off at the list of atoms level, but in PyBigDFT we go one step further. At the top, we have the <code class="docutils literal notranslate"><span class="pre">System</span></code> class which is again based on a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">BigDFT.Systems</span> <span class="kn">import</span> <span class="n">System</span>
+<span class="n">sys</span> <span class="o">=</span> <span class="n">System</span><span class="p">()</span>
+<span class="n">sys</span><span class="p">[</span><span class="s2">&quot;WAT:0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frag1</span>
+<span class="n">sys</span><span class="p">[</span><span class="s2">&quot;WAT:1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frag2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dump</span><span class="p">(</span><span class="n">sys</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>!!python/object:BigDFT.Systems.System
+cell: !!python/object:BigDFT.UnitCells.UnitCell
+  cell:
+  - - .inf
+    - 0
+    - 0
+  - - 0
+    - .inf
+    - 0
+  - - 0
+    - 0
+    - .inf
+conmat: null
+store:
+  WAT:0: !!python/object:BigDFT.Fragments.Fragment
+    atoms:
+    - !!python/object:BigDFT.Atoms.Atom
+      store:
+        r:
+        - 2.3229430273
+        - 1.3229430273
+        - 1.7139430273
+        sym: O
+        units: angstroem
+    - !!python/object:BigDFT.Atoms.Atom
+      store:
+        r:
+        - 2.3229430273
+        - 2.0801430273
+        - 1.1274430273
+        sym: H
+        units: angstroem
+    - !!python/object:BigDFT.Atoms.Atom
+      store:
+        r:
+        - 2.3229430273
+        - 0.5657430273000001
+        - 1.1274430273
+        sym: H
+        units: angstroem
+    conmat: null
+    frozen: null
+    q1: null
+    q2: null
+  WAT:1: !!python/object:BigDFT.Fragments.Fragment
+    atoms:
+    - !!python/object:BigDFT.Atoms.Atom
+      store:
+        r:
+        - 14.389726124565062
+        - 1.7611170852950608
+        - 2.499999999999999
+        sym: O
+        units: bohr
+    - !!python/object:BigDFT.Atoms.Atom
+      store:
+        r:
+        - 14.389726124565062
+        - 2.86944145735247
+        - 3.930900621520664
+        sym: H
+        units: bohr
+    - !!python/object:BigDFT.Atoms.Atom
+      store:
+        r:
+        - 14.389726124565062
+        - 2.86944145735247
+        - 1.0690993784793343
+        sym: H
+        units: bohr
+    conmat: null
+    frozen: null
+    q1: null
+    q2: null
+</pre></div>
+</div>
+</div>
+</div>
+<p>In principle, any dictionary key is fine to use for our <code class="docutils literal notranslate"><span class="pre">System</span></code> class, but in practice we follow the convention of giving it a name and identifier separated by a colon. To summarize the hierarchy, let’s iterate over our <code class="docutils literal notranslate"><span class="pre">System</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">fragid</span><span class="p">,</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fragid</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atm</span> <span class="ow">in</span> <span class="n">frag</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">atm</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WAT:0
+{&#39;sym&#39;: &#39;O&#39;, &#39;r&#39;: [2.3229430273, 1.3229430273, 1.7139430273], &#39;units&#39;: &#39;angstroem&#39;}
+{&#39;sym&#39;: &#39;H&#39;, &#39;r&#39;: [2.3229430273, 2.0801430273, 1.1274430273], &#39;units&#39;: &#39;angstroem&#39;}
+{&#39;sym&#39;: &#39;H&#39;, &#39;r&#39;: [2.3229430273, 0.5657430273000001, 1.1274430273], &#39;units&#39;: &#39;angstroem&#39;}
+WAT:1
+{&#39;sym&#39;: &#39;O&#39;, &#39;r&#39;: [14.389726124565062, 1.7611170852950608, 2.499999999999999], &#39;units&#39;: &#39;bohr&#39;}
+{&#39;sym&#39;: &#39;H&#39;, &#39;r&#39;: [14.389726124565062, 2.86944145735247, 3.930900621520664], &#39;units&#39;: &#39;bohr&#39;}
+{&#39;sym&#39;: &#39;H&#39;, &#39;r&#39;: [14.389726124565062, 2.86944145735247, 1.0690993784793343], &#39;units&#39;: &#39;bohr&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we’ve reached the top level, let’s visualize the system we have built.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="3dmolviewer_17019878526531732"  style="position: relative; width: 400px; height: 300px;">
+        <p id="3dmolwarning_17019878526531732" style="background-color:#ffcccc;color:black">You appear to be running in JupyterLab (or JavaScript failed to load for some other reason).  You need to install the 3dmol extension: <br>
+        <tt>jupyter labextension install jupyterlab_3dmol</tt></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js');
+}
+
+var viewer_17019878526531732 = null;
+var warn = document.getElementById("3dmolwarning_17019878526531732");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+var viewergrid_17019878526531732 = null;
+viewergrid_17019878526531732 = $3Dmol.createViewerGrid(document.getElementById("3dmolviewer_17019878526531732"),{rows: 1, cols: 1, control_all: false},{backgroundColor:"white"});
+viewer_17019878526531732 = viewergrid_17019878526531732[0][0];
+viewergrid_17019878526531732[0][0].zoomTo();	viewergrid_17019878526531732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526531732[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_17019878526531732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526531732[0][0].setStyle({"model": -1, "serial": 1},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_17019878526531732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526531732[0][0].setStyle({"model": -1, "serial": 2},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_17019878526531732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526531732[0][0].setStyle({"model": -1, "serial": 3},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_17019878526531732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526531732[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_17019878526531732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526531732[0][0].setStyle({"model": -1, "serial": 4},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526531732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526531732[0][0].setStyle({"model": -1, "serial": 5},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526531732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526531732[0][0].setStyle({"model": -1, "serial": 6},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526531732[0][0].addUnitCell({"model": -1},{"box": {"color": "black"}, "alabel": "", "blabel": "", "clabel": ""});
+	viewergrid_17019878526531732[0][0].zoomTo();
+viewergrid_17019878526531732[0][0].render();
+});
+</script></div></div>
+</div>
+<p>The visualization module has identified that there are two separate fragments, and colored them accordingly. Of course if we merged our fragments, the visualization would look different.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sys2</span> <span class="o">=</span> <span class="n">System</span><span class="p">()</span>
+<span class="n">sys2</span><span class="p">[</span><span class="s2">&quot;COM:0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">sys2</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="3dmolviewer_17019878526664732"  style="position: relative; width: 400px; height: 300px;">
+        <p id="3dmolwarning_17019878526664732" style="background-color:#ffcccc;color:black">You appear to be running in JupyterLab (or JavaScript failed to load for some other reason).  You need to install the 3dmol extension: <br>
+        <tt>jupyter labextension install jupyterlab_3dmol</tt></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js');
+}
+
+var viewer_17019878526664732 = null;
+var warn = document.getElementById("3dmolwarning_17019878526664732");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+var viewergrid_17019878526664732 = null;
+viewergrid_17019878526664732 = $3Dmol.createViewerGrid(document.getElementById("3dmolviewer_17019878526664732"),{rows: 1, cols: 1, control_all: false},{backgroundColor:"white"});
+viewer_17019878526664732 = viewergrid_17019878526664732[0][0];
+viewergrid_17019878526664732[0][0].zoomTo();	viewergrid_17019878526664732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526664732[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_17019878526664732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526664732[0][0].setStyle({"model": -1, "serial": 1},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526664732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526664732[0][0].setStyle({"model": -1, "serial": 2},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526664732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526664732[0][0].setStyle({"model": -1, "serial": 3},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526664732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526664732[0][0].setStyle({"model": -1, "serial": 4},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526664732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526664732[0][0].setStyle({"model": -1, "serial": 5},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526664732[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       7.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       7.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       7.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526664732[0][0].setStyle({"model": -1, "serial": 6},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526664732[0][0].addUnitCell({"model": -1},{"box": {"color": "black"}, "alabel": "", "blabel": "", "clabel": ""});
+	viewergrid_17019878526664732[0][0].zoomTo();
+viewergrid_17019878526664732[0][0].render();
+});
+</script></div></div>
+</div>
+</section>
+<section id="multiple-views">
+<h3>Multiple Views<a class="headerlink" href="#multiple-views" title="Permalink to this heading"></a></h3>
+<p>We can take advantage of deepcopying to construct multiple views of the same system. For example, we might want to have two separate views of the same set of atoms. In one view, we split the set into two molecules, and the other we have just one big fragment. This might be convenient if, for example, we want to be able to rotate the entire system as a group.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Reminder of standard shallow copy</span>
+<span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">}</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">}</span>
+<span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span>
+<span class="n">a</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;x&#39;: &#39;1&#39;}, {&#39;x&#39;: &#39;2&#39;}]
+[{&#39;x&#39;: 3}, {&#39;x&#39;: &#39;2&#39;}]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Deep copy</span>
+<span class="n">sep</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">sys</span><span class="p">)</span>
+<span class="n">joint</span> <span class="o">=</span> <span class="n">System</span><span class="p">()</span>
+<span class="n">joint</span><span class="p">[</span><span class="s2">&quot;COM:0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sep</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">joint</span><span class="p">[</span><span class="s2">&quot;COM:0&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;degrees&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="3dmolviewer_17019878526921384"  style="position: relative; width: 400px; height: 300px;">
+        <p id="3dmolwarning_17019878526921384" style="background-color:#ffcccc;color:black">You appear to be running in JupyterLab (or JavaScript failed to load for some other reason).  You need to install the 3dmol extension: <br>
+        <tt>jupyter labextension install jupyterlab_3dmol</tt></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js');
+}
+
+var viewer_17019878526921384 = null;
+var warn = document.getElementById("3dmolwarning_17019878526921384");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+var viewergrid_17019878526921384 = null;
+viewergrid_17019878526921384 = $3Dmol.createViewerGrid(document.getElementById("3dmolviewer_17019878526921384"),{rows: 1, cols: 1, control_all: false},{backgroundColor:"white"});
+viewer_17019878526921384 = viewergrid_17019878526921384[0][0];
+viewergrid_17019878526921384[0][0].zoomTo();	viewergrid_17019878526921384[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526921384[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_17019878526921384[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526921384[0][0].setStyle({"model": -1, "serial": 1},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_17019878526921384[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526921384[0][0].setStyle({"model": -1, "serial": 2},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_17019878526921384[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526921384[0][0].setStyle({"model": -1, "serial": 3},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_17019878526921384[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526921384[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_17019878526921384[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526921384[0][0].setStyle({"model": -1, "serial": 4},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526921384[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526921384[0][0].setStyle({"model": -1, "serial": 5},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526921384[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    WAT A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526921384[0][0].setStyle({"model": -1, "serial": 6},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526921384[0][0].addUnitCell({"model": -1},{"box": {"color": "black"}, "alabel": "", "blabel": "", "clabel": ""});
+	viewergrid_17019878526921384[0][0].zoomTo();
+viewergrid_17019878526921384[0][0].render();
+});
+</script></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span>  <span class="o">=</span> <span class="n">joint</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="3dmolviewer_17019878526993964"  style="position: relative; width: 400px; height: 300px;">
+        <p id="3dmolwarning_17019878526993964" style="background-color:#ffcccc;color:black">You appear to be running in JupyterLab (or JavaScript failed to load for some other reason).  You need to install the 3dmol extension: <br>
+        <tt>jupyter labextension install jupyterlab_3dmol</tt></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js');
+}
+
+var viewer_17019878526993964 = null;
+var warn = document.getElementById("3dmolwarning_17019878526993964");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+var viewergrid_17019878526993964 = null;
+viewergrid_17019878526993964 = $3Dmol.createViewerGrid(document.getElementById("3dmolviewer_17019878526993964"),{rows: 1, cols: 1, control_all: false},{backgroundColor:"white"});
+viewer_17019878526993964 = viewergrid_17019878526993964[0][0];
+viewergrid_17019878526993964[0][0].zoomTo();	viewergrid_17019878526993964[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526993964[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_17019878526993964[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526993964[0][0].setStyle({"model": -1, "serial": 1},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526993964[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526993964[0][0].setStyle({"model": -1, "serial": 2},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526993964[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526993964[0][0].setStyle({"model": -1, "serial": 3},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526993964[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526993964[0][0].setStyle({"model": -1, "serial": 4},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526993964[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526993964[0][0].setStyle({"model": -1, "serial": 5},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526993964[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 O    COM A   0       5.360   1.323   3.969  1.00  0.00       B   O  \nHETATM    2 H    COM A   0       4.773   2.080   3.969  1.00  0.00       B   H  \nHETATM    3 H    COM A   0       4.773   0.566   3.969  1.00  0.00       B   H  \nHETATM    4 O    COM A   0       4.969   0.932  -1.323  1.00  0.00       B   O  \nHETATM    5 H    COM A   0       5.726   1.518  -1.323  1.00  0.00       B   H  \nHETATM    6 H    COM A   0       4.212   1.518  -1.323  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878526993964[0][0].setStyle({"model": -1, "serial": 6},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878526993964[0][0].addUnitCell({"model": -1},{"box": {"color": "black"}, "alabel": "", "blabel": "", "clabel": ""});
+	viewergrid_17019878526993964[0][0].zoomTo();
+viewergrid_17019878526993964[0][0].render();
+});
+</script></div></div>
+</div>
+</section>
+<section id="extended-systems">
+<h3>Extended Systems<a class="headerlink" href="#extended-systems" title="Permalink to this heading"></a></h3>
+<p>For building and manipulating extended systems, the extra ingredient required is a <code class="docutils literal notranslate"><span class="pre">UnitCell</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">BigDFT.UnitCells</span> <span class="kn">import</span> <span class="n">UnitCell</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="n">UnitCell</span><span class="p">([</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;angstroem&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="3dmolviewer_1701987852711822"  style="position: relative; width: 400px; height: 300px;">
+        <p id="3dmolwarning_1701987852711822" style="background-color:#ffcccc;color:black">You appear to be running in JupyterLab (or JavaScript failed to load for some other reason).  You need to install the 3dmol extension: <br>
+        <tt>jupyter labextension install jupyterlab_3dmol</tt></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js');
+}
+
+var viewer_1701987852711822 = null;
+var warn = document.getElementById("3dmolwarning_1701987852711822");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+var viewergrid_1701987852711822 = null;
+viewergrid_1701987852711822 = $3Dmol.createViewerGrid(document.getElementById("3dmolviewer_1701987852711822"),{rows: 1, cols: 1, control_all: false},{backgroundColor:"white"});
+viewer_1701987852711822 = viewergrid_1701987852711822[0][0];
+viewergrid_1701987852711822[0][0].zoomTo();	viewergrid_1701987852711822[0][0].addModelsAsFrames("MODEL 0\nCRYST1    7.000    7.000    7.000     90     90     90                          \nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       0.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       0.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       0.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987852711822[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_1701987852711822[0][0].addModelsAsFrames("MODEL 0\nCRYST1    7.000    7.000    7.000     90     90     90                          \nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       0.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       0.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       0.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987852711822[0][0].setStyle({"model": -1, "serial": 1},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_1701987852711822[0][0].addModelsAsFrames("MODEL 0\nCRYST1    7.000    7.000    7.000     90     90     90                          \nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       0.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       0.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       0.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987852711822[0][0].setStyle({"model": -1, "serial": 2},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_1701987852711822[0][0].addModelsAsFrames("MODEL 0\nCRYST1    7.000    7.000    7.000     90     90     90                          \nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       0.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       0.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       0.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987852711822[0][0].setStyle({"model": -1, "serial": 3},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_1701987852711822[0][0].addModelsAsFrames("MODEL 0\nCRYST1    7.000    7.000    7.000     90     90     90                          \nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       0.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       0.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       0.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987852711822[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_1701987852711822[0][0].addModelsAsFrames("MODEL 0\nCRYST1    7.000    7.000    7.000     90     90     90                          \nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       0.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       0.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       0.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987852711822[0][0].setStyle({"model": -1, "serial": 4},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_1701987852711822[0][0].addModelsAsFrames("MODEL 0\nCRYST1    7.000    7.000    7.000     90     90     90                          \nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       0.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       0.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       0.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987852711822[0][0].setStyle({"model": -1, "serial": 5},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_1701987852711822[0][0].addModelsAsFrames("MODEL 0\nCRYST1    7.000    7.000    7.000     90     90     90                          \nHETATM    1 O    WAT A   0       2.323   1.323   1.714  1.00  0.00       B   O  \nHETATM    2 H    WAT A   0       2.323   2.080   1.127  1.00  0.00       B   H  \nHETATM    3 H    WAT A   0       2.323   0.566   1.127  1.00  0.00       B   H  \nHETATM    4 O    WAT A   1       0.615   0.932   1.323  1.00  0.00       B   O  \nHETATM    5 H    WAT A   1       0.615   1.518   2.080  1.00  0.00       B   H  \nHETATM    6 H    WAT A   1       0.615   1.518   0.566  1.00  0.00       B   H  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987852711822[0][0].setStyle({"model": -1, "serial": 6},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_1701987852711822[0][0].addUnitCell({"model": -1},{"box": {"color": "black"}, "alabel": "", "blabel": "", "clabel": ""});
+	viewergrid_1701987852711822[0][0].zoomTo();
+viewergrid_1701987852711822[0][0].render();
+});
+</script></div></div>
+</div>
+<p>We see that the minimum image convention has wrapped the red fragment around so that it is now on the left side. We can inspect this position values closer from the <code class="docutils literal notranslate"><span class="pre">Atom</span></code> class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">fragid</span><span class="p">,</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fragid</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">frag</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">at</span><span class="o">.</span><span class="n">get_position</span><span class="p">(</span><span class="s2">&quot;angstroem&quot;</span><span class="p">),</span> <span class="n">at</span><span class="o">.</span><span class="n">get_position</span><span class="p">(</span><span class="s2">&quot;angstroem&quot;</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">cell</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WAT:0
+[2.3229430273, 1.3229430273, 1.7139430273] [2.3229430273, 1.3229430273, 1.7139430273]
+[2.3229430273, 2.0801430273, 1.1274430273] [2.3229430273, 2.0801430273, 1.1274430273]
+[2.3229430273, 0.5657430273000001, 1.1274430273] [2.3229430273, 0.5657430273000001, 1.1274430273]
+WAT:1
+[7.6147151365, 0.9319430273000001, 1.3229430272999996] [0.6147151365000005, 0.9319430273000001, 1.3229430272999996]
+[7.6147151365, 1.5184430273000002, 2.0801430272999997] [0.6147151365000005, 1.5184430273000002, 2.0801430272999997]
+[7.6147151365, 1.5184430273000002, 0.5657430272999997] [0.6147151365000005, 1.5184430273000002, 0.5657430272999997]
+</pre></div>
+</div>
+</div>
+</div>
+<p>We also can get accessed to fractional units this way.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">fragid</span><span class="p">,</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fragid</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">frag</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">at</span><span class="o">.</span><span class="n">get_position</span><span class="p">(</span><span class="s2">&quot;reduced&quot;</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">cell</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WAT:0
+[0.331849, 0.188992, 0.244849]
+[0.331849, 0.297163, 0.161063]
+[0.331849, 0.08082, 0.161063]
+WAT:1
+[0.087816, 0.133135, 0.188992]
+[0.087816, 0.21692, 0.297163]
+[0.087816, 0.21692, 0.08082]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">sys.get_posinp()</span></code> method provides the information written in <code class="docutils literal notranslate"><span class="pre">YAML</span></code> markup format:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sys</span><span class="o">.</span><span class="n">get_posinp</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;positions&#39;: [{&#39;frag&#39;: [&#39;WAT&#39;, &#39;0&#39;],
+   &#39;O&#39;: [2.3229430273, 1.3229430273, 1.7139430273]},
+  {&#39;frag&#39;: [&#39;WAT&#39;, &#39;0&#39;], &#39;H&#39;: [2.3229430273, 2.0801430273, 1.1274430273]},
+  {&#39;frag&#39;: [&#39;WAT&#39;, &#39;0&#39;],
+   &#39;H&#39;: [2.3229430273, 0.5657430273000001, 1.1274430273]},
+  {&#39;frag&#39;: [&#39;WAT&#39;, &#39;1&#39;],
+   &#39;O&#39;: [0.6147151365000005, 0.9319430273000001, 1.3229430272999996]},
+  {&#39;frag&#39;: [&#39;WAT&#39;, &#39;1&#39;],
+   &#39;H&#39;: [0.6147151365000005, 1.5184430273000002, 2.0801430272999997]},
+  {&#39;frag&#39;: [&#39;WAT&#39;, &#39;1&#39;],
+   &#39;H&#39;: [0.6147151365000005, 1.5184430273000002, 0.5657430272999997]}],
+ &#39;units&#39;: &#39;angstroem&#39;,
+ &#39;cell&#39;: [7.0, 7.0, 7.0]}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calculation-examples">
+<h3>Calculation examples<a class="headerlink" href="#calculation-examples" title="Permalink to this heading"></a></h3>
+<p>1 - Simple finite system</p>
+<p>2 - Periodic system</p>
+<p>We now start to perform some basic calculations with the code.
+Such calculation can be executed:</p>
+<p>A. On the local workstation if you have the bigdft code installed.</p>
+<p>B. On google colab with the Installation method “full-suite” (see the 0.Installation.ipynb) notebook of this project.</p>
+<p>C. We can use the <code class="docutils literal notranslate"><span class="pre">dry-run</span></code> approach where we do not actually run the calculation but we employ previously existing logfiles of the same systems.</p>
+<p>We here employ the solution C. In order to do that we have to compy the data from the bigdft-school database repo.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget<span class="w"> </span>https://raw.githubusercontent.com/BigDFT-group/bigdft-school/main/packaging/install.py<span class="w"> </span><span class="m">2</span>&gt;<span class="w"> </span>/dev/null
+<span class="kn">import</span> <span class="nn">install</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">install</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s1">&#39;data/Enccs_basics.tar.xz&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Executing: wget https://gitlab.com/luigigenovese/bigdft-school/-/raw/main/data/Enccs_basics.tar.xz -O Enccs_basics.tar.xz
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2023-12-07 22:24:12--  https://gitlab.com/luigigenovese/bigdft-school/-/raw/main/data/Enccs_basics.tar.xz
+Resolving gitlab.com (gitlab.com)... 172.65.251.78, 2606:4700:90:0:f22e:fbec:5bed:a9b9
+Connecting to gitlab.com (gitlab.com)|172.65.251.78|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 22228 (22K) [application/octet-stream]
+Saving to: ‘Enccs_basics.tar.xz’
+
+     0K .......... .......... .                               100%  104M=0s
+
+2023-12-07 22:24:13 (104 MB/s) - ‘Enccs_basics.tar.xz’ saved [22228/22228]
+
+
+Executing: mkdir -p /home/runner/work/efficient-materials-modelling-on-hpc/efficient-materials-modelling-on-hpc/content/code/bigdft
+
+Executing: tar xJf Enccs_basics.tar.xz -C .
+</pre></div>
+</div>
+</div>
+</div>
+<p>1 - Let us create a simple system using the tools described so far and run a calculation with a wavelet grid spacing of $0.4$ bohr (good for the large majority of the systems) and the PBE functional. A logfile is generated from which we can access the computed properties. This logfile has built in properties and can be accessed like a dictionary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create Three Atoms</span>
+<span class="n">at1</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">({</span><span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;bohr&quot;</span><span class="p">})</span>
+<span class="n">at2</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">({</span><span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;bohr&quot;</span><span class="p">})</span>
+<span class="n">at3</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">({</span><span class="s2">&quot;He&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;bohr&quot;</span><span class="p">})</span>
+<span class="c1"># Construct a System from Two Fragments (H2, He)</span>
+<span class="n">sys</span> <span class="o">=</span> <span class="n">System</span><span class="p">()</span>
+<span class="n">sys</span><span class="p">[</span><span class="s2">&quot;H2:1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">([</span><span class="n">at1</span><span class="p">,</span> <span class="n">at2</span><span class="p">])</span>
+<span class="n">sys</span><span class="p">[</span><span class="s2">&quot;He:2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Fragment</span><span class="p">([</span><span class="n">at3</span><span class="p">])</span>
+
+<span class="c1"># Iterate Over The System to inspect the atoms positions</span>
+<span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">at</span><span class="o">.</span><span class="n">sym</span><span class="p">,</span> <span class="n">at</span><span class="o">.</span><span class="n">get_position</span><span class="p">())</span>
+<span class="c1"># or alternatively, two-level iteration (fragment first)</span>
+<span class="k">for</span> <span class="n">fragid</span><span class="p">,</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fragid</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">frag</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">at</span><span class="o">.</span><span class="n">sym</span><span class="p">,</span> <span class="n">at</span><span class="o">.</span><span class="n">get_position</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>H [0.0, 0.0, 0.0]
+H [0.0, 0.0, 1.4]
+He [10.0, 0.0, 0.0]
+H2:1
+  H [0.0, 0.0, 0.0]
+  H [0.0, 0.0, 1.4]
+He:2
+  He [10.0, 0.0, 0.0]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># this is what we have created</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="3dmolviewer_17019878531706612"  style="position: relative; width: 400px; height: 300px;">
+        <p id="3dmolwarning_17019878531706612" style="background-color:#ffcccc;color:black">You appear to be running in JupyterLab (or JavaScript failed to load for some other reason).  You need to install the 3dmol extension: <br>
+        <tt>jupyter labextension install jupyterlab_3dmol</tt></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js');
+}
+
+var viewer_17019878531706612 = null;
+var warn = document.getElementById("3dmolwarning_17019878531706612");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+var viewergrid_17019878531706612 = null;
+viewergrid_17019878531706612 = $3Dmol.createViewerGrid(document.getElementById("3dmolviewer_17019878531706612"),{rows: 1, cols: 1, control_all: false},{backgroundColor:"white"});
+viewer_17019878531706612 = viewergrid_17019878531706612[0][0];
+viewergrid_17019878531706612[0][0].zoomTo();	viewergrid_17019878531706612[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 H    H2  A   1       0.000   0.000   0.000  1.00  0.00       B   H  \nHETATM    2 H    H2  A   1       0.000   0.000   0.741  1.00  0.00       B   H  \nHETATM    3 He   He  A   2       5.292   0.000   0.000  1.00  0.00       B  He  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878531706612[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_17019878531706612[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 H    H2  A   1       0.000   0.000   0.000  1.00  0.00       B   H  \nHETATM    2 H    H2  A   1       0.000   0.000   0.741  1.00  0.00       B   H  \nHETATM    3 He   He  A   2       5.292   0.000   0.000  1.00  0.00       B  He  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878531706612[0][0].setStyle({"model": -1, "serial": 1},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878531706612[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 H    H2  A   1       0.000   0.000   0.000  1.00  0.00       B   H  \nHETATM    2 H    H2  A   1       0.000   0.000   0.741  1.00  0.00       B   H  \nHETATM    3 He   He  A   2       5.292   0.000   0.000  1.00  0.00       B  He  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878531706612[0][0].setStyle({"model": -1, "serial": 2},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_17019878531706612[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 H    H2  A   1       0.000   0.000   0.000  1.00  0.00       B   H  \nHETATM    2 H    H2  A   1       0.000   0.000   0.741  1.00  0.00       B   H  \nHETATM    3 He   He  A   2       5.292   0.000   0.000  1.00  0.00       B  He  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878531706612[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_17019878531706612[0][0].addModelsAsFrames("MODEL 0\nHETATM    1 H    H2  A   1       0.000   0.000   0.000  1.00  0.00       B   H  \nHETATM    2 H    H2  A   1       0.000   0.000   0.741  1.00  0.00       B   H  \nHETATM    3 He   He  A   2       5.292   0.000   0.000  1.00  0.00       B  He  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_17019878531706612[0][0].setStyle({"model": -1, "serial": 3},{"sphere": {"scale": 0.2, "color": "#FF0000"}});
+	viewergrid_17019878531706612[0][0].addUnitCell({"model": -1},{"box": {"color": "black"}, "alabel": "", "blabel": "", "clabel": ""});
+	viewergrid_17019878531706612[0][0].zoomTo();
+viewergrid_17019878531706612[0][0].render();
+});
+</script></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;BigDFT.Visualization.InlineVisualizer at 0x7fd6a0f72e50&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">BigDFT.Inputfiles</span> <span class="kn">import</span> <span class="n">Inputfile</span>
+<span class="n">inp</span> <span class="o">=</span> <span class="n">Inputfile</span><span class="p">()</span>
+<span class="n">inp</span><span class="o">.</span><span class="n">set_hgrid</span><span class="p">(</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">inp</span><span class="o">.</span><span class="n">set_xc</span><span class="p">(</span><span class="s2">&quot;PBE&quot;</span><span class="p">)</span>
+<span class="c1"># we remove the calculation of the forces</span>
+<span class="n">inp</span><span class="p">[</span><span class="s2">&quot;perf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;calculate_forces&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">BigDFT.Calculators</span> <span class="kn">import</span> <span class="n">SystemCalculator</span>
+<span class="n">calc</span> <span class="o">=</span> <span class="n">SystemCalculator</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">log</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sys</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;quick&quot;</span><span class="p">,</span> <span class="n">run_dir</span><span class="o">=</span><span class="s2">&quot;scratch&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#some basic info</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">evals</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">[</span><span class="s2">&quot;Memory Consumption Report&quot;</span><span class="p">]</span>
+             <span class="p">[</span><span class="s2">&quot;Memory occupation&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-4.0546151576846
+[BandArray([[-0.57600357, -0.38118857]])]
+{&#39;Peak Value (MB)&#39;: 230.69, &#39;for the array&#39;: &#39;f_i&#39;, &#39;in the routine&#39;: &#39;vxcpostprocessing&#39;, &#39;Memory Peak of process&#39;: &#39;unknown&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<p>We have “executed” (the calculation result is provided with the school material here) a very simple calculation with two Kohn-Sham orbitals. The description of the possible input parameters and how to trigger larger calculations (even on remote computers) will be provided in the forthcoming tutorials.</p>
+<p>2 - We setup a BCC unit cell of iron and perform the calculation using a 2x2x2 k-point grid with a Monkhorst-Pack grid.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">BigDFT.UnitCells</span> <span class="kn">import</span> <span class="n">UnitCell</span>
+<span class="c1"># one single periodic atom</span>
+<span class="n">pat</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">({</span><span class="s2">&quot;Fe&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;angstroem&quot;</span><span class="p">})</span>
+<span class="n">psys</span> <span class="o">=</span> <span class="n">System</span><span class="p">({</span><span class="s2">&quot;CEL:0&quot;</span><span class="p">:</span> <span class="n">Fragment</span><span class="p">([</span><span class="n">pat</span><span class="p">])})</span>
+<span class="n">psys</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="n">UnitCell</span><span class="p">([</span><span class="mf">2.867</span><span class="p">,</span> <span class="mf">2.867</span><span class="p">,</span> <span class="mf">2.867</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;angstroem&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psys</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="3dmolviewer_1701987853222728"  style="position: relative; width: 400px; height: 300px;">
+        <p id="3dmolwarning_1701987853222728" style="background-color:#ffcccc;color:black">You appear to be running in JupyterLab (or JavaScript failed to load for some other reason).  You need to install the 3dmol extension: <br>
+        <tt>jupyter labextension install jupyterlab_3dmol</tt></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js');
+}
+
+var viewer_1701987853222728 = null;
+var warn = document.getElementById("3dmolwarning_1701987853222728");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+var viewergrid_1701987853222728 = null;
+viewergrid_1701987853222728 = $3Dmol.createViewerGrid(document.getElementById("3dmolviewer_1701987853222728"),{rows: 1, cols: 1, control_all: false},{backgroundColor:"white"});
+viewer_1701987853222728 = viewergrid_1701987853222728[0][0];
+viewergrid_1701987853222728[0][0].zoomTo();	viewergrid_1701987853222728[0][0].addModelsAsFrames("MODEL 0\nCRYST1    2.867    2.867    2.867     90     90     90                          \nHETATM    1 Fe   CEL A   0       0.000   0.000   0.000  1.00  0.00       B  Fe  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987853222728[0][0].setStyle({"model": -1},{"line": {"color": "black"}});
+	viewergrid_1701987853222728[0][0].addModelsAsFrames("MODEL 0\nCRYST1    2.867    2.867    2.867     90     90     90                          \nHETATM    1 Fe   CEL A   0       0.000   0.000   0.000  1.00  0.00       B  Fe  \nENDMDL\n","pdb",{"keepH": "true"});
+	viewergrid_1701987853222728[0][0].setStyle({"model": -1, "serial": 1},{"sphere": {"scale": 0.2, "color": "#7F00FF"}});
+	viewergrid_1701987853222728[0][0].addUnitCell({"model": -1},{"box": {"color": "black"}, "alabel": "", "blabel": "", "clabel": ""});
+	viewergrid_1701987853222728[0][0].zoomTo();
+viewergrid_1701987853222728[0][0].render();
+});
+</script></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;BigDFT.Visualization.InlineVisualizer at 0x7fd6a0edaf10&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># very small k-point mesh, just for comparison</span>
+<span class="n">inp</span> <span class="o">=</span> <span class="n">Inputfile</span><span class="p">()</span>
+<span class="n">inp</span><span class="o">.</span><span class="n">set_hgrid</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">inp</span><span class="o">.</span><span class="n">set_xc</span><span class="p">(</span><span class="s2">&quot;LDA&quot;</span><span class="p">)</span> <span class="c1"># can be omitted as this is the default</span>
+<span class="n">inp</span><span class="p">[</span><span class="s2">&quot;kpt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;mpgrid&quot;</span><span class="p">,</span> <span class="s2">&quot;ngkpt&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">log</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sys</span><span class="o">=</span><span class="n">psys</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;psys&quot;</span><span class="p">,</span> <span class="n">run_dir</span><span class="o">=</span><span class="s2">&quot;scratch&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">get_dos</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/a25f10c84de383c91da0a7f0e716cedba8ad2dd82e90037084d3d1a204e7831b.png" src="../../../_images/a25f10c84de383c91da0a7f0e716cedba8ad2dd82e90037084d3d1a204e7831b.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../../lectures-4/" class="btn btn-neutral float-left" title="Lectures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../2.RemoteManagerInitialTutorial/" class="btn btn-neutral float-right" title="Remote manager tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

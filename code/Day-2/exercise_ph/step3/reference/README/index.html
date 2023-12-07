@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Copy dynamical matrix and out directory from step2 &mdash; Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/tabs.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/overrides.css" />
+
+  
+    <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../../_static/jquery.js"></script>
+        <script src="../../../../../../_static/underscore.js"></script>
+        <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../../_static/doctools.js"></script>
+        <script src="../../../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../../../_static/clipboard.min.js"></script>
+        <script src="../../../../../../_static/copybutton.js"></script>
+        <script src="../../../../../../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../../../../../../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script data-domain="enccs.github.io/efficient-materials-modelling-on-hpc" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../../../search/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../" class="icon icon-home">
+            Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT
+              <img src="../../../../../../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Day 1 - MAX-CoE and Quantum ESPRESSO</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../lectures-1/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../espresso-tutorial/">Tutorial: Quantum ESPRESSO on HPC systems</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 2 - Quantum ESPRESSO and AiiDA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../lectures-2/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../espresso-tutorial-phonons/">Tutorial: Phonons, EELS and magnons for HPC and GPUs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 3 - Yambo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../lectures-3/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../yambo-tutorial/">Yambo tutorial: Quasiparticles in the GW approximation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 4 - BigDFT</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../lectures-4/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../bigdft/1.SystemGenFirstCalcs/">Introductory PyBigDFT tour - Basic functionalities and first calculations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../bigdft/2.RemoteManagerInitialTutorial/">Remote manager tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../bigdft/3.CubicScaling-H2O/">Calculations with cubic-scaling BigDFT code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../bigdft/4.LinearScaling-H2O/">Calculations with linear-scaling BigDFT code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../">Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Copy dynamical matrix and out directory from step2</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/Efficient-materials-modelling-on-HPC/blob/main/content/code/Day-2/exercise_ph/step3/reference/README.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="copy-dynamical-matrix-and-out-directory-from-step2">
+<h1>Copy dynamical matrix and out directory from step2<a class="headerlink" href="#copy-dynamical-matrix-and-out-directory-from-step2" title="Permalink to this heading"></a></h1>
+</section>
+<section id="modify-the-submit-job-to-run-the-dynamt-x-calculation">
+<h1>Modify the submit job to run the dynamt.x calculation<a class="headerlink" href="#modify-the-submit-job-to-run-the-dynamt-x-calculation" title="Permalink to this heading"></a></h1>
+</section>
+<section id="id1">
+<h1><a class="headerlink" href="#id1" title="Permalink to this heading"></a></h1>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

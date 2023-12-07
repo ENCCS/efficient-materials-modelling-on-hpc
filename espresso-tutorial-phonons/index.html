@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial: Phonons, EELS and magnons for HPC and GPUs &mdash; Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/overrides.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script src="../_static/tabs.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script data-domain="enccs.github.io/efficient-materials-modelling-on-hpc" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Lectures" href="../lectures-3/" />
+    <link rel="prev" title="Lectures" href="../lectures-2/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT
+              <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Day 1 - MAX-CoE and Quantum ESPRESSO</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../lectures-1/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../espresso-tutorial/">Tutorial: Quantum ESPRESSO on HPC systems</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 2 - Quantum ESPRESSO and AiiDA</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lectures-2/">Lectures</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial: Phonons, EELS and magnons for HPC and GPUs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#phonon-modes-of-cnsni3-at-gamma">Phonon modes of CnSnI3 at Gamma</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pwscf-simulation-step-1">pwscf simulation, step 1</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#solution">Solution</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#phonon-calculation-step2">Phonon calculation, step2</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Solution</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#asr-rule-application-step-3">ASR rule application, step 3</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Solution</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-gpu-offload-with-pools-step-4">Multi GPU offload with pools, step 4</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Solution</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-gpu-offload-with-images-step-5">Multi gpu offload with images, step 5</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Solution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#eels-in-bulk-silicon">EELS in bulk Silicon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculation-of-the-magnon-spectra-of-bulk-iron">Calculation of the magnon spectra of bulk iron</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 3 - Yambo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../lectures-3/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../yambo-tutorial/">Yambo tutorial: Quasiparticles in the GW approximation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 4 - BigDFT</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../lectures-4/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code/bigdft/1.SystemGenFirstCalcs/">Introductory PyBigDFT tour - Basic functionalities and first calculations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code/bigdft/2.RemoteManagerInitialTutorial/">Remote manager tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code/bigdft/3.CubicScaling-H2O/">Calculations with cubic-scaling BigDFT code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code/bigdft/4.LinearScaling-H2O/">Calculations with linear-scaling BigDFT code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial: Phonons, EELS and magnons for HPC and GPUs</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/Efficient-materials-modelling-on-HPC/blob/main/content/espresso-tutorial-phonons.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-phonons-eels-and-magnons-for-hpc-and-gpus">
+<h1>Tutorial: Phonons, EELS and magnons for HPC and GPUs<a class="headerlink" href="#tutorial-phonons-eels-and-magnons-for-hpc-and-gpus" title="Permalink to this heading"></a></h1>
+<p><a class="reference download internal" download="" href="../_downloads/69468799b1bf953a9f0d9a4f30869712/Handson-Day2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">Slides</span></code></a></p>
+<section id="phonon-modes-of-cnsni3-at-gamma">
+<h2>Phonon modes of CnSnI3 at Gamma<a class="headerlink" href="#phonon-modes-of-cnsni3-at-gamma" title="Permalink to this heading"></a></h2>
+<section id="pwscf-simulation-step-1">
+<h3>pwscf simulation, step 1<a class="headerlink" href="#pwscf-simulation-step-1" title="Permalink to this heading"></a></h3>
+<p><strong>Files needed</strong>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">submit.slurm template</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">pw.CnSnI3.in</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --nodes 1</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH --time=00:10:00</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --partition=gpu</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --ntasks-per-node=4</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --ntasks-per-socket=2</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --gres=gpu:4</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --job-name=phstep1</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --error=err.job-%j</span>
+<span class="linenos">11</span><span class="c1">#SBATCH --output=out.job-%j</span>
+<span class="linenos">12</span><span class="c1">#SBATCH --hint=nomultithread</span>
+<span class="linenos">13</span><span class="c1">#SBATCH --reservation=maxgpu</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="nb">export</span><span class="w"> </span><span class="nv">WORK</span><span class="o">=</span>/ceph/hpc/data/d2021-135-users
+<span class="linenos">16</span>
+<span class="linenos">17</span>module<span class="w"> </span>purge
+<span class="linenos">18</span>module<span class="w"> </span>use<span class="w"> </span><span class="si">${</span><span class="nv">WORK</span><span class="si">}</span>/modules
+<span class="linenos">19</span>
+<span class="linenos">20</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/DEV-NVHPC-21.2
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="nb">export</span><span class="w"> </span><span class="nv">ESPRESSO_PSEUDO</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/../../../pseudo
+<span class="linenos">23</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="nv">mpiopt</span><span class="o">=</span><span class="s2">&quot;-mca pml ucx -mca btl ^uct,tcp,openib,vader  --map-by socket:PE=32 --rank-by core&quot;</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span>npw<span class="w"> </span>pw.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">1</span><span class="w"> </span>-nk<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>pw.CnSnI3.in<span class="w"> </span>&gt;<span class="w"> </span>pw.CnSnI3.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">CONTROL</span>
+	<span class="n">calculation</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;./out&#39;</span>
+<span class="o">/</span>
+<span class="o">&amp;</span><span class="n">SYSTEM</span>
+   <span class="n">ecutwfc</span>          <span class="o">=</span> <span class="mi">80</span>
+   <span class="n">ecutrho</span>          <span class="o">=</span> <span class="mi">320</span>
+   <span class="n">occupations</span>      <span class="o">=</span> <span class="s1">&#39;fixed&#39;</span>
+   <span class="n">ntyp</span>             <span class="o">=</span> <span class="mi">3</span>
+   <span class="n">nat</span>              <span class="o">=</span> <span class="mi">5</span>
+   <span class="n">ibrav</span>            <span class="o">=</span> <span class="mi">0</span>
+<span class="o">/</span>
+<span class="o">&amp;</span><span class="n">ELECTRONS</span>
+   <span class="n">conv_thr</span>         <span class="o">=</span> <span class="mf">1e-14</span>
+<span class="o">/</span>
+<span class="o">&amp;</span><span class="n">IONS</span>
+<span class="o">/</span>
+<span class="o">&amp;</span><span class="n">CELL</span>
+	<span class="n">press</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">press_conv_thr</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="o">/</span>
+
+<span class="n">ATOMIC_SPECIES</span>
+<span class="n">Cs</span> <span class="mf">132.90545196</span> <span class="n">Cs</span><span class="o">-</span><span class="n">nc</span><span class="o">-</span><span class="n">pbesol</span><span class="o">.</span><span class="n">upf</span>
+<span class="n">Sn</span> <span class="mf">118.71</span> <span class="n">Sn</span><span class="o">-</span><span class="n">nc</span><span class="o">-</span><span class="n">pbesol</span><span class="o">.</span><span class="n">upf</span>
+<span class="n">I</span> <span class="mf">126.90447</span> <span class="n">I</span><span class="o">-</span><span class="n">nc</span><span class="o">-</span><span class="n">pbesol</span><span class="o">.</span><span class="n">upf</span>
+
+<span class="n">K_POINTS</span> <span class="n">automatic</span>
+<span class="mi">8</span> <span class="mi">8</span> <span class="mi">8</span>  <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+
+<span class="n">CELL_PARAMETERS</span> <span class="n">angstrom</span>
+<span class="mf">6.1821206415142775</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>
+<span class="mf">0.0000000000000000</span>  <span class="mf">6.1821206415142775</span>  <span class="mf">0.0000000000000000</span>
+<span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">6.1821206415142775</span>
+
+<span class="n">ATOMIC_POSITIONS</span> <span class="n">angstrom</span>
+<span class="n">Cs</span>    <span class="mf">3.0910603207571383</span>  <span class="mf">3.0910603207571383</span>  <span class="mf">3.0910603207571383</span>
+<span class="n">Sn</span>    <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>
+<span class="n">I</span>    <span class="mf">3.0910603207571383</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>
+<span class="n">I</span>    <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">3.0910603207571383</span>
+<span class="n">I</span>    <span class="mf">0.0000000000000000</span>  <span class="mf">3.0910603207571383</span>  <span class="mf">0.0000000000000000</span>
+</pre></div>
+</div>
+</div></div>
+<p>Perform a vc-relax calculation for CnSnI3  using the <code class="docutils literal notranslate"><span class="pre">pw.x</span></code> program.</p>
+<ol class="arabic">
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">../inputs/pw.CnSnI3.in</span></code> in the current folder and modify the <code class="docutils literal notranslate"><span class="pre">&amp;CONTROL</span></code> namelist to do a vc-relax calculation</p>
+<p><code class="docutils literal notranslate"><span class="pre">calculation=&quot;&quot;</span></code></p>
+</li>
+<li><p>Open <code class="docutils literal notranslate"><span class="pre">submit.slurm</span></code> and modify npw to use R&amp;G on 4 MPIs:GPUs</p></li>
+<li><p>Submit the job file</p>
+<p><code class="docutils literal notranslate"><span class="pre">sbatch</span> <span class="pre">submit.slurm</span></code></p>
+<p>Check if convergence has been achieved.</p>
+</li>
+<li><p>Copy the output directory (<code class="docutils literal notranslate"><span class="pre">out/</span></code>)in the folder of step2.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cp</span> <span class="pre">-r</span> <span class="pre">./out</span> <span class="pre">../step2/</span></code></p>
+</li>
+</ol>
+<section id="solution">
+<h4>Solution<a class="headerlink" href="#solution" title="Permalink to this heading"></a></h4>
+<div class="admonition-solution solution important dropdown admonition" id="solution-0">
+<p class="admonition-title">Solution</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">submit.slurm</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">pw.CnSnI3.in</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --nodes 1</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH --time=00:10:00</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --partition=gpu</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --ntasks-per-node=4</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --ntasks-per-socket=2</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --gres=gpu:4</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --job-name=phstep1</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --error=err.job-%j</span>
+<span class="linenos">11</span><span class="c1">#SBATCH --output=out.job-%j</span>
+<span class="linenos">12</span><span class="c1">#SBATCH --hint=nomultithread</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="nb">export</span><span class="w"> </span><span class="nv">WORK</span><span class="o">=</span>/ceph/hpc/data/d2021-135-users
+<span class="linenos">15</span>
+<span class="linenos">16</span>module<span class="w"> </span>purge
+<span class="linenos">17</span>module<span class="w"> </span>use<span class="w"> </span><span class="si">${</span><span class="nv">WORK</span><span class="si">}</span>/modules
+<span class="linenos">18</span>
+<span class="linenos">19</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/DEV-NVHPC-21.2
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="nb">export</span><span class="w"> </span><span class="nv">ESPRESSO_PSEUDO</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/../../../pseudo
+<span class="linenos">22</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="nv">mpiopt</span><span class="o">=</span><span class="s2">&quot;-mca pml ucx -mca btl ^uct,tcp,openib,vader  --map-by socket:PE=32 --rank-by core &quot;</span>
+<span class="linenos">25</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">4</span><span class="w"> </span>pw.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">1</span><span class="w"> </span>-nk<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>pw.CnSnI3.in<span class="w"> </span>&gt;<span class="w"> </span>pw.CnSnI3.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">CONTROL</span>
+	<span class="n">calculation</span> <span class="o">=</span> <span class="s1">&#39;vc-relax&#39;</span>
+        <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;./out&#39;</span>
+<span class="o">/</span>
+<span class="o">&amp;</span><span class="n">SYSTEM</span>
+   <span class="n">ecutwfc</span>          <span class="o">=</span> <span class="mi">80</span>
+   <span class="n">ecutrho</span>          <span class="o">=</span> <span class="mi">320</span>
+   <span class="n">occupations</span>      <span class="o">=</span> <span class="s1">&#39;fixed&#39;</span>
+   <span class="n">ntyp</span>             <span class="o">=</span> <span class="mi">3</span>
+   <span class="n">nat</span>              <span class="o">=</span> <span class="mi">5</span>
+   <span class="n">ibrav</span>            <span class="o">=</span> <span class="mi">0</span>
+<span class="o">/</span>
+<span class="o">&amp;</span><span class="n">ELECTRONS</span>
+   <span class="n">conv_thr</span>         <span class="o">=</span> <span class="mf">1e-14</span>
+<span class="o">/</span>
+<span class="o">&amp;</span><span class="n">IONS</span>
+<span class="o">/</span>
+<span class="o">&amp;</span><span class="n">CELL</span>
+	<span class="n">press</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="n">press_conv_thr</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="o">/</span>
+
+<span class="n">ATOMIC_SPECIES</span>
+<span class="n">Cs</span> <span class="mf">132.90545196</span> <span class="n">Cs</span><span class="o">-</span><span class="n">nc</span><span class="o">-</span><span class="n">pbesol</span><span class="o">.</span><span class="n">upf</span>
+<span class="n">Sn</span> <span class="mf">118.71</span> <span class="n">Sn</span><span class="o">-</span><span class="n">nc</span><span class="o">-</span><span class="n">pbesol</span><span class="o">.</span><span class="n">upf</span>
+<span class="n">I</span> <span class="mf">126.90447</span> <span class="n">I</span><span class="o">-</span><span class="n">nc</span><span class="o">-</span><span class="n">pbesol</span><span class="o">.</span><span class="n">upf</span>
+
+<span class="n">K_POINTS</span> <span class="n">automatic</span>
+<span class="mi">8</span> <span class="mi">8</span> <span class="mi">8</span>  <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+
+<span class="n">CELL_PARAMETERS</span> <span class="n">angstrom</span>
+<span class="mf">6.1821206415142775</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>
+<span class="mf">0.0000000000000000</span>  <span class="mf">6.1821206415142775</span>  <span class="mf">0.0000000000000000</span>
+<span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">6.1821206415142775</span>
+
+<span class="n">ATOMIC_POSITIONS</span> <span class="n">angstrom</span>
+<span class="n">Cs</span>    <span class="mf">3.0910603207571383</span>  <span class="mf">3.0910603207571383</span>  <span class="mf">3.0910603207571383</span>
+<span class="n">Sn</span>    <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>
+<span class="n">I</span>    <span class="mf">3.0910603207571383</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>
+<span class="n">I</span>    <span class="mf">0.0000000000000000</span>  <span class="mf">0.0000000000000000</span>  <span class="mf">3.0910603207571383</span>
+<span class="n">I</span>    <span class="mf">0.0000000000000000</span>  <span class="mf">3.0910603207571383</span>  <span class="mf">0.0000000000000000</span>
+</pre></div>
+</div>
+</div></div>
+</div>
+</section>
+</section>
+<section id="phonon-calculation-step2">
+<h3>Phonon calculation, step2<a class="headerlink" href="#phonon-calculation-step2" title="Permalink to this heading"></a></h3>
+<p><strong>Files needed</strong>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">submit.slurm</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">ph.CnSnI3.in</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --nodes 1</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH --time=00:20:00</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --partition=gpu</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --ntasks-per-node=1</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --ntasks-per-socket=1</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --gres=gpu:1</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --job-name=phstep2</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --error=err.job-%j</span>
+<span class="linenos">11</span><span class="c1">#SBATCH --output=out.job-%j</span>
+<span class="linenos">12</span><span class="c1">#SBATCH --hint=nomultithread</span>
+<span class="linenos">13</span><span class="c1">#SBATCH --reservation=maxgpu</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="nb">export</span><span class="w"> </span><span class="nv">WORK</span><span class="o">=</span>/ceph/hpc/data/d2021-135-users
+<span class="linenos">16</span>
+<span class="linenos">17</span>module<span class="w"> </span>purge
+<span class="linenos">18</span>module<span class="w"> </span>use<span class="w"> </span><span class="si">${</span><span class="nv">WORK</span><span class="si">}</span>/modules
+<span class="linenos">19</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/DEV-NVHPC-21.2
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="nb">export</span><span class="w"> </span><span class="nv">ESPRESSO_PSEUDO</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/../../../pseudo
+<span class="linenos">22</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="nv">mpiopt</span><span class="o">=</span><span class="s2">&quot;-mca pml ucx -mca btl ^uct,tcp,openib,vader --map-by socket:PE=32 --rank-by core &quot;</span>
+<span class="linenos">25</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">1</span><span class="w"> </span>ph.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">1</span><span class="w"> </span>-nk<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>ph.CnSnI3.in<span class="w"> </span>&gt;<span class="w"> </span>ph.CnSnI3.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">inputph</span>
+	<span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+	<span class="n">fildyn</span> <span class="o">=</span> <span class="s1">&#39;harmdyn_support&#39;</span>
+	<span class="n">amass</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> 
+        <span class="n">amass</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> 
+        <span class="n">amass</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> 
+	<span class="n">tr2_ph</span> <span class="o">=</span> <span class="mi">1</span><span class="n">d</span><span class="o">-</span><span class="mi">16</span>
+        <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;./out&#39;</span>
+<span class="o">/</span>
+</pre></div>
+</div>
+</div></div>
+<p>Perform a phonon calculation at Gamma for CnSnI3 using the <code class="docutils literal notranslate"><span class="pre">ph.x</span></code> program.</p>
+<ol class="arabic">
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">../inputs/ph.CnSnI3.in</span></code> in the current folder and modify the <code class="docutils literal notranslate"><span class="pre">&amp;inputph</span></code> namelist ; add coordinates of the Gamma point</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">inputph</span>
+	<span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+	<span class="n">amass</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span>
+	<span class="n">amass</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">=</span>
+	<span class="n">amass</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">=</span>
+<span class="o">/</span>
+<span class="n">X</span>	<span class="n">Y</span>	<span class="n">Z</span>
+</pre></div>
+</div>
+</li>
+<li><p>Submit the jobfile to run <code class="docutils literal notranslate"><span class="pre">ph.x</span></code> on 1 MPI : GPU</p></li>
+<li><p>Check the number of k points</p>
+<p><code class="docutils literal notranslate"><span class="pre">awk</span> <span class="pre">'/number</span> <span class="pre">of</span> <span class="pre">k/'</span> <span class="pre">ph.CnSnI3.out</span></code></p>
+</li>
+<li><p>Check the number of irreducible representations</p>
+<p><code class="docutils literal notranslate"><span class="pre">awk</span> <span class="pre">'/irreducible/'</span> <span class="pre">ph.CnSnI3.out</span></code></p>
+</li>
+<li><p>Check the dynamical matrix in dynmat.out</p>
+<p><code class="docutils literal notranslate"><span class="pre">tail</span> <span class="pre">-n</span> <span class="pre">97</span> <span class="pre">harmdyn_support</span></code></p>
+</li>
+</ol>
+<section id="id1">
+<h4>Solution<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<div class="admonition-solution solution important dropdown admonition" id="solution-1">
+<p class="admonition-title">Solution</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">submit.slurm</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">ph.CnSnI3.in</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --nodes 1</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH --time=00:20:00</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --partition=gpu</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --ntasks-per-node=1</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --ntasks-per-socket=1</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --gres=gpu:1</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --job-name=phstep2</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --error=err.job-%j</span>
+<span class="linenos">11</span><span class="c1">#SBATCH --output=out.job-%j</span>
+<span class="linenos">12</span><span class="c1">#SBATCH --hint=nomultithread</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="nb">export</span><span class="w"> </span><span class="nv">WORK</span><span class="o">=</span>/ceph/hpc/data/d2021-135-users
+<span class="linenos">15</span>
+<span class="linenos">16</span>module<span class="w"> </span>purge
+<span class="linenos">17</span>module<span class="w"> </span>use<span class="w"> </span><span class="si">${</span><span class="nv">WORK</span><span class="si">}</span>/modules
+<span class="linenos">18</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/DEV-NVHPC-21.2
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="nb">export</span><span class="w"> </span><span class="nv">ESPRESSO_PSEUDO</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/../../../pseudo
+<span class="linenos">21</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="nv">mpiopt</span><span class="o">=</span><span class="s2">&quot;-mca pml ucx -mca btl ^uct,tcp,openib,vader --map-by socket:PE=32 --rank-by core &quot;</span>
+<span class="linenos">24</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">1</span><span class="w"> </span>ph.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">1</span><span class="w"> </span>-nk<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>ph.CnSnI3.in<span class="w"> </span>&gt;<span class="w"> </span>ph.CnSnI3.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">inputph</span>
+	<span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;pwscf&#39;</span>
+	<span class="n">fildyn</span> <span class="o">=</span> <span class="s1">&#39;harmdyn_support&#39;</span>
+	<span class="n">tr2_ph</span> <span class="o">=</span> <span class="mi">1</span><span class="n">d</span><span class="o">-</span><span class="mi">16</span>
+        <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;./out&#39;</span>
+<span class="o">/</span>
+<span class="mf">0.0</span>	<span class="mf">0.0</span>	<span class="mf">0.0</span>
+</pre></div>
+</div>
+</div></div>
+</div>
+</section>
+</section>
+<section id="asr-rule-application-step-3">
+<h3>ASR rule application, step 3<a class="headerlink" href="#asr-rule-application-step-3" title="Permalink to this heading"></a></h3>
+<p><strong>Files needed</strong>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">submit.slurm</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">dyn.CnSnI3.in</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --nodes 1</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH --time=00:10:00</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --partition=gpu</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --ntasks-per-node=1</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --ntasks-per-socket=1</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --gres=gpu:1</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --job-name=phstep3</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --error=err.job-%j</span>
+<span class="linenos">11</span><span class="c1">#SBATCH --output=out.job-%j</span>
+<span class="linenos">12</span><span class="c1">#SBATCH --hint=nomultithread</span>
+<span class="linenos">13</span><span class="c1">#SBATCH --reservation=maxgpu</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="nb">export</span><span class="w"> </span><span class="nv">WORK</span><span class="o">=</span>/ceph/hpc/data/d2021-135-users
+<span class="linenos">16</span>
+<span class="linenos">17</span>module<span class="w"> </span>purge
+<span class="linenos">18</span>module<span class="w"> </span>use<span class="w"> </span><span class="si">${</span><span class="nv">WORK</span><span class="si">}</span>/modules
+<span class="linenos">19</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/DEV-NVHPC-21.2
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="nb">export</span><span class="w"> </span><span class="nv">ESPRESSO_PSEUDO</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/../../../pseudo
+<span class="linenos">22</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="nv">mpiopt</span><span class="o">=</span><span class="s2">&quot;-mca pml ucx -mca btl ^uct,tcp,openib,vader --map-by socket:PE=32 --rank-by core &quot;</span>
+<span class="linenos">25</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">1</span><span class="w"> </span>dynmat.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">1</span><span class="w"> </span>-nk<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>dyn.CnSnI3.in<span class="w"> </span>&gt;<span class="w"> </span>dyn.CnSnI3.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">&amp;</span><span class="nb">input</span>
+  <span class="n">fildyn</span> <span class="o">=</span> <span class="s1">&#39;harmdyn_support&#39;</span><span class="p">,</span>
+  <span class="n">asr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+ <span class="o">/</span>
+</pre></div>
+</div>
+</div></div>
+<p>Apply the Acoustic Sum Rule (ASR) with <code class="docutils literal notranslate"><span class="pre">dynmat.x</span></code></p>
+<ol class="arabic">
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">../inputs/dyn.CnSnI3.in</span></code> and add the <code class="docutils literal notranslate"><span class="pre">‘crystal’</span></code> ASR rule</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nb">input</span>
+	<span class="n">asr</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">../step2/harmdyn_support</span></code> in the current folder</p></li>
+<li><p>Submit the job</p></li>
+<li><p>Check phonon frequencies with ASR rule applied in <code class="docutils literal notranslate"><span class="pre">dyn.CnSnI3.out</span></code></p></li>
+</ol>
+<section id="id2">
+<h4>Solution<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
+<div class="admonition-solution solution important dropdown admonition" id="solution-2">
+<p class="admonition-title">Solution</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">dyn.CnSnI3.in</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">dyn.CnSnI3.out</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">&amp;</span><span class="nb">input</span>
+  <span class="n">fildyn</span> <span class="o">=</span> <span class="s1">&#39;harmdyn_support&#39;</span><span class="p">,</span>
+  <span class="n">asr</span> <span class="o">=</span> <span class="s1">&#39;crystal&#39;</span>
+ <span class="o">/</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+     <span class="n">Program</span> <span class="n">DYNMAT</span> <span class="n">v</span><span class="mf">.7.1</span> <span class="n">starts</span> <span class="n">on</span>  <span class="mi">4</span><span class="n">Nov2022</span> <span class="n">at</span> <span class="mi">23</span><span class="p">:</span> <span class="mi">2</span><span class="p">:</span><span class="mi">22</span> 
+        <span class="n">Git</span> <span class="n">branch</span><span class="p">:</span> <span class="n">develop_bands</span>
+        <span class="n">Last</span> <span class="n">git</span> <span class="n">commit</span><span class="p">:</span> <span class="mi">816</span><span class="n">aee40db40e6b706df606a62b57acfcd26b4df</span>
+        <span class="n">Last</span> <span class="n">git</span> <span class="n">commit</span> <span class="n">date</span><span class="p">:</span> <span class="n">Fri</span> <span class="n">Oct</span> <span class="mi">21</span> <span class="mi">11</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">44</span> <span class="mi">2022</span> <span class="o">+</span><span class="mi">0200</span>
+        <span class="n">Last</span> <span class="n">git</span> <span class="n">commit</span> <span class="n">subject</span><span class="p">:</span> <span class="n">improvement</span> <span class="k">for</span> <span class="n">magnons</span>
+
+     <span class="n">This</span> <span class="n">program</span> <span class="ow">is</span> <span class="n">part</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">open</span><span class="o">-</span><span class="n">source</span> <span class="n">Quantum</span> <span class="n">ESPRESSO</span> <span class="n">suite</span>
+     <span class="k">for</span> <span class="n">quantum</span> <span class="n">simulation</span> <span class="n">of</span> <span class="n">materials</span><span class="p">;</span> <span class="n">please</span> <span class="n">cite</span>
+         <span class="s2">&quot;P. Giannozzi et al., J. Phys.:Condens. Matter 21 395502 (2009);</span>
+         <span class="s2">&quot;P. Giannozzi et al., J. Phys.:Condens. Matter 29 465901 (2017);</span>
+         <span class="s2">&quot;P. Giannozzi et al., J. Chem. Phys. 152 154105 (2020);</span>
+          <span class="n">URL</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">quantum</span><span class="o">-</span><span class="n">espresso</span><span class="o">.</span><span class="n">org</span><span class="s2">&quot;, </span>
+     <span class="ow">in</span> <span class="n">publications</span> <span class="ow">or</span> <span class="n">presentations</span> <span class="n">arising</span> <span class="kn">from</span> <span class="nn">this</span> <span class="n">work</span><span class="o">.</span> <span class="n">More</span> <span class="n">details</span> <span class="n">at</span>
+     <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">quantum</span><span class="o">-</span><span class="n">espresso</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">quote</span>
+
+     <span class="n">Parallel</span> <span class="n">version</span> <span class="p">(</span><span class="n">MPI</span> <span class="o">&amp;</span> <span class="n">OpenMP</span><span class="p">),</span> <span class="n">running</span> <span class="n">on</span>       <span class="mi">1</span> <span class="n">processor</span> <span class="n">cores</span>
+     <span class="n">Number</span> <span class="n">of</span> <span class="n">MPI</span> <span class="n">processes</span><span class="p">:</span>                 <span class="mi">1</span>
+     <span class="n">Threads</span><span class="o">/</span><span class="n">MPI</span> <span class="n">process</span><span class="p">:</span>                     <span class="mi">1</span>
+
+     <span class="n">MPI</span> <span class="n">processes</span> <span class="n">distributed</span> <span class="n">on</span>     <span class="mi">1</span> <span class="n">nodes</span>
+     <span class="mi">488507</span> <span class="n">MiB</span> <span class="n">available</span> <span class="n">memory</span> <span class="n">on</span> <span class="n">the</span> <span class="n">printing</span> <span class="n">compute</span> <span class="n">node</span> <span class="n">when</span> <span class="n">the</span> <span class="n">environment</span> <span class="n">starts</span>
+ 
+
+     <span class="n">Reading</span> <span class="n">Dynamical</span> <span class="n">Matrix</span> <span class="kn">from</span> <span class="nn">file</span> <span class="n">harmdyn_support</span>
+     <span class="o">...</span><span class="n">Force</span> <span class="n">constants</span> <span class="n">read</span>
+     <span class="o">...</span><span class="n">epsilon</span> <span class="ow">and</span> <span class="n">Z</span><span class="o">*</span> <span class="ow">not</span> <span class="n">read</span> <span class="p">(</span><span class="ow">not</span> <span class="n">found</span> <span class="n">on</span> <span class="n">file</span><span class="p">)</span>
+     <span class="n">Acoustic</span> <span class="n">Sum</span> <span class="n">Rule</span><span class="p">:</span> <span class="o">||</span> <span class="n">Z</span><span class="o">*</span><span class="p">(</span><span class="n">ASR</span><span class="p">)</span> <span class="o">-</span> <span class="n">Z</span><span class="o">*</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span><span class="o">||</span> <span class="o">=</span>    <span class="mf">0.000000E+00</span>
+     <span class="n">Acoustic</span> <span class="n">Sum</span> <span class="n">Rule</span><span class="p">:</span> <span class="o">||</span><span class="n">dyn</span><span class="p">(</span><span class="n">ASR</span><span class="p">)</span> <span class="o">-</span> <span class="n">dyn</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span><span class="o">||=</span>    <span class="mf">9.509352E-04</span>
+     <span class="n">A</span> <span class="n">direction</span> <span class="k">for</span> <span class="n">q</span> <span class="n">was</span> <span class="ow">not</span> <span class="n">specified</span><span class="p">:</span><span class="n">TO</span><span class="o">-</span><span class="n">LO</span> <span class="n">splitting</span> <span class="n">will</span> <span class="n">be</span> <span class="n">absent</span>
+
+     <span class="n">Polarizability</span> <span class="p">(</span><span class="n">A</span><span class="o">^</span><span class="mi">3</span> <span class="n">units</span><span class="p">)</span>
+     <span class="n">multiply</span> <span class="n">by</span> <span class="mf">1.000000</span> <span class="k">for</span> <span class="n">Clausius</span><span class="o">-</span><span class="n">Mossotti</span> <span class="n">correction</span>
+         <span class="mf">0.000000</span>    <span class="mf">0.000000</span>    <span class="mf">0.000000</span>
+         <span class="mf">0.000000</span>    <span class="mf">0.000000</span>    <span class="mf">0.000000</span>
+         <span class="mf">0.000000</span>    <span class="mf">0.000000</span>    <span class="mf">0.000000</span>
+
+     <span class="n">IR</span> <span class="n">activities</span> <span class="n">are</span> <span class="ow">in</span> <span class="p">(</span><span class="n">D</span><span class="o">/</span><span class="n">A</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span><span class="o">/</span><span class="n">amu</span> <span class="n">units</span>
+
+<span class="c1"># mode   [cm-1]    [THz]      IR</span>
+    <span class="mi">1</span>     <span class="o">-</span><span class="mf">0.00</span>   <span class="o">-</span><span class="mf">0.0000</span>    <span class="mf">0.0000</span>
+    <span class="mi">2</span>      <span class="mf">0.00</span>    <span class="mf">0.0000</span>    <span class="mf">0.0000</span>
+    <span class="mi">3</span>      <span class="mf">0.00</span>    <span class="mf">0.0000</span>    <span class="mf">0.0000</span>
+    <span class="mi">4</span>      <span class="mf">8.07</span>    <span class="mf">0.2419</span>    <span class="mf">0.0000</span>
+    <span class="mi">5</span>      <span class="mf">8.07</span>    <span class="mf">0.2419</span>    <span class="mf">0.0000</span>
+    <span class="mi">6</span>      <span class="mf">8.07</span>    <span class="mf">0.2419</span>    <span class="mf">0.0000</span>
+    <span class="mi">7</span>     <span class="mf">23.16</span>    <span class="mf">0.6943</span>    <span class="mf">0.0000</span>
+    <span class="mi">8</span>     <span class="mf">23.16</span>    <span class="mf">0.6943</span>    <span class="mf">0.0000</span>
+    <span class="mi">9</span>     <span class="mf">23.16</span>    <span class="mf">0.6943</span>    <span class="mf">0.0000</span>
+   <span class="mi">10</span>     <span class="mf">38.68</span>    <span class="mf">1.1597</span>    <span class="mf">0.0000</span>
+   <span class="mi">11</span>     <span class="mf">38.68</span>    <span class="mf">1.1597</span>    <span class="mf">0.0000</span>
+   <span class="mi">12</span>     <span class="mf">38.68</span>    <span class="mf">1.1597</span>    <span class="mf">0.0000</span>
+   <span class="mi">13</span>     <span class="mf">78.20</span>    <span class="mf">2.3443</span>    <span class="mf">0.0000</span>
+   <span class="mi">14</span>     <span class="mf">78.20</span>    <span class="mf">2.3443</span>    <span class="mf">0.0000</span>
+   <span class="mi">15</span>     <span class="mf">78.20</span>    <span class="mf">2.3443</span>    <span class="mf">0.0000</span>
+ 
+     <span class="n">DYNMAT</span>       <span class="p">:</span>      <span class="mf">0.00</span><span class="n">s</span> <span class="n">CPU</span>      <span class="mf">0.06</span><span class="n">s</span> <span class="n">WALL</span>
+
+ 
+   <span class="n">This</span> <span class="n">run</span> <span class="n">was</span> <span class="n">terminated</span> <span class="n">on</span><span class="p">:</span>  <span class="mi">23</span><span class="p">:</span> <span class="mi">2</span><span class="p">:</span><span class="mi">22</span>   <span class="mi">4</span><span class="n">Nov2022</span>            
+
+<span class="o">=------------------------------------------------------------------------------=</span>
+   <span class="n">JOB</span> <span class="n">DONE</span><span class="o">.</span>
+<span class="o">=------------------------------------------------------------------------------=</span>
+</pre></div>
+</div>
+</div></div>
+</div>
+</section>
+</section>
+<section id="multi-gpu-offload-with-pools-step-4">
+<h3>Multi GPU offload with pools, step 4<a class="headerlink" href="#multi-gpu-offload-with-pools-step-4" title="Permalink to this heading"></a></h3>
+<p><strong>Files needed</strong>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">submit.slurm</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --nodes 1</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH --time=00:20:00</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --partition=gpu</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --ntasks-per-node=2</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --ntasks-per-socket=1</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --gres=gpu:2</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --job-name=phstep4</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --error=err.job-%j</span>
+<span class="linenos">11</span><span class="c1">#SBATCH --output=out.job-%j</span>
+<span class="linenos">12</span><span class="c1">#SBATCH --hint=nomultithread</span>
+<span class="linenos">13</span><span class="c1">#SBATCH --reservation=maxgpu</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="nb">export</span><span class="w"> </span><span class="nv">WORK</span><span class="o">=</span>/ceph/hpc/data/d2021-135-users
+<span class="linenos">16</span>
+<span class="linenos">17</span>module<span class="w"> </span>purge
+<span class="linenos">18</span>module<span class="w"> </span>use<span class="w"> </span><span class="si">${</span><span class="nv">WORK</span><span class="si">}</span>/modules
+<span class="linenos">19</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/DEV-NVHPC-21.2
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="nb">export</span><span class="w"> </span><span class="nv">ESPRESSO_PSEUDO</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/../../../pseudo
+<span class="linenos">22</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="nv">mpiopt</span><span class="o">=</span><span class="s2">&quot;-mca pml ucx -mca btl ^uct,tcp,openib,vader --map-by socket:PE=32 --rank-by core&quot;</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">2</span><span class="w"> </span>ph.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">1</span><span class="w"> </span>-nk<span class="w"> </span>npools<span class="w"> </span>-i<span class="w"> </span>ph.CnSnI3.in<span class="w"> </span>&gt;<span class="w"> </span>ph.CnSnI3.out
+</pre></div>
+</div>
+</div></div>
+<p>Perform a phonon calculation at Gamma on 2 GPUs for CnSnI3 using the <code class="docutils literal notranslate"><span class="pre">ph.x</span></code> program.</p>
+<ol class="arabic">
+<li><p>Copy the input of step2 <code class="docutils literal notranslate"><span class="pre">../step2/ph.CnSnI3.in</span></code> in the current folder</p></li>
+<li><p>Copy the <code class="docutils literal notranslate"><span class="pre">../step1/out</span></code> directory in the current folder</p></li>
+<li><p>Modify <code class="docutils literal notranslate"><span class="pre">npools</span></code> in <code class="docutils literal notranslate"><span class="pre">submit.slurm</span></code> to distribute the calculation on 2 MPIs : GPUs with pool parallelization</p></li>
+<li><p>Submit the jobfile</p>
+<p><code class="docutils literal notranslate"><span class="pre">sbatch</span> <span class="pre">submit.slurm</span></code></p>
+</li>
+<li><p>Check wall time of parallel execution</p>
+<p><code class="docutils literal notranslate"><span class="pre">tail</span> <span class="pre">ph.CnSnI3.out</span></code></p>
+</li>
+</ol>
+<section id="id3">
+<h4>Solution<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
+<div class="admonition-solution solution important dropdown admonition" id="solution-3">
+<p class="admonition-title">Solution</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-7-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-7-7-0" name="7-0" role="tab" tabindex="0">submit.slurm</button><button aria-controls="panel-7-7-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-7-7-1" name="7-1" role="tab" tabindex="-1">ph.CnSnI3.in</button></div><div aria-labelledby="tab-7-7-0" class="sphinx-tabs-panel" id="panel-7-7-0" name="7-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --nodes 1</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH --time=00:20:00</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --partition=gpu</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --ntasks-per-node=2</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --ntasks-per-socket=1</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --gres=gpu:2</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --job-name=phstep4</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --error=err.job-%j</span>
+<span class="linenos">11</span><span class="c1">#SBATCH --output=out.job-%j</span>
+<span class="linenos">12</span><span class="c1">#SBATCH --hint=nomultithread</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="nb">export</span><span class="w"> </span><span class="nv">WORK</span><span class="o">=</span>/ceph/hpc/data/d2021-135-users
+<span class="linenos">15</span>
+<span class="linenos">16</span>module<span class="w"> </span>purge
+<span class="linenos">17</span>module<span class="w"> </span>use<span class="w"> </span><span class="si">${</span><span class="nv">WORK</span><span class="si">}</span>/modules
+<span class="linenos">18</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/DEV-NVHPC-21.2
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="nb">export</span><span class="w"> </span><span class="nv">ESPRESSO_PSEUDO</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/../../../pseudo
+<span class="linenos">21</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="nv">mpiopt</span><span class="o">=</span><span class="s2">&quot;-mca pml ucx -mca btl ^uct,tcp,openib,vader --map-by socket:PE=32 --rank-by core &quot;</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">2</span><span class="w"> </span>ph.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">1</span><span class="w"> </span>-nk<span class="w"> </span><span class="m">2</span><span class="w"> </span>-i<span class="w"> </span>ph.CnSnI3.in<span class="w"> </span>&gt;<span class="w"> </span>ph.CnSnI3.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-7-1" class="sphinx-tabs-panel" hidden="true" id="panel-7-7-1" name="7-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">inputph</span>
+	<span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+	<span class="n">fildyn</span> <span class="o">=</span> <span class="s1">&#39;harmdyn_support&#39;</span>
+	<span class="n">amass</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> 
+        <span class="n">amass</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> 
+        <span class="n">amass</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> 
+	<span class="n">tr2_ph</span> <span class="o">=</span> <span class="mi">1</span><span class="n">d</span><span class="o">-</span><span class="mi">16</span>
+        <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;./out&#39;</span>
+<span class="o">/</span>
+<span class="mf">0.0</span> <span class="mf">0.0</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+</div></div>
+</div>
+</section>
+</section>
+<section id="multi-gpu-offload-with-images-step-5">
+<h3>Multi gpu offload with images, step 5<a class="headerlink" href="#multi-gpu-offload-with-images-step-5" title="Permalink to this heading"></a></h3>
+<p><strong>Files needed</strong>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-8-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-8-8-0" name="8-0" role="tab" tabindex="0">submit.slurm</button><button aria-controls="panel-8-8-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-8-8-1" name="8-1" role="tab" tabindex="-1">dyn.CnSnI3.in</button></div><div aria-labelledby="tab-8-8-0" class="sphinx-tabs-panel" id="panel-8-8-0" name="8-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --nodes 1</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH --time=00:30:00</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --partition=gpu</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --ntasks-per-node=4</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --ntasks-per-socket=2</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --gres=gpu:4</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --job-name=phstep5</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --error=err.job-%j</span>
+<span class="linenos">11</span><span class="c1">#SBATCH --output=out.job-%j</span>
+<span class="linenos">12</span><span class="c1">#SBATCH --hint=nomultithread</span>
+<span class="linenos">13</span><span class="c1">#SBATCH --reservation=maxgpu</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="nb">export</span><span class="w"> </span><span class="nv">WORK</span><span class="o">=</span>/ceph/hpc/data/d2021-135-users
+<span class="linenos">16</span>
+<span class="linenos">17</span>module<span class="w"> </span>purge
+<span class="linenos">18</span>module<span class="w"> </span>use<span class="w"> </span><span class="si">${</span><span class="nv">WORK</span><span class="si">}</span>/modules
+<span class="linenos">19</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/DEV-NVHPC-21.2
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="nb">export</span><span class="w"> </span><span class="nv">ESPRESSO_PSEUDO</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/../../../pseudo
+<span class="linenos">22</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="nv">mpiopt</span><span class="o">=</span><span class="s2">&quot;-mca pml ucx -mca btl ^uct,tcp,openib,vader --map-by socket:PE=32 --rank-by core &quot;</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">4</span><span class="w"> </span>ph.x<span class="w"> </span>-ni<span class="w"> </span>nimages<span class="w"> </span>-nk<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>ph.CnSnI3.in<span class="w"> </span>&gt;<span class="w"> </span>out.0_0
+<span class="linenos">27</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">1</span><span class="w"> </span>ph.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">1</span><span class="w"> </span>-nk<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>ph.CnSnI3.recover.in<span class="w"> </span>&gt;<span class="w"> </span>ph.CnSnI3.recover.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-8-8-1" class="sphinx-tabs-panel" hidden="true" id="panel-8-8-1" name="8-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">&amp;</span><span class="nb">input</span>
+  <span class="n">fildyn</span> <span class="o">=</span> <span class="s1">&#39;harmdyn_support&#39;</span><span class="p">,</span>
+  <span class="n">asr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+ <span class="o">/</span>
+</pre></div>
+</div>
+</div></div>
+<p>Perform a phonon calculation at Gamma on 4 GPUs for CnSnI3 using the <code class="docutils literal notranslate"><span class="pre">ph.x</span></code> program.</p>
+<ol class="arabic">
+<li><p>Copy the input of step2 <code class="docutils literal notranslate"><span class="pre">../step2/ph.CnSnI3.in</span></code></p></li>
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">ph.CnSnI3.in</span></code> as <code class="docutils literal notranslate"><span class="pre">ph.CnSnI3.recover.in</span></code> and add <code class="docutils literal notranslate"><span class="pre">recover=.true.</span></code> in <code class="docutils literal notranslate"><span class="pre">&amp;inputph</span></code></p></li>
+<li><p>Copy the <code class="docutils literal notranslate"><span class="pre">../step1/out</span></code> directory in the current folder</p></li>
+<li><p>Modify <code class="docutils literal notranslate"><span class="pre">nimages</span></code> in <code class="docutils literal notranslate"><span class="pre">submit.slurm</span></code> to distribute the calculation on 4 MPIs : GPUs with image parallelization</p></li>
+<li><p>Submit the jobfile</p>
+<p><code class="docutils literal notranslate"><span class="pre">sbatch</span> <span class="pre">submit.slurm</span></code></p>
+</li>
+<li><p>With image parallelism there is 1 output file for each image. These are named <code class="docutils literal notranslate"><span class="pre">out.*_0</span></code>, with * the image rank.
+Check the workload of each image</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>awk<span class="w"> </span><span class="s1">&#39;/I am image/ {x=NR+3} (NR&lt;=x) {print $0} &#39;</span><span class="w"> </span>out.*_0
+</pre></div>
+</div>
+</li>
+<li><p>Compare wall times. Which images takes the longest time ? Why ?</p></li>
+</ol>
+<section id="id4">
+<h4>Solution<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
+<div class="admonition-solution solution important dropdown admonition" id="solution-4">
+<p class="admonition-title">Solution</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-9-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-9-9-0" name="9-0" role="tab" tabindex="0">submit.slurm</button></div><div aria-labelledby="tab-9-9-0" class="sphinx-tabs-panel" id="panel-9-9-0" name="9-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --nodes 1</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH --time=00:30:00</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --partition=gpu</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --ntasks-per-node=4</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --ntasks-per-socket=2</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --gres=gpu:4</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --job-name=phstep5</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --error=err.job-%j</span>
+<span class="linenos">11</span><span class="c1">#SBATCH --output=out.job-%j</span>
+<span class="linenos">12</span><span class="c1">#SBATCH --hint=nomultithread</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="nb">export</span><span class="w"> </span><span class="nv">WORK</span><span class="o">=</span>/ceph/hpc/data/d2021-135-users
+<span class="linenos">15</span>
+<span class="linenos">16</span>module<span class="w"> </span>purge
+<span class="linenos">17</span>module<span class="w"> </span>use<span class="w"> </span><span class="si">${</span><span class="nv">WORK</span><span class="si">}</span>/modules
+<span class="linenos">18</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/DEV-NVHPC-21.2
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="nb">export</span><span class="w"> </span><span class="nv">ESPRESSO_PSEUDO</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>/../../../pseudo
+<span class="linenos">21</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="nv">mpiopt</span><span class="o">=</span><span class="s2">&quot;-mca pml ucx -mca btl ^uct,tcp,openib,vader --map-by socket:PE=32 --rank-by core &quot;</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">4</span><span class="w"> </span>ph.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">4</span><span class="w"> </span>-nk<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>ph.CnSnI3.in<span class="w"> </span>&gt;<span class="w"> </span>out.0_0
+<span class="linenos">26</span>mpirun<span class="w"> </span><span class="nv">$mpiopt</span><span class="w"> </span>-np<span class="w"> </span><span class="m">1</span><span class="w"> </span>ph.x<span class="w"> </span>-ni<span class="w"> </span><span class="m">1</span><span class="w"> </span>-nk<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>ph.CnSnI3.recover.in<span class="w"> </span>&gt;<span class="w"> </span>ph.CnSnI3.recover.out
+</pre></div>
+</div>
+</div></div>
+</div>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="eels-in-bulk-silicon">
+<h2>EELS in bulk Silicon<a class="headerlink" href="#eels-in-bulk-silicon" title="Permalink to this heading"></a></h2>
+<p>Calculation of the electron energy loss spectra (EELS) of bulk silicon.</p>
+<p><strong>Submit files needed</strong>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-10-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-10-10-0" name="10-0" role="tab" tabindex="0">submit_pw.slurm</button><button aria-controls="panel-10-10-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-1" name="10-1" role="tab" tabindex="-1">submit_eels.slurm</button><button aria-controls="panel-10-10-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-10-10-2" name="10-2" role="tab" tabindex="-1">submit_spectrum.slurm</button></div><div aria-labelledby="tab-10-10-0" class="sphinx-tabs-panel" id="panel-10-10-0" name="10-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --job-name=pwSi</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH -N 1</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --ntasks=64</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --time=00:30:00</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --partition=cpu</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --ntasks-per-node=64</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --exclusive</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --reservation=maxcpu</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>module<span class="w"> </span>purge
+<span class="linenos">13</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/7.1-foss-2022a
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">64</span><span class="w"> </span>pw.x<span class="w"> </span>-nk<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>pw.Si.scf.in<span class="w"> </span>&gt;<span class="w"> </span>pw.Si.scf.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-10-10-1" class="sphinx-tabs-panel" hidden="true" id="panel-10-10-1" name="10-1" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --job-name=eelsSi</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH -N 1</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --ntasks=64</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --time=00:30:00</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --partition=cpu</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --ntasks-per-node=64</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --exclusive</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --reservation=maxcpu</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>module<span class="w"> </span>purge
+<span class="linenos">13</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/7.1-foss-2022a
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">64</span><span class="w"> </span>turbo_eels.x<span class="w"> </span>-nk<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>turbo_eels.Si.tddfpt.in<span class="w"> </span>&gt;<span class="w"> </span>turbo_eels.Si.tddfpt.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-10-10-2" class="sphinx-tabs-panel" hidden="true" id="panel-10-10-2" name="10-2" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --job-name=specSi</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH -N 1</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --ntasks=1</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --time=00:30:00</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --partition=cpu</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --ntasks-per-node=1</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --reservation=maxcpu</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>module<span class="w"> </span>purge
+<span class="linenos">12</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/7.1-foss-2022a
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">1</span><span class="w"> </span>turbo_spectrum.x<span class="w"> </span>-i<span class="w"> </span>turbo_spectrum.Si.pp.in<span class="w"> </span>&gt;<span class="w"> </span>turbo_spectrum.Si.pp.out
+</pre></div>
+</div>
+</div></div>
+<p><strong>Input files needed</strong>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-11-11-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-11-11-0" name="11-0" role="tab" tabindex="0">pw.Si.scf.in</button><button aria-controls="panel-11-11-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-1" name="11-1" role="tab" tabindex="-1">turbo_eels.Si.tddfpt.in</button><button aria-controls="panel-11-11-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-11-11-2" name="11-2" role="tab" tabindex="-1">turbo_spectrum.Si.pp.in</button></div><div aria-labelledby="tab-11-11-0" class="sphinx-tabs-panel" id="panel-11-11-0" name="11-0" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">&amp;</span><span class="n">control</span>
+    <span class="n">calculation</span><span class="o">=</span><span class="s1">&#39;scf&#39;</span>
+    <span class="n">restart_mode</span><span class="o">=</span><span class="s1">&#39;from_scratch&#39;</span><span class="p">,</span>
+    <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Sieels&#39;</span>
+    <span class="n">pseudo_dir</span> <span class="o">=</span> <span class="s1">&#39;../../pseudo&#39;</span>
+    <span class="n">outdir</span><span class="o">=</span><span class="s1">&#39;./tempdir&#39;</span>
+ <span class="o">/</span>
+ <span class="o">&amp;</span><span class="n">system</span>
+    <span class="n">ibrav</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">celldm</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mf">10.26</span><span class="p">,</span>
+    <span class="n">nat</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">ntyp</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">ecutwfc</span> <span class="o">=</span> <span class="mf">20.0</span>
+ <span class="o">/</span>
+ <span class="o">&amp;</span><span class="n">electrons</span>
+    <span class="n">conv_thr</span> <span class="o">=</span>  <span class="mf">1.0</span><span class="n">d</span><span class="o">-</span><span class="mi">10</span>
+ <span class="o">/</span>
+<span class="n">ATOMIC_SPECIES</span>
+<span class="n">Si</span>  <span class="mf">28.08</span>  <span class="n">Si</span><span class="o">.</span><span class="n">upf</span>
+<span class="n">ATOMIC_POSITIONS</span> <span class="p">{</span><span class="n">alat</span><span class="p">}</span>
+<span class="n">Si</span> <span class="mf">0.00</span> <span class="mf">0.00</span> <span class="mf">0.00</span>
+<span class="n">Si</span> <span class="mf">0.25</span> <span class="mf">0.25</span> <span class="mf">0.25</span>
+<span class="n">K_POINTS</span> <span class="p">{</span><span class="n">automatic</span><span class="p">}</span>
+<span class="mi">12</span> <span class="mi">12</span> <span class="mi">12</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-11-11-1" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-1" name="11-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">&amp;</span><span class="n">lr_input</span>
+   <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;Sieels&#39;</span><span class="p">,</span>
+   <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;./tempdir&#39;</span><span class="p">,</span>
+   <span class="n">restart_step</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+   <span class="n">restart</span> <span class="o">=</span> <span class="o">.</span><span class="n">false</span><span class="o">.</span>
+<span class="o">/</span>
+ <span class="o">&amp;</span><span class="n">lr_control</span>
+   <span class="n">calculator</span> <span class="o">=</span> <span class="s1">&#39;lanczos&#39;</span><span class="p">,</span>
+   <span class="n">itermax</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+   <span class="n">q1</span> <span class="o">=</span> <span class="mf">0.866</span><span class="p">,</span>
+   <span class="n">q2</span> <span class="o">=</span> <span class="mf">0.000</span><span class="p">,</span>
+   <span class="n">q3</span> <span class="o">=</span> <span class="mf">0.000</span>
+ <span class="o">/</span>
+
+
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-11-11-2" class="sphinx-tabs-panel" hidden="true" id="panel-11-11-2" name="11-2" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">&amp;</span><span class="n">lr_input</span>
+   <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;Sieels&#39;</span><span class="p">,</span>
+   <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;./tempdir&#39;</span><span class="p">,</span>
+   <span class="n">eels</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+   <span class="n">itermax0</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+   <span class="n">itermax</span>  <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+   <span class="n">extrapolation</span> <span class="o">=</span> <span class="s2">&quot;osc&quot;</span><span class="p">,</span>
+   <span class="n">epsil</span> <span class="o">=</span> <span class="mf">0.035</span><span class="p">,</span>
+   <span class="n">units</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="n">start</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="n">end</span>   <span class="o">=</span> <span class="mf">50.0</span><span class="p">,</span>
+   <span class="n">increment</span> <span class="o">=</span> <span class="mf">0.01</span>
+ <span class="o">/</span>
+</pre></div>
+</div>
+</div></div>
+<p>Step-by-step for running the tutorial can be found in the slides linked at the top of this page!</p>
+</section>
+<hr class="docutils" />
+<section id="calculation-of-the-magnon-spectra-of-bulk-iron">
+<h2>Calculation of the magnon spectra of bulk iron<a class="headerlink" href="#calculation-of-the-magnon-spectra-of-bulk-iron" title="Permalink to this heading"></a></h2>
+<p><strong>Submit files needed</strong>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-12-12-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-12-12-0" name="12-0" role="tab" tabindex="0">submit_pw.slurm</button><button aria-controls="panel-12-12-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-12-12-1" name="12-1" role="tab" tabindex="-1">submit_magnon.slurm</button><button aria-controls="panel-12-12-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-12-12-2" name="12-2" role="tab" tabindex="-1">submit_spectrum.slurm</button></div><div aria-labelledby="tab-12-12-0" class="sphinx-tabs-panel" id="panel-12-12-0" name="12-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --job-name=pwFe</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH -N 1</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --ntasks=64</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --time=00:30:00</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --partition=cpu</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --ntasks-per-node=64</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --exclusive</span>
+<span class="linenos">10</span><span class="c1">#SBATCH --reservation=maxcpu</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>module<span class="w"> </span>purge
+<span class="linenos">13</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/7.1-foss-2022a
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">64</span><span class="w">  </span>pw.x<span class="w"> </span>-nk<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>pw.Fe.scf.in<span class="w"> </span>&gt;<span class="w"> </span>pw.Fe.scf.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-12-12-1" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-1" name="12-1" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --job-name=magnonFe</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH -N 1</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --ntasks=64</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --time=00:30:00</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --partition=cpu</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --ntasks-per-node=64</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --reservation=maxcpu</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>module<span class="w"> </span>purge
+<span class="linenos">12</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/7.1-foss-2022a
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">64</span><span class="w"> </span>turbo_magnon.x<span class="w"> </span>-nk<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>turbo_magnon.Fe.tddfpt.in<span class="w"> </span>&gt;<span class="w"> </span>turbo_magnon.Fe.tddfpt.out
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-12-12-2" class="sphinx-tabs-panel" hidden="true" id="panel-12-12-2" name="12-2" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos"> 2</span><span class="c1">#SBATCH --job-name=specFe</span>
+<span class="linenos"> 3</span><span class="c1">#SBATCH -N 1</span>
+<span class="linenos"> 4</span><span class="c1">#SBATCH --ntasks=1</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --time=00:30:00</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --partition=cpu</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --ntasks-per-node=1</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="linenos"> 9</span><span class="c1">#SBATCH --reservation=maxcpu</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>module<span class="w"> </span>purge
+<span class="linenos">12</span>module<span class="w"> </span>load<span class="w"> </span>QuantumESPRESSO/7.1-foss-2022a
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">1</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">1</span><span class="w"> </span>turbo_spectrum.x<span class="w"> </span>-i<span class="w"> </span>turbo_spectrum.Fe.pp.in<span class="w"> </span>&gt;<span class="w"> </span>turbo_spectrum.Fe.pp.out
+</pre></div>
+</div>
+</div></div>
+<p><strong>Input files needed</strong>:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-13-13-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-13-13-0" name="13-0" role="tab" tabindex="0">pw.Fe.scf.in</button><button aria-controls="panel-13-13-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-13-13-1" name="13-1" role="tab" tabindex="-1">turbo_magnon.Fe.tddfpt.in</button><button aria-controls="panel-13-13-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-13-13-2" name="13-2" role="tab" tabindex="-1">turbo_spectrum.Fe.pp.in</button></div><div aria-labelledby="tab-13-13-0" class="sphinx-tabs-panel" id="panel-13-13-0" name="13-0" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">&amp;</span><span class="n">control</span>
+    <span class="n">calculation</span><span class="o">=</span><span class="s1">&#39;scf&#39;</span>
+    <span class="n">restart_mode</span><span class="o">=</span><span class="s1">&#39;from_scratch&#39;</span><span class="p">,</span>
+    <span class="n">outdir</span><span class="o">=</span><span class="s1">&#39;./tempdir&#39;</span><span class="p">,</span>
+    <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Femag&#39;</span>
+    <span class="n">pseudo_dir</span><span class="o">=</span><span class="s2">&quot;../../pseudo&quot;</span>
+    <span class="n">verbosity</span><span class="o">=</span><span class="s1">&#39;high&#39;</span>
+ <span class="o">/</span>
+ <span class="o">&amp;</span><span class="n">system</span>
+    <span class="n">nosym</span>           <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+    <span class="n">noinv</span>           <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+    <span class="n">noncolin</span>        <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+    <span class="n">lspinorb</span>        <span class="o">=</span> <span class="o">.</span><span class="n">false</span><span class="o">.</span>
+    <span class="n">ibrav</span>           <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">celldm</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>       <span class="o">=</span> <span class="mf">5.406</span>
+    <span class="n">nat</span>             <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ntyp</span>            <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ecutwfc</span>         <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">occupations</span>     <span class="o">=</span> <span class="s1">&#39;smearing&#39;</span>
+    <span class="n">smearing</span>        <span class="o">=</span> <span class="s1">&#39;gaussian&#39;</span>
+    <span class="n">degauss</span>         <span class="o">=</span> <span class="mf">0.01</span>
+    <span class="n">starting_magnetization</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.15</span>
+ <span class="o">/</span>
+ <span class="o">&amp;</span><span class="n">electrons</span>
+    <span class="n">mixing_beta</span>     <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="n">conv_thr</span>        <span class="o">=</span> <span class="mf">1.</span><span class="n">d</span><span class="o">-</span><span class="mi">9</span>
+ <span class="o">/</span>
+<span class="n">ATOMIC_SPECIES</span>
+<span class="n">Fe</span>  <span class="mf">55.85</span>   <span class="n">Fe</span><span class="o">.</span><span class="n">pz</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="n">nc</span><span class="o">.</span><span class="n">UPF</span>
+<span class="n">ATOMIC_POSITIONS</span> <span class="n">alat</span>
+<span class="n">Fe</span>  <span class="mf">0.00000000</span> <span class="mf">0.00000000</span> <span class="mf">0.00000000</span>
+<span class="n">K_POINTS</span> <span class="n">automatic</span>
+ <span class="mi">4</span> <span class="mi">4</span> <span class="mi">4</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+
+
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-13-13-1" class="sphinx-tabs-panel" hidden="true" id="panel-13-13-1" name="13-1" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">&amp;</span><span class="n">lr_input</span>
+   <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;Femag&#39;</span><span class="p">,</span>
+   <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;./tempdir&#39;</span><span class="p">,</span>
+   <span class="n">restart_step</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+   <span class="n">restart</span> <span class="o">=</span> <span class="o">.</span><span class="n">false</span><span class="o">.</span>
+ <span class="o">/</span>
+<span class="o">&amp;</span><span class="n">lr_control</span>
+    <span class="n">itermax</span>          <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+    <span class="n">q1</span>               <span class="o">=</span> <span class="mf">0.1</span><span class="n">d0</span><span class="p">,</span>
+    <span class="n">q2</span>               <span class="o">=</span> <span class="mf">0.1</span><span class="n">d0</span><span class="p">,</span>
+    <span class="n">q3</span>               <span class="o">=</span> <span class="mf">0.0</span><span class="n">d0</span><span class="p">,</span>
+    <span class="n">pseudo_hermitian</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+    <span class="n">ipol</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="o">/</span>
+
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-13-13-2" class="sphinx-tabs-panel" hidden="true" id="panel-13-13-2" name="13-2" role="tabpanel" tabindex="0"><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">&amp;</span><span class="n">lr_input</span>
+   <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;Femag&#39;</span><span class="p">,</span>
+   <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;./tempdir&#39;</span><span class="p">,</span>
+   <span class="n">magnons</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span><span class="p">,</span>
+   <span class="n">units</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+   <span class="n">itermax0</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+   <span class="n">itermax</span> <span class="o">=</span> <span class="mi">15000</span><span class="p">,</span>
+   <span class="n">extrapolation</span><span class="o">=</span><span class="s1">&#39;osc&#39;</span><span class="p">,</span>
+   <span class="n">epsil</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+   <span class="n">ipol</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+   <span class="n">start</span> <span class="o">=</span> <span class="mf">0.0</span><span class="n">d0</span><span class="p">,</span>
+   <span class="n">increment</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">d0</span><span class="p">,</span>
+   <span class="n">end</span> <span class="o">=</span> <span class="mf">28.0</span><span class="n">d0</span>
+ <span class="o">/</span>
+</pre></div>
+</div>
+</div></div>
+<p>Step-by-step for running the tutorial can be found in the slides linked at the top of this page!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lectures-2/" class="btn btn-neutral float-left" title="Lectures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lectures-3/" class="btn btn-neutral float-right" title="Lectures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

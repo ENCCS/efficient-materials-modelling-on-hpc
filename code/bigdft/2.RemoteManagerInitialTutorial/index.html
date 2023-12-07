@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Remote manager tutorial &mdash; Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/overrides.css" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../../../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script data-domain="enccs.github.io/efficient-materials-modelling-on-hpc" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="Calculations with cubic-scaling BigDFT code" href="../3.CubicScaling-H2O/" />
+    <link rel="prev" title="Introductory PyBigDFT tour - Basic functionalities and first calculations" href="../1.SystemGenFirstCalcs/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../" class="icon icon-home">
+            Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT
+              <img src="../../../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Day 1 - MAX-CoE and Quantum ESPRESSO</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-1/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../espresso-tutorial/">Tutorial: Quantum ESPRESSO on HPC systems</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 2 - Quantum ESPRESSO and AiiDA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-2/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../espresso-tutorial-phonons/">Tutorial: Phonons, EELS and magnons for HPC and GPUs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 3 - Yambo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-3/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../yambo-tutorial/">Yambo tutorial: Quasiparticles in the GW approximation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 4 - BigDFT</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-4/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1.SystemGenFirstCalcs/">Introductory PyBigDFT tour - Basic functionalities and first calculations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Remote manager tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-basis-concept-dataset">The basis concept: Dataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#print-ds-run-cmds"><code class="docutils literal notranslate"><span class="pre">print(ds.run_cmds)</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#while-not-ds-all-finished"><code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">not</span> <span class="pre">ds.all_finished:</span> <span class="pre">...</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise">Exercise</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../3.CubicScaling-H2O/">Calculations with cubic-scaling BigDFT code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4.LinearScaling-H2O/">Calculations with linear-scaling BigDFT code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../">Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Remote manager tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/Efficient-materials-modelling-on-HPC/blob/main/content/code/bigdft/2.RemoteManagerInitialTutorial.ipynb" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="remote-manager-tutorial">
+<h1>Remote manager tutorial<a class="headerlink" href="#remote-manager-tutorial" title="Permalink to this heading"></a></h1>
+<blockquote>
+<div><p>This material is adapted from <a class="reference external" href="https://github.com/BigDFT-group/bigdft-school/">work by Luigi Genovese, Laura Ratcliff and others</a></p>
+</div></blockquote>
+<p>We will see here the engine which is employed by BigDFT to run calculations on a remote supercomputer. After this tutorial you will be able to trigger the usage of the nodes from the local workstation.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">remotemanager</span></code> package will have to be installed on your machine (or in the colab session)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>remotemanager
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting remotemanager
+  Using cached remotemanager-0.10.10-py3-none-any.whl.metadata (1.9 kB)
+Requirement already satisfied: pyyaml in /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages (from remotemanager) (6.0.1)
+Requirement already satisfied: requests in /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages (from remotemanager) (2.31.0)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages (from requests-&gt;remotemanager) (3.3.2)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages (from requests-&gt;remotemanager) (3.6)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages (from requests-&gt;remotemanager) (2.1.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: certifi&gt;=2017.4.17 in /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages (from requests-&gt;remotemanager) (2023.11.17)
+Using cached remotemanager-0.10.10-py3-none-any.whl (85 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Installing collected packages: remotemanager
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully installed remotemanager-0.10.10
+</pre></div>
+</div>
+</div>
+</div>
+<p>Begin with the common imports, <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> and <code class="docutils literal notranslate"><span class="pre">URL</span></code>. As these two are always used, they are available from <code class="docutils literal notranslate"><span class="pre">remotemanager</span></code> root.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">remotemanager</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">URL</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Define a simple function to run:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">basic_function</span><span class="p">(</span><span class="n">inp</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">inp</span><span class="o">*</span><span class="n">inp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For the moment, we’re just running on our local machines</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">URL</span><span class="p">()</span>
+<span class="c1">#url = URL(host=&#39;vega&#39;) #switch on this after the first walkthrough of this notebook</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="the-basis-concept-dataset">
+<h2>The basis concept: Dataset<a class="headerlink" href="#the-basis-concept-dataset" title="Permalink to this heading"></a></h2>
+<p>We here see the main concept of the remotemanager spirit. A function can ran multiple times on a remote machine with different values of its arguments.</p>
+<p>This will be useful to control the running of different calculations of more complex data submissions.</p>
+<p>As basic setup is done, lets create the Dataset</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">function</span><span class="o">=</span><span class="n">basic_function</span><span class="p">,</span>
+             <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+             <span class="c1"># script=&#39;module load Python&#39;, # we need python to execute a python function, such script loads it</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The Dataset stores the <em>function</em>, the Runners store the <em>arguments</em></p>
+<p>Right now all we have is a function, need to create the args:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">append_run</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;inp&#39;</span><span class="p">:</span> <span class="n">val</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>appended run runner-0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>appended run runner-1
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>appended run runner-2
+appended run runner-3
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we have all the material required:</p>
+<ul class="simple">
+<li><p>Function</p></li>
+<li><p>Connection</p></li>
+<li><p>Arguments</p></li>
+</ul>
+<p>Time to run:</p>
+<p>Here we run the dataset.</p>
+<p><strong>WARNING</strong>: If you have timeout problems in this part, try to increase the <code class="docutils literal notranslate"><span class="pre">timeout</span></code> value in the URL class attributes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#ds.url.timeout = 120</span>
+<span class="c1">#ds.url.max_timeouts = 4</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>assessing run for runner dataset-0324eba7-runner-0... force running
+assessing run for runner dataset-0324eba7-runner-1... force running
+assessing run for runner dataset-0324eba7-runner-2... force running
+assessing run for runner dataset-0324eba7-runner-3... force running
+</pre></div>
+</div>
+</div>
+</div>
+<p>The below cell is useful to wait on a run function, there are two sections to it:</p>
+<section id="print-ds-run-cmds">
+<h3><code class="docutils literal notranslate"><span class="pre">print(ds.run_cmds)</span></code><a class="headerlink" href="#print-ds-run-cmds" title="Permalink to this heading"></a></h3>
+<p>This checks the commands that were used to launch the command were okay. If there was any errors, you’ll see them here.</p>
+</section>
+<section id="while-not-ds-all-finished">
+<h3><code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">not</span> <span class="pre">ds.all_finished:</span> <span class="pre">...</span></code><a class="headerlink" href="#while-not-ds-all-finished" title="Permalink to this heading"></a></h3>
+<p>This block waits for the dataset to be completed. <code class="docutils literal notranslate"><span class="pre">Dataset.all_finished</span></code> only returns <code class="docutils literal notranslate"><span class="pre">True</span></code> when all the runners are completed.</p>
+<p>Note: You can also use <code class="docutils literal notranslate"><span class="pre">Dataset.is_finished</span></code> to see the state on a per-runner basis.</p>
+<p><strong>WARNING (for the exercise)</strong>: If you have an error like ‘python not found’ here, define a script header in the dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">run_cmds</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="k">while</span> <span class="ow">not</span> <span class="n">ds</span><span class="o">.</span><span class="n">all_finished</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dataset not finished yet, sleeping for 1s&#39;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="nb">print</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">run_cmds</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">time</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">while</span> <span class="ow">not</span> <span class="n">ds</span><span class="o">.</span><span class="n">all_finished</span><span class="p">:</span>
+
+<span class="ne">AttributeError</span>: &#39;Dataset&#39; object has no attribute &#39;run_cmds&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>If we’ve made it through the wait block then we must have results, let’s fetch them:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span><span class="o">.</span><span class="n">fetch_results</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now they’re fetched, we can access them via the <code class="docutils literal notranslate"><span class="pre">results</span></code> property without having to talk to the remote again:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span><span class="o">.</span><span class="n">results</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1, 9, 49, 2500]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span><span class="o">.</span><span class="n">runners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">history</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;2022-11-16 19:22:00/0&#39;: &#39;created&#39;,
+ &#39;2022-11-16 19:22:02/0&#39;: &#39;submitted&#39;,
+ &#39;2022-11-16 19:22:03/0&#39;: &#39;resultfile created remotely&#39;,
+ &#39;2022-11-16 19:22:12/0&#39;: &#39;completed&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise">
+<h2>Exercise<a class="headerlink" href="#exercise" title="Permalink to this heading"></a></h2>
+<p>Run this simple function on vega.
+Change the URL to <code class="docutils literal notranslate"><span class="pre">vega</span></code> (it should be enough to put in the URL command the same host you put for your <code class="docutils literal notranslate"><span class="pre">ssh</span></code> connection - e.g. <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">vega</span></code>).
+Pay attention to the various steps of the procedure.</p>
+<p>Hint: Is python loaded by default when you ssh into vega? Perhaps <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">spider</span> <span class="pre">python</span></code> can help with this.</p>
+<p><strong>Important</strong>: contact us in case you are using a setup that would not work for the excercise. You can run the following tutorials also on google colab in case there are difficulties in installing a jupyter notebook environment on your workstation.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../1.SystemGenFirstCalcs/" class="btn btn-neutral float-left" title="Introductory PyBigDFT tour - Basic functionalities and first calculations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../3.CubicScaling-H2O/" class="btn btn-neutral float-right" title="Calculations with cubic-scaling BigDFT code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yambo tutorial: Quasiparticles in the GW approximation &mdash; Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/overrides.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script data-domain="enccs.github.io/efficient-materials-modelling-on-hpc" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Lectures" href="../lectures-4/" />
+    <link rel="prev" title="Lectures" href="../lectures-3/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../" class="icon icon-home">
+            Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT
+              <img src="../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Day 1 - MAX-CoE and Quantum ESPRESSO</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../lectures-1/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../espresso-tutorial/">Tutorial: Quantum ESPRESSO on HPC systems</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 2 - Quantum ESPRESSO and AiiDA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../lectures-2/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../espresso-tutorial-phonons/">Tutorial: Phonons, EELS and magnons for HPC and GPUs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 3 - Yambo</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lectures-3/">Lectures</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Yambo tutorial: Quasiparticles in the GW approximation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#many-body-corrections-to-the-dft-band-gap">Many-body corrections to the DFT band gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-a-yambo-calculation">Set up a Yambo calculation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#yambo-save-folder">Yambo <code class="docutils literal notranslate"><span class="pre">SAVE</span></code> folder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#yambo-input-file">Yambo input file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters-for-a-gw-calculation">Parameters for a GW calculation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-first-run">The first run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gw-convergence">GW convergence</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#response-function-varepsilon-1-gg-bands-and-g-vectors">Response function <span class="math notranslate nohighlight">\(\varepsilon^{-1}_{GG'}\)</span> - Bands and G-vectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#self-energy-sigma-c-bands">Self-energy <span class="math notranslate nohighlight">\(\Sigma^c\)</span> - Bands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gw-parallel-strategies">GW parallel strategies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mpi-parallelization">MPI parallelization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hybrid-parallelization-strategy">Hybrid parallelization strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-comparing-different-parallelisation-schemes">[OPTIONAL]: Comparing different parallelisation schemes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#full-gw-band-structure">Full GW band structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-on-gpus">Running on GPUs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-results">The results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 4 - BigDFT</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../lectures-4/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code/bigdft/1.SystemGenFirstCalcs/">Introductory PyBigDFT tour - Basic functionalities and first calculations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code/bigdft/2.RemoteManagerInitialTutorial/">Remote manager tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code/bigdft/3.CubicScaling-H2O/">Calculations with cubic-scaling BigDFT code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code/bigdft/4.LinearScaling-H2O/">Calculations with linear-scaling BigDFT code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Yambo tutorial: Quasiparticles in the GW approximation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/Efficient-materials-modelling-on-HPC/blob/main/content/yambo-tutorial.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="yambo-tutorial-quasiparticles-in-the-gw-approximation">
+<h1>Yambo tutorial: Quasiparticles in the GW approximation<a class="headerlink" href="#yambo-tutorial-quasiparticles-in-the-gw-approximation" title="Permalink to this heading"></a></h1>
+<blockquote>
+<div><p>This material is adapted from <a class="reference external" href="https://hackmd.io/&#64;palful/SJrHtTJrs">work by Fulvio Paleari </a>.</p>
+</div></blockquote>
+<p><strong>Useful info for the tutorial:</strong></p>
+<ul class="simple">
+<li><p>Check the table of contents below for the planned sections of the tutorial.</p></li>
+<li><p>There is an additional page <a class="reference external" href="https://hackmd.io/&#64;palful/HkU0xblHj">here</a> containing the various scripts and files (inputs, submissions, postprocessing)</p></li>
+</ul>
+<div class="admonition-yambo-input-gw-in solution important dropdown admonition" id="solution-0">
+<p class="admonition-title">Yambo input gw.in</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#  ____  ____     _       ____    ____  ______      ___</span>
+<span class="c1"># |_  _||_  _|   / \     |_   \  /   _||_   _ \   .&quot;   `.</span>
+<span class="c1">#   \ \  / /    / _ \      |   \/   |    | |_) | /  .-.  \</span>
+<span class="c1">#    \ \/ /    / ___ \     | |\  /| |    |  __&quot;. | |   | |</span>
+<span class="c1">#    _|  |_  _/ /   \ \_  _| |_\/_| |_  _| |__) |\  `-&quot;  /</span>
+<span class="c1">#   |______||____| |____||_____||_____||_______/  `.___.&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># Version 5.1.0 Revision 21422 Hash (prev commit) fde6e2a07</span>
+<span class="c1">#                        Branch is</span>
+<span class="c1">#             MPI+OpenMP+SLK+HDF5_MPI_IO Build</span>
+<span class="c1">#                http://www.yambo-code.org</span>
+<span class="c1">#</span>
+rim_cut<span class="w">                          </span><span class="c1"># [R] Coulomb potential</span>
+gw0<span class="w">                              </span><span class="c1"># [R] GW approximation</span>
+ppa<span class="w">                              </span><span class="c1"># [R][Xp] Plasmon Pole Approximation for the Screened Interaction</span>
+dyson<span class="w">                            </span><span class="c1"># [R] Dyson Equation solver</span>
+HF_and_locXC<span class="w">                     </span><span class="c1"># [R] Hartree-Fock</span>
+em1d<span class="w">                             </span><span class="c1"># [R][X] Dynamically Screened Interaction</span>
+<span class="nv">FFTGvecs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="w"> </span>Ry<span class="w">                 </span><span class="c1"># [FFT] Plane-waves</span>
+<span class="nv">X_Threads</span><span class="o">=</span><span class="m">0</span><span class="w">                      </span><span class="c1"># [OPENMP/X] Number of threads for response functions</span>
+<span class="nv">DIP_Threads</span><span class="o">=</span><span class="m">0</span><span class="w">                    </span><span class="c1"># [OPENMP/X] Number of threads for dipoles</span>
+<span class="nv">SE_Threads</span><span class="o">=</span><span class="m">0</span><span class="w">                     </span><span class="c1"># [OPENMP/GW] Number of threads for self-energy</span>
+<span class="nv">RandQpts</span><span class="o">=</span><span class="m">1000000</span><span class="w">                   </span><span class="c1"># [RIM] Number of random q-points in the BZ</span>
+<span class="nv">RandGvec</span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="w">                </span>RL<span class="w">    </span><span class="c1"># [RIM] Coulomb interaction RS components</span>
+<span class="nv">CUTGeo</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;slab z&quot;</span><span class="w">                   </span><span class="c1"># [CUT] Coulomb Cutoff geometry: box/cylinder/sphere/ws/slab X/Y/Z/XY..</span>
+%<span class="w"> </span>CUTBox
+<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="p">|</span><span class="w">        </span><span class="c1"># [CUT] [au] Box sides</span>
+%
+<span class="nv">CUTRadius</span><span class="o">=</span><span class="w"> </span><span class="m">0</span>.000000<span class="w">              </span><span class="c1"># [CUT] [au] Sphere/Cylinder radius</span>
+<span class="nv">CUTCylLen</span><span class="o">=</span><span class="w"> </span><span class="m">0</span>.000000<span class="w">              </span><span class="c1"># [CUT] [au] Cylinder length</span>
+<span class="nv">CUTwsGvec</span><span class="o">=</span><span class="w"> </span><span class="m">0</span>.700000<span class="w">              </span><span class="c1"># [CUT] WS cutoff: number of G to be modified</span>
+<span class="nv">EXXRLvcs</span><span class="o">=</span><span class="w">  </span><span class="m">2</span><span class="w">           </span>Ry<span class="w">        </span><span class="c1"># [XX] Exchange    RL components</span>
+<span class="nv">VXCRLvcs</span><span class="o">=</span><span class="w">  </span><span class="m">2</span><span class="w">           </span>Ry<span class="w">        </span><span class="c1"># [XC] XCpotential RL components</span>
+<span class="nv">Chimod</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;HARTREE&quot;</span><span class="w">                </span><span class="c1"># [X] IP/Hartree/ALDA/LRC/PF/BSfxc</span>
+%<span class="w"> </span>BndsRnXp
+<span class="w">   </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="p">|</span><span class="w">                     </span><span class="c1"># [Xp] Polarization function bands</span>
+%
+<span class="nv">NGsBlkXp</span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="w">                </span>Ry<span class="w">    </span><span class="c1"># [Xp] Response block size</span>
+%<span class="w"> </span>LongDrXp
+<span class="w"> </span><span class="m">1</span>.000000<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">1</span>.000000<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">1</span>.000000<span class="w"> </span><span class="p">|</span><span class="w">        </span><span class="c1"># [Xp] [cc] Electric Field</span>
+%
+<span class="nv">PPAPntXp</span><span class="o">=</span><span class="w"> </span><span class="m">27</span>.21138<span class="w">         </span>eV<span class="w">    </span><span class="c1"># [Xp] PPA imaginary energy</span>
+<span class="nv">XTermKind</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;none&quot;</span><span class="w">                </span><span class="c1"># [X] X terminator (&quot;none&quot;,&quot;BG&quot; Bruneval-Gonze)</span>
+%<span class="w"> </span>GbndRnge
+<span class="w">   </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="p">|</span><span class="w">                         </span><span class="c1"># [GW] G[W] bands range</span>
+%
+<span class="nv">GTermKind</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;none&quot;</span><span class="w">                </span><span class="c1"># [GW] GW terminator (&quot;none&quot;,&quot;BG&quot; Bruneval-Gonze,&quot;BRS&quot; Berger-Reining-Sottile)</span>
+<span class="nv">DysSolver</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;n&quot;</span><span class="w">                   </span><span class="c1"># [GW] Dyson Equation solver (&quot;n&quot;,&quot;s&quot;,&quot;g&quot;)</span>
+%QPkrange<span class="w">                        </span><span class="c1"># [GW] QP generalized Kpoint/Band indices</span>
+<span class="m">1</span><span class="p">|</span><span class="m">19</span><span class="p">|</span><span class="m">23</span><span class="p">|</span><span class="m">30</span><span class="p">|</span>
+%
+</pre></div>
+</div>
+</div>
+<div class="admonition-batch-script-run-first-job-sh solution important dropdown admonition" id="solution-1">
+<p class="admonition-title">Batch script run_first_job.sh</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=16</span>
+<span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="c1">#SBATCH --partition=cpu</span>
+<span class="c1">#SBATCH --time=0:30:00</span>
+<span class="c1">#SBATCH --account=d2021-135-users</span>
+<span class="c1">#SBATCH --mem-per-cpu=2000MB</span>
+<span class="c1">#SBATCH --job-name=mos2</span>
+<span class="c1">#SBATCH --reservation=maxcpu</span>
+
+<span class="c1"># load yambo and dependencies</span>
+module<span class="w"> </span>purge
+module<span class="w"> </span>use<span class="w"> </span>/ceph/hpc/data/d2021-135-users/modules
+module<span class="w"> </span>load<span class="w"> </span>YAMBO/5.1.1-FOSS-2022a
+<span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="si">${</span><span class="nv">SLURM_CPUS_PER_TASK</span><span class="si">}</span>
+
+<span class="c1"># run job</span>
+srun<span class="w"> </span>--mpi<span class="o">=</span>pmix<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">SLURM_NTASKS</span><span class="si">}</span><span class="w"> </span>yambo<span class="w"> </span>-F<span class="w"> </span>gw.in<span class="w"> </span>-J<span class="w"> </span>GW_dbs<span class="w"> </span>-C<span class="w"> </span>GW_reports
+</pre></div>
+</div>
+</div>
+<div class="admonition-batch-script-gpu-job-sh solution important dropdown admonition" id="solution-2">
+<p class="admonition-title">Batch script gpu_job.sh</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=4</span>
+<span class="c1">#SBATCH --ntasks-per-socket=2</span>
+<span class="c1">#SBATCH --cpus-per-task=64</span>
+<span class="c1">#SBATCH --gres=gpu:4</span>
+<span class="c1">#SBATCH --partition=gpu</span>
+<span class="c1">#SBATCH --time=0:30:00</span>
+<span class="c1">#SBATCH --account=d2021-135-users</span>
+<span class="c1">#SBATCH --mem=230000MB</span>
+<span class="c1">#SBATCH --job-name=mos2-test</span>
+<span class="c1">#SBATCH --exclusive</span>
+<span class="c1">#SBATCH --reservation=maxgpu</span>
+
+<span class="c1"># load yambo and dependencies</span>
+module<span class="w"> </span>purge
+module<span class="w"> </span>use<span class="w"> </span>/ceph/hpc/data/d2021-135-users/modules
+module<span class="w"> </span>load<span class="w"> </span>YAMBO/5.1.1-OMPI-4.0.5-NVHPC-21.2-CUDA-11.2.1
+<span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">8</span>
+
+srun<span class="w"> </span>--mpi<span class="o">=</span>pmix<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">SLURM_NTASKS</span><span class="si">}</span><span class="w"> </span>yambo<span class="w"> </span>-F<span class="w"> </span>gw.in<span class="w"> </span>-J<span class="w"> </span>GW_dbs<span class="w"> </span>-C<span class="w"> </span>GW_reports
+</pre></div>
+</div>
+</div>
+<div class="admonition-batch-script-run01-converge-pol-sh solution important dropdown admonition" id="solution-3">
+<p class="admonition-title">Batch script run01_converge_pol.sh</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=16</span>
+<span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="c1">#SBATCH --partition=cpu</span>
+<span class="c1">#SBATCH --time=0:30:00</span>
+<span class="c1">#SBATCH --account=d2021-135-users</span>
+<span class="c1">#SBATCH --mem-per-cpu=2000MB</span>
+<span class="c1">#SBATCH --job-name=mos2</span>
+
+<span class="c1"># load yambo and dependencies</span>
+module<span class="w"> </span>purge
+module<span class="w"> </span>use<span class="w"> </span>/ceph/hpc/data/d2021-135-users/modules
+module<span class="w"> </span>load<span class="w"> </span>YAMBO/5.1.1-FOSS-2022a
+<span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="si">${</span><span class="nv">SLURM_CPUS_PER_TASK</span><span class="si">}</span>
+
+<span class="nv">file0</span><span class="o">=</span><span class="s1">&#39;i01-GW&#39;</span>
+
+<span class="k">for</span><span class="w"> </span>POL_BANDS<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">40</span><span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="m">80</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;NGsBlkXp [Ry]   E_vale [eV]   E_cond [eV]&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>summary_01_<span class="si">${</span><span class="nv">POL_BANDS</span><span class="si">}</span>bands.txt
+
+<span class="k">for</span><span class="w"> </span>NGsBlkXp_Ry<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">12</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+
+<span class="nv">label</span><span class="o">=</span>Xp_<span class="si">${</span><span class="nv">POL_BANDS</span><span class="si">}</span>_bands_<span class="si">${</span><span class="nv">NGsBlkXp_Ry</span><span class="si">}</span>_Ry
+<span class="nv">jdir</span><span class="o">=</span>job_<span class="si">${</span><span class="nv">label</span><span class="si">}</span>
+<span class="nv">cdir</span><span class="o">=</span>out_<span class="si">${</span><span class="nv">label</span><span class="si">}</span>
+<span class="nv">filein</span><span class="o">=</span>i01-GW_<span class="si">${</span><span class="nv">label</span><span class="si">}</span>
+
+sed<span class="w"> </span><span class="s2">&quot;s/NGsBlkXp=.*/NGsBlkXp=</span><span class="si">${</span><span class="nv">NGsBlkXp_Ry</span><span class="si">}</span><span class="s2"> Ry/;</span>
+<span class="s2">      /% BndsRnXp/{n;s/.*/  1 |  </span><span class="si">${</span><span class="nv">POL_BANDS</span><span class="si">}</span><span class="s2"> |/}&quot;</span><span class="w"> </span><span class="nv">$file0</span><span class="w"> </span>&gt;<span class="w"> </span><span class="nv">$filein</span>
+
+<span class="c1"># run yambo</span>
+srun<span class="w"> </span>--mpi<span class="o">=</span>pmix<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">SLURM_NTASKS</span><span class="si">}</span><span class="w"> </span>yambo<span class="w"> </span>-F<span class="w"> </span><span class="nv">$filein</span><span class="w"> </span>-J<span class="w"> </span><span class="nv">$jdir</span><span class="w"> </span>-C<span class="w"> </span><span class="nv">$cdir</span>
+
+<span class="nv">E_GW_v</span><span class="o">=</span><span class="sb">`</span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">cdir</span><span class="si">}</span>/o-<span class="si">${</span><span class="nv">jdir</span><span class="si">}</span>.qp<span class="p">|</span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3+$4}&#39;</span><span class="sb">`</span>
+<span class="nv">E_GW_c</span><span class="o">=</span><span class="sb">`</span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">cdir</span><span class="si">}</span>/o-<span class="si">${</span><span class="nv">jdir</span><span class="si">}</span>.qp<span class="p">|</span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3+$4}&#39;</span><span class="sb">`</span>
+
+<span class="nv">GAP_GW</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$E_GW_c</span><span class="w"> </span>-<span class="w"> </span><span class="nv">$E_GW_v</span><span class="w"> </span><span class="p">|</span>bc<span class="sb">`</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="si">${</span><span class="nv">NGsBlkXp_Ry</span><span class="si">}</span><span class="w"> </span><span class="s1">&#39;        &#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">E_GW_v</span><span class="si">}</span><span class="w"> </span><span class="s1">&#39;        &#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">E_GW_c</span><span class="si">}</span><span class="w"> </span><span class="s1">&#39;        &#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">GAP_GW</span><span class="si">}</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>summary_01_<span class="si">${</span><span class="nv">POL_BANDS</span><span class="si">}</span>bands.txt
+<span class="k">done</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-batch-script-job-parallel-sh solution important dropdown admonition" id="solution-4">
+<p class="admonition-title">Batch script job_parallel.sh</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=16</span>
+<span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="c1">#SBATCH --partition=cpu</span>
+<span class="c1">#SBATCH --time=1:00:00</span>
+<span class="c1">#SBATCH --account=d2021-135-users</span>
+<span class="c1">#SBATCH --mem-per-cpu=2000MB</span>
+<span class="c1">#SBATCH --job-name=mos2</span>
+<span class="c1">##ATCH --reservation=maxcpu</span>
+
+<span class="c1"># load yambo and dependencies</span>
+module<span class="w"> </span>purge
+module<span class="w"> </span>use<span class="w"> </span>/ceph/hpc/data/d2021-135-users/modules
+module<span class="w"> </span>load<span class="w"> </span>YAMBO/5.1.1-FOSS-2022a
+<span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="si">${</span><span class="nv">SLURM_CPUS_PER_TASK</span><span class="si">}</span>
+
+<span class="c1"># info</span>
+<span class="nv">ncpu</span><span class="o">=</span><span class="si">${</span><span class="nv">SLURM_NTASKS</span><span class="si">}</span>
+<span class="nv">nthreads</span><span class="o">=</span><span class="si">${</span><span class="nv">OMP_NUM_THREADS</span><span class="si">}</span>
+
+<span class="nv">label</span><span class="o">=</span>MPI<span class="si">${</span><span class="nv">ncpu</span><span class="si">}</span>_OMP<span class="si">${</span><span class="nv">nthreads</span><span class="si">}</span>
+<span class="nv">jdir</span><span class="o">=</span>run_<span class="si">${</span><span class="nv">label</span><span class="si">}</span>
+<span class="nv">cdir</span><span class="o">=</span>run_<span class="si">${</span><span class="nv">label</span><span class="si">}</span>.out
+
+<span class="c1"># Update input file</span>
+<span class="nv">filein0</span><span class="o">=</span>gw.in<span class="w">         </span><span class="c1"># Original file</span>
+<span class="nv">filein</span><span class="o">=</span>gw_<span class="si">${</span><span class="nv">label</span><span class="si">}</span>.in<span class="w"> </span><span class="c1"># New file</span>
+
+cp<span class="w"> </span>-f<span class="w"> </span><span class="nv">$filein0</span><span class="w"> </span><span class="nv">$filein</span>
+cat<span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="nv">$filein</span><span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+
+<span class="s">DIP_CPU= &quot;1 $ncpu 1&quot;          # [PARALLEL] CPUs for each role</span>
+<span class="s">DIP_ROLEs= &quot;k c v&quot;            # [PARALLEL] CPUs roles (k,c,v)</span>
+<span class="s">DIP_Threads=  0               # [OPENMP/X] Number of threads for dipoles</span>
+<span class="s">X_and_IO_CPU= &quot;1 1 1 $ncpu 1&quot; # [PARALLEL] CPUs for each role</span>
+<span class="s">X_and_IO_ROLEs= &quot;q g k c v&quot;   # [PARALLEL] CPUs roles (q,g,k,c,v)</span>
+<span class="s">X_and_IO_nCPU_LinAlg_INV=1    # [PARALLEL] CPUs for Linear Algebra (if -1 it is automatically set)</span>
+<span class="s">X_Threads=  0                 # [OPENMP/X] Number of threads for response functions</span>
+<span class="s">SE_CPU= &quot;1 $ncpu 1&quot;           # [PARALLEL] CPUs for each role</span>
+<span class="s">SE_ROLEs= &quot;q qp b&quot;            # [PARALLEL] CPUs roles (q,qp,b)</span>
+<span class="s">SE_Threads=  0                # [OPENMP/GW] Number of threads for self-energy</span>
+
+<span class="s">EOF</span>
+
+<span class="c1"># run yambo</span>
+srun<span class="w"> </span>--mpi<span class="o">=</span>pmix<span class="w"> </span>-n<span class="w"> </span><span class="nv">$ncpu</span><span class="w"> </span>yambo<span class="w"> </span>-F<span class="w"> </span><span class="nv">$filein</span><span class="w"> </span>-J<span class="w"> </span><span class="nv">$jdir</span><span class="w"> </span>-C<span class="w"> </span><span class="nv">$cdir</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-plotting-script-plot-01-py solution important dropdown admonition" id="solution-5">
+<p class="admonition-title">Plotting script plot-01.py</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">list_of_bands</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">80</span><span class="p">]</span>
+
+<span class="n">list_of_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">bands</span> <span class="ow">in</span> <span class="n">list_of_bands</span><span class="p">:</span>
+ <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;summary_01_</span><span class="si">{</span><span class="n">bands</span><span class="si">}</span><span class="s1">bands.txt&#39;</span><span class="p">,</span><span class="n">comments</span><span class="o">=</span><span class="s1">&#39;NGs&#39;</span><span class="p">)</span>
+ <span class="n">list_of_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">bands</span><span class="p">,</span><span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list_of_bands</span><span class="p">,</span><span class="n">list_of_data</span><span class="p">):</span>
+ <span class="n">X</span><span class="o">=</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+ <span class="n">Y</span><span class="o">=</span><span class="n">data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">bands</span><span class="si">}</span><span class="s1">_bands&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Direct Gap [eV]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;NGsBlkXp [Ry]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fig-01.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-plotting-script-plot-02-py solution important dropdown admonition" id="solution-6">
+<p class="admonition-title">Plotting script plot-02.py</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">list_of_files</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;summary_02_noBG.txt&#39;</span><span class="p">]</span>
+<span class="c1">#list_of_files = [&#39;summary_02_noBG.txt&#39;,&#39;summary_03_BG.txt&#39;]</span>
+
+<span class="n">list_of_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">_file</span> <span class="ow">in</span> <span class="n">list_of_files</span><span class="p">:</span>
+ <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">_file</span><span class="p">,</span><span class="n">comments</span><span class="o">=</span><span class="s1">&#39;G b&#39;</span><span class="p">)</span>
+ <span class="n">list_of_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">_file</span><span class="p">,</span><span class="n">data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list_of_files</span><span class="p">,</span><span class="n">list_of_data</span><span class="p">):</span>
+ <span class="n">X</span><span class="o">=</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+ <span class="n">Y</span><span class="o">=</span><span class="n">data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+ <span class="n">_label</span><span class="o">=</span><span class="n">_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+ <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">_label</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Direct Gap [eV]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;G bands&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fig-02.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-analysis-script-parse-ytiming-py solution important dropdown admonition" id="solution-7">
+<p class="admonition-title">Analysis script parse-ytiming.py</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Script used to parse the timings at the end of</span>
+<span class="sd">Yambo reports file.</span>
+
+<span class="sd">Usage: parse_ytimings.py head_calc_dir</span>
+<span class="sd">head_calc_dir = first characters of the names of directories containing reports</span>
+
+<span class="sd">Output:</span>
+<span class="sd">- scaling plots</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">def</span> <span class="nf">parse_timing_data</span><span class="p">(</span><span class="n">separator1</span><span class="o">=</span><span class="s2">&quot; : &quot;</span><span class="p">,</span><span class="n">separator2</span> <span class="o">=</span><span class="s2">&quot;s P&quot;</span><span class="p">,</span><span class="n">separator3</span> <span class="o">=</span> <span class="s2">&quot;s C&quot;</span><span class="p">,</span><span class="n">separator4</span> <span class="o">=</span> <span class="s2">&quot;m-&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read timing sections of a list of report files</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get report files</span>
+    <span class="n">n_runs</span>    <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;*.out&#39;</span><span class="p">))</span>
+    <span class="n">reports</span>   <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;*/r-*&#39;</span><span class="p">)</span>
+    <span class="n">n_reports</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">reports</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_reports</span> <span class="o">!=</span> <span class="n">n_runs</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;[ERR] report (</span><span class="si">%d</span><span class="s2">) and run (</span><span class="si">%d</span><span class="s2">) numbers are different&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">n_reports</span><span class="p">,</span><span class="n">n_runs</span><span class="p">))</span>
+    <span class="c1"># Produce a dictionary for each output</span>
+    <span class="c1"># Key: timing section name, Value: timing in seconds</span>
+    <span class="n">time_dicts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">n_tasks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="n">reports</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">report</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="c1"># Find Timing Overview in the report</span>
+        <span class="k">for</span> <span class="n">il</span><span class="p">,</span><span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;Threads total&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span> <span class="n">n_tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="s2">&quot;Timing Overview&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span> <span class="n">l0</span> <span class="o">=</span> <span class="n">il</span>
+            <span class="k">if</span> <span class="s2">&quot;Memory Overview&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span> <span class="n">l1</span> <span class="o">=</span> <span class="n">il</span>
+        <span class="n">lines</span><span class="o">=</span><span class="n">lines</span><span class="p">[</span><span class="n">l0</span><span class="p">:</span><span class="n">l1</span><span class="p">]</span>
+        <span class="n">time_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">separator1</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">aux</span>   <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator1</span><span class="p">)</span>
+                <span class="n">key</span>   <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="c1"># Use separator2 for parallel runs, separator3 for serial</span>
+                <span class="k">if</span> <span class="n">separator2</span> <span class="ow">in</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">value</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">separator3</span> <span class="ow">in</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">value</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="c1"># Convert in seconds if minutes format found</span>
+                <span class="k">if</span> <span class="n">separator4</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator4</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mf">60.</span><span class="o">+</span>\
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator4</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>                   <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">time_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span>
+        <span class="n">time_dicts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time_dict</span><span class="p">)</span>
+    <span class="c1"># Last check</span>
+    <span class="n">n_dicts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_dicts</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_dicts</span><span class="o">!=</span><span class="n">n_reports</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;[ERR] Parsing problem (number of dicts. </span><span class="si">%d</span><span class="s2"> different from number of reports </span><span class="si">%d</span><span class="s2">)&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">n_dicts</span><span class="p">,</span><span class="n">n_reports</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">n_tasks</span><span class="p">,</span><span class="n">time_dicts</span>
+
+<span class="k">def</span> <span class="nf">get_global_time</span><span class="p">(</span><span class="n">separator1</span><span class="o">=</span><span class="s2">&quot;m-&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read global time (MAX) from list of report files</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get report files</span>
+    <span class="n">n_runs</span>    <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;*.out&#39;</span><span class="p">))</span>
+    <span class="n">reports</span>   <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;*/r-*&#39;</span><span class="p">)</span>
+    <span class="n">n_reports</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">reports</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_reports</span> <span class="o">!=</span> <span class="n">n_runs</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;[ERR] report and run number are different: &quot;</span><span class="p">,</span><span class="n">n_reports</span><span class="p">,</span><span class="n">n_runs</span><span class="p">)</span>
+    <span class="n">time_total</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="n">reports</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">report</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;[Time-Profile]&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">separator1</span> <span class="ow">in</span> <span class="n">time</span><span class="p">:</span> <span class="n">time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mf">60.</span><span class="o">+</span>\
+                                              <span class="nb">float</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>                  <span class="n">time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+                <span class="n">time_total</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+                <span class="k">break</span>
+    <span class="n">n_times</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_total</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_times</span><span class="o">!=</span><span class="n">n_reports</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;[ERR] Parsing problem (number of times </span><span class="si">%d</span><span class="s2"> different from number of reports </span><span class="si">%d</span><span class="s2">)&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">n_times</span><span class="p">,</span><span class="n">n_reports</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">time_total</span>
+
+<span class="k">def</span> <span class="nf">plot_scaling</span><span class="p">(</span><span class="n">n_tasks</span><span class="p">,</span><span class="n">time_total</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot scaling figure: times (s) vs n_tasks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">n_tasks</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n_tasks</span><span class="p">)</span>
+    <span class="n">time_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">time_total</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">n_tasks</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">time_total</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">n_tasks</span><span class="p">)]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;N tasks&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;teal&#39;</span><span class="p">,</span><span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gw_scaling.png&#39;</span><span class="p">)</span>
+    <span class="c1">#plt.show()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">!=</span><span class="mi">2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: &gt; python parse_ytimings.py header_dir&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;with argument being head chars of report directory i.e. &#39;header_dir&#39;=&#39;run_MPI&#39;&quot;</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">()</span>
+
+    <span class="n">n_tasks</span><span class="p">,</span> <span class="n">time_dicts</span> <span class="o">=</span> <span class="n">parse_timing_data</span><span class="p">()</span>
+    <span class="n">time_total</span> <span class="o">=</span> <span class="n">get_global_time</span><span class="p">()</span>
+    <span class="n">plot_scaling</span><span class="p">(</span><span class="n">n_tasks</span><span class="p">,</span><span class="n">time_total</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-plotting-script-plot-bands-py solution important dropdown admonition" id="solution-8">
+<p class="admonition-title">Plotting script plot_bands.py</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">plot_bands</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span><span class="n">data2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot bands (DFT vs GW)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">get_high_sym_indices</span><span class="p">(</span><span class="n">Npts</span><span class="p">):</span>
+        <span class="n">den</span><span class="o">=</span><span class="mf">3.</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">3.</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">3.</span><span class="p">)</span><span class="o">/</span><span class="n">den</span><span class="p">,</span><span class="mf">1.</span><span class="o">/</span><span class="n">den</span><span class="p">,</span><span class="mf">2.</span><span class="o">/</span><span class="n">den</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">Npts</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="nb">int</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="n">Npts</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">Npts</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Energy (eV)&quot;</span><span class="p">)</span>
+    <span class="n">Spts</span> <span class="o">=</span> <span class="n">get_high_sym_indices</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data1</span><span class="p">))</span>
+    <span class="n">Svals</span><span class="o">=</span> <span class="p">[</span> <span class="n">data1</span><span class="p">[</span><span class="n">pt</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">Spts</span> <span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">Svals</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="s1">&#39;G&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;K&#39;</span><span class="p">,</span><span class="s1">&#39;G&#39;</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Svals</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+    <span class="n">Nb</span> <span class="o">=</span> <span class="n">data1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">ib</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nb</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ib</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data1</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data1</span><span class="p">[:,</span><span class="n">ib</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;dft&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data2</span><span class="p">[:,</span><span class="n">ib</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;gw&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data1</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data1</span><span class="p">[:,</span><span class="n">ib</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data2</span><span class="p">[:,</span><span class="n">ib</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gw_bands.png&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">!=</span><span class="mi">4</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: &gt; python plot_bands.py DFT_bands_file GW_bands_file N_b&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;with argument being name of interpolated bands file: DFT, GW&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;and N_b the bands number&quot;</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">()</span>
+
+<span class="n">Nb</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nb</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">]</span>
+<span class="n">dft_bands</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="n">cols</span><span class="p">))</span>
+<span class="n">gw_bands</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="n">cols</span><span class="p">))</span>
+<span class="n">plot_bands</span><span class="p">(</span><span class="n">dft_bands</span><span class="p">,</span><span class="n">gw_bands</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>We will work in <code class="docutils literal notranslate"><span class="pre">/exa5/data/d2021-135-users</span></code>. If you didn’t do it before, <strong>please create there a directory named after your username</strong>.</p></li>
+<li><p>The tutorial is located in <code class="docutils literal notranslate"><span class="pre">/exa5/data/d2021-135-users/YAMBO_TUTORIAL</span></code>
+<strong>Please copy this directory in your own user’s directory</strong>:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">exa5</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">d2021</span><span class="o">-</span><span class="mi">135</span><span class="o">-</span><span class="n">users</span>
+<span class="n">mkdir</span> <span class="n">MY</span><span class="o">-</span><span class="n">USER</span><span class="o">-</span><span class="n">DIRECTORY</span>
+<span class="n">cp</span> <span class="o">-</span><span class="n">r</span> <span class="o">/</span><span class="n">exa5</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">d2021</span><span class="o">-</span><span class="mi">135</span><span class="o">-</span><span class="n">users</span><span class="o">/</span><span class="n">YAMBO_TUTORIAL</span> <span class="n">MY</span><span class="o">-</span><span class="n">USER</span><span class="o">-</span><span class="n">DIRECTORY</span><span class="o">/</span>
+<span class="n">cd</span> <span class="n">MY</span><span class="o">-</span><span class="n">USER</span><span class="o">-</span><span class="n">DIRECTORY</span>
+</pre></div>
+</div>
+<p>In this tutorial you will learn how to run a GW simulation using Yambo on a HPC machine.</p>
+<p>You will compute the quasiparticle corrections to the band structure of a free-standing single layer of MoS$_2$ while learning about convergence studies, parallel strategies, and GPU calculations.</p>
+<p>In the end, you will obtain a quasiparticle band structure based on the simulations, the first step towards the reproduction of an ARPES spectrum. Beware: we won’t use fully converged parameters, so the final result should not be considered very accurate.</p>
+<figure class="align-default">
+<img alt="https://i.imgur.com/EtICxQb.png" src="https://i.imgur.com/EtICxQb.png" />
+</figure>
+<p><em>MoS$_2$ monolayer (top and side views). Gray: Mo atoms, yellow: S atoms.</em></p>
+<section id="many-body-corrections-to-the-dft-band-gap">
+<h2>Many-body corrections to the DFT band gap<a class="headerlink" href="#many-body-corrections-to-the-dft-band-gap" title="Permalink to this heading"></a></h2>
+<p>We want to describe the electronic energy levels using a better description of electron-electron interactions than DFT is capable of.</p>
+<p>Essentially, we want to solve the non-linear quasiparticle equation at first order in the GW self-energy <span class="math notranslate nohighlight">\(Σ\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[E^{QP}_{nk}=\epsilon_{nk}+Z_{nk}[\Sigma]\langle\psi_{nk}|\Sigma(\epsilon_{nk})-V_{xc}|\psi_{nk}\rangle\]</div>
+<p>For each electronic state $nk$, the self-energy can be separated into two components: a static, gap-opening term called the exchange self-energy (<span class="math notranslate nohighlight">\(\Sigma^x\)</span>), and an energy-dependent, usually gap-closing term called the correlation self-energy (<span class="math notranslate nohighlight">\(\Sigma^c\)</span>). These contributions are tackled separately by the code:</p>
+<div class="math notranslate nohighlight">
+\[\Sigma_{nk}(\omega)=\Sigma_{nk}^x+\Sigma^c_{nk}(\omega)\]</div>
+<p>The energy-dependent dynamical electronic screening <span class="math notranslate nohighlight">\(\varepsilon^{-1}(\omega)\)</span> is included in <span class="math notranslate nohighlight">\(\Sigma^c\)</span>.</p>
+<p>In this way, we can compute the “quasiparticle” corrections <span class="math notranslate nohighlight">\(E^{QP}_{nk}\)</span> to the single-particle Kohn-Sham eigenvalues <span class="math notranslate nohighlight">\(\epsilon_{nk}\)</span>.
+The typical workflow for a GW calculation is:</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/GW_graph.png"><img alt="../_images/GW_graph.png" src="../_images/GW_graph.png" style="width: 337.6px; height: 456.0px;" /></a>
+</figure>
+</section>
+<section id="set-up-a-yambo-calculation">
+<h2>Set up a Yambo calculation<a class="headerlink" href="#set-up-a-yambo-calculation" title="Permalink to this heading"></a></h2>
+<p>Provided you have cloned the tutorial repository in your directory, enter it now</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd YAMBO_TUTORIAL</span>
+</pre></div>
+</div>
+<section id="yambo-save-folder">
+<h3>Yambo <code class="docutils literal notranslate"><span class="pre">SAVE</span></code> folder<a class="headerlink" href="#yambo-save-folder" title="Permalink to this heading"></a></h3>
+<p>First of all, we need to convert some of the data produced in a previous non-self-consistent DFT calculation (using Quantum ESPRESSO) into a convenient format for Yambo.</p>
+<p>The QE save folder for MoS$_2$ is at <code class="docutils literal notranslate"><span class="pre">00_QE-DFT</span></code>. Move inside it and then run the <code class="docutils literal notranslate"><span class="pre">p2y</span></code> executable to generate the uninitialised <code class="docutils literal notranslate"><span class="pre">SAVE</span></code>. But first, we need to load the yambo-specific modules:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">module use /ceph/hpc/data/d2021-135-users/modules</span>
+<span class="go">module load YAMBO/5.1.1-FOSS-2022a</span>
+</pre></div>
+</div>
+<p>Then:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd 00_QE-DFT/mos2.save</span>
+<span class="go">p2y</span>
+</pre></div>
+</div>
+<p>Now, we need to run the initialization step. Every Yambo run <strong>must</strong> start with this step. Just type</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">yambo</span>
+</pre></div>
+</div>
+<p>and check the standard output. This step determins the $G$-vector shells and $k$- and $q$-point grids from the DFT calculations. If you check inside the <code class="docutils literal notranslate"><span class="pre">SAVE</span></code> you will see two types of databases. The static ones, starting with <code class="docutils literal notranslate"><span class="pre">ns.*</span></code>, are directly converted in the <code class="docutils literal notranslate"><span class="pre">p2y</span></code>, while the dynamical ones, <code class="docutils literal notranslate"><span class="pre">ndb.*</span></code> are generated during the initialisation.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ls SAVE/</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ndb</span><span class="o">.</span><span class="n">gops</span>       <span class="c1"># info on G-vector shells, etc</span>
+<span class="n">ndb</span><span class="o">.</span><span class="n">kindx</span>      <span class="c1"># info and k and q meshes</span>
+<span class="n">ns</span><span class="o">.</span><span class="n">db1</span>         <span class="c1"># info on geometry and KS bands</span>
+<span class="n">ns</span><span class="o">.</span><span class="n">kb_pp_pwscf</span> <span class="c1"># pseudopotential info</span>
+<span class="n">ns</span><span class="o">.</span><span class="n">wf</span>          <span class="c1"># wave functions info</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>The databases are written in netCDF format.
+Yambo has produced also a human readable output, <code class="docutils literal notranslate"><span class="pre">r_setup</span></code>, reporting relevant information such as lattice parameters, symmetries, atomic positions, k-points, DFT eigenvalues and band gaps. We can have a quick look at the sections.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vim r_setup</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">02.01</span><span class="p">]</span> <span class="n">Unit</span> <span class="n">cells</span> <span class="c1"># Lattice geometry info</span>
+<span class="o">==================</span>
+  <span class="o">...</span>
+<span class="p">[</span><span class="mf">02.02</span><span class="p">]</span> <span class="n">Symmetries</span> <span class="c1"># Symmetry ops. written explicitly</span>
+<span class="o">==================</span>
+  <span class="o">...</span>
+<span class="p">[</span><span class="mf">02.03</span><span class="p">]</span> <span class="n">Reciprocal</span> <span class="n">space</span>  <span class="c1"># Reciprocal lattice info</span>
+<span class="o">========================</span>
+<span class="o">...</span>
+<span class="p">[</span><span class="mf">02.04</span><span class="p">]</span> <span class="n">K</span><span class="o">-</span><span class="n">grid</span> <span class="n">lattice</span> <span class="c1"># k-point coords. written explicitly</span>
+<span class="o">======================</span>
+<span class="o">...</span>
+<span class="p">[</span><span class="mf">02.05</span><span class="p">]</span> <span class="n">Energies</span> <span class="o">&amp;</span> <span class="n">Occupations</span> <span class="c1"># Info on band gaps and occupations</span>
+<span class="o">==============================</span> <span class="c1"># DFT eigenvalues</span>
+<span class="o">...</span>
+<span class="p">[</span><span class="mi">03</span><span class="p">]</span> <span class="n">Transferred</span> <span class="n">momenta</span> <span class="n">grid</span> <span class="ow">and</span> <span class="n">indexing</span> <span class="c1"># q-points (momentum transfer grid)</span>
+<span class="o">==========================================</span>
+</pre></div>
+</div>
+<p>Finally, let us move the <code class="docutils literal notranslate"><span class="pre">SAVE</span></code> and the report file to the directory where we will run the first GW calculation.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mv SAVE r_setup ../../01_GW_first_run/</span>
+<span class="go">cd ../../01_GW_first_run/</span>
+</pre></div>
+</div>
+</section>
+<section id="yambo-input-file">
+<h3>Yambo input file<a class="headerlink" href="#yambo-input-file" title="Permalink to this heading"></a></h3>
+<p>Now that we have a working <code class="docutils literal notranslate"><span class="pre">SAVE</span></code>, it is time to generate the input file we will be using for our first GW calculation.</p>
+<p>This can be done by the <code class="docutils literal notranslate"><span class="pre">yambo</span></code> executable via command-line instructions.</p>
+<p>If you type</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">yambo -h</span>
+</pre></div>
+</div>
+<p>You will get a list of the possibile options:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> ___ __  _____  __ __  _____   _____
+|   Y  ||  _  ||  Y  ||  _  \ |  _  |
+|   |  ||. |  ||.    ||. |  / |. |  |
+ \   _/ |. _  ||.\ / ||. _  \ |. |  |
+  |: |  |: |  ||: |  ||: |   \|: |  |
+  |::|  |:.|:.||:.|:.||::.   /|::.  |
+  `--&quot;  `-- --&quot;`-- --&quot;`-----&quot; `-----&quot;
+ &#39;A shiny pot of fun and happiness [C.D.Hogan]&#39;
+
+ This is      : yambo
+ Version      : 5.1.0 Revision 21422 Hash fde6e2a07
+ Configuration: MPI+OpenMP+SLK+HDF5_MPI_IO
+
+ Help &amp; version:
+ -help            (-h) &lt;string&gt;   :&lt;string&gt; can be an option (e.g. -h optics)
+ -version                         :Code version &amp; libraries
+
+ Input file &amp; Directories:
+ -Input           (-F) &lt;string&gt;   :Input file
+ -Verbosity       (-V) &lt;string&gt;   :Input file variables verbosity (more with -h Verbosity)
+ -Job             (-J) &lt;string&gt;   :Job string
+ -Idir            (-I) &lt;string&gt;   :Input directory
+ -Odir            (-O) &lt;string&gt;   :I/O directory
+ -Cdir            (-C) &lt;string&gt;   :Communication directory
+
+ Parallel Control:
+ -parenv          (-E) &lt;string&gt;   :Environment Parallel Variables file
+ -nompi                           :Switch off MPI support
+ -noopenmp                        :Switch off OPENMP support
+
+ Initializations:
+ -setup           (-i)            :Initialization
+ -coulomb         (-r)            :Coulomb potential
+
+ Response Functions:
+ -optics          (-o) &lt;string&gt;   :Linear Response optical properties (more with -h optics)
+ -X               (-d) &lt;string&gt;   :Inverse Dielectric Matrix (more with -h X)
+ -dipoles         (-q)            :Oscillator strenghts (or dipoles)
+ -kernel          (-k) &lt;string&gt;   :Kernel (more with -h kernel)
+
+ Self-Energy:
+ -hf              (-x)            :Hartree-Fock
+ -gw0             (-p) &lt;string&gt;   :GW approximation (more with -h gw0)
+ -dyson           (-g) &lt;string&gt;   :Dyson Equation solver (more with -h dyson)
+ -lifetimes       (-l)            :GoWo Quasiparticle lifetimes
+
+ Bethe-Salpeter Equation:
+ -Ksolver         (-y) &lt;string&gt;   :BSE solver (more with -h Ksolver)
+
+ Total Energy:
+ -acfdt                           :ACFDT Total Energy
+
+ Utilites:
+ -Quiet           (-Q)            :Quiet input file creation
+ -fatlog                          :Verbose (fatter) log(s)
+ -DBlist          (-D)            :Databases properties
+ -walltime             &lt;int&gt;      :Walltime (more with -h walltime)
+ -memory               &lt;int&gt;      :Memory (more with -h memory)
+ -slktest                         :ScaLapacK test
+
+ YAMBO developers group (http://www.yambo-code.org)
+</pre></div>
+</div>
+<p>In order to build our input, we need to use the options for a GW calculation. We want to use the plasmon pole approximation for the dynamical screening, solve the quasiparticle equation with the Newton method, and add a truncation of the Coulomb potential which is useful for 2D systems. In addition, we want to set up explicitly the parameters for parallel runs. Therefore we type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">yambo -gw0 p -g n -r -V par -F gw.in</span>
+</pre></div>
+</div>
+<p>You can now inspect the input file <code class="docutils literal notranslate"><span class="pre">gw.in</span></code> and try to familiarize with some of the parameters. The input will come with default values for many parameters that we might need to change.</p>
+<p>We discuss them below step by step.</p>
+</section>
+<section id="parameters-for-a-gw-calculation">
+<h3>Parameters for a GW calculation<a class="headerlink" href="#parameters-for-a-gw-calculation" title="Permalink to this heading"></a></h3>
+<p>We start with the runlevels:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rim_cut</span>                          <span class="c1"># [R] Coulomb potential</span>
+<span class="n">gw0</span>                              <span class="c1"># [R] GW approximation</span>
+<span class="n">ppa</span>                              <span class="c1"># [R][Xp] Plasmon Pole Approximation for the Screened Interaction</span>
+<span class="n">dyson</span>                            <span class="c1"># [R] Dyson Equation solver</span>
+<span class="n">HF_and_locXC</span>                     <span class="c1"># [R] Hartree-Fock</span>
+<span class="n">em1d</span>                             <span class="c1"># [R][X] Dynamically Screened Interaction</span>
+</pre></div>
+</div>
+<div class="admonition-runlevels callout admonition" id="callout-0">
+<p class="admonition-title">Runlevels</p>
+<ul class="simple">
+<li><p>The <strong>[R]</strong> keyword refers to the runlevels: these flag tell Yambo which parts of the code should be executed. Each runlevel enables its own set of input variables. In particular here we have:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">rim_cut</span></code>: Coulomb potential random integration method and cutoff (enables [RIM] and [CUT] variables).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gw0</span></code>: Yambo learns that it has to run a GW calculation (enables [GW] variables).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HF_and_locXC</span></code>: calculation of exchange part of the self-energy $\Sigma^x$ (i.e., Hartree-Fock approximation).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">em1d</span></code>: enables the calculation of the dynamical screening of the electrons, i.e. the dielectric matrix ([X] variables). In this way Yambo can go beyond Hartree-Fock and compute $\Sigma^c$.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ppa</span></code>: tells Yambo that the dynamical screening should be computed in the plasmon pole approximation ([Xp] variables).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dyson</span></code>: Yambo will solve the Dyson-like quasiparticle equation.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Going through the file we find:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXXRLvcs</span><span class="o">=</span>  <span class="mi">37965</span>           <span class="n">RL</span>    <span class="c1"># [XX] Exchange    RL components</span>
+<span class="n">VXCRLvcs</span><span class="o">=</span>  <span class="mi">37965</span>           <span class="n">RL</span>    <span class="c1"># [XC] XCpotential RL components</span>
+</pre></div>
+</div>
+<p>Recall that we have, for the exchange self-energy:</p>
+<div class="math notranslate nohighlight">
+\[\Sigma^x_{nk} = - \sum_G\sum_v \int \frac{d^3q}{2\pi^3} v(q+G)|\rho_{nv}(k,q,G)|^2f_{vk-q}\]</div>
+<div class="admonition-exxrlvcs-and-vxcrlvcs callout admonition" id="callout-1">
+<p class="admonition-title">EXXRLvcs and VXCRLvcs</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EXXRLvcs</span></code> controls the number of G-vectors used to build the exchange self-energy, while <code class="docutils literal notranslate"><span class="pre">VXCRLvcs</span></code> does the same for the exchange-correlation potential reconstructed from DFT. Since these two quantities are to be subtracted, it is important to keep the same values here (and possibly not change the default maximum value).</p></li>
+</ul>
+</div>
+<p>Let us now have a look at the parameters for the calculation correlation part of the self-energy. Recall that we have:</p>
+<div class="math notranslate nohighlight">
+\[\Sigma^c_{nk} = i \sum_m \int \frac{d^3q}{2\pi^3} \sum_{GG'} v(q+G) \rho_{nmk}(q,G) \rho^*_{nmk}(q,G') \int d\omega' G^0_{mk-q}(\omega-\omega')\varepsilon^{-1}_{GG'}(q,\omega')\]</div>
+<p>(Here, the <span class="math notranslate nohighlight">\(\rho\)</span>-terms represent the screening matrix elements which are computed separately by yambo and stored in their own database.)</p>
+<p>The calculation which is divided in two steps. First, the response function in the plasmon pole approximation (<code class="docutils literal notranslate"><span class="pre">em1d</span> <span class="pre">ppa</span></code>), under the keywords <code class="docutils literal notranslate"><span class="pre">[X]</span></code> and <code class="docutils literal notranslate"><span class="pre">[Xp]</span></code>, i.e., <span class="math notranslate nohighlight">\(\varepsilon^{-1}_{GG'}(q,\omega)\)</span>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Chimod</span><span class="o">=</span> <span class="s2">&quot;HARTREE&quot;</span>                <span class="c1"># [X] IP/Hartree/ALDA/LRC/PF/BSfxc</span>
+<span class="o">%</span> <span class="n">BndsRnXp</span>
+   <span class="mi">1</span> <span class="o">|</span> <span class="mi">300</span> <span class="o">|</span>                     <span class="c1"># [Xp] Polarization function bands</span>
+<span class="o">%</span>
+<span class="n">NGsBlkXp</span><span class="o">=</span> <span class="mi">1</span>                <span class="n">RL</span>    <span class="c1"># [Xp] Response block size</span>
+<span class="o">%</span> <span class="n">LongDrXp</span>
+ <span class="mf">1.000000</span> <span class="o">|</span> <span class="mf">0.000000</span> <span class="o">|</span> <span class="mf">0.000000</span> <span class="o">|</span>        <span class="c1"># [Xp] [cc] Electric Field</span>
+<span class="o">%</span>
+<span class="n">PPAPntXp</span><span class="o">=</span> <span class="mf">27.21138</span>         <span class="n">eV</span>    <span class="c1"># [Xp] PPA imaginary energy</span>
+<span class="n">XTermKind</span><span class="o">=</span> <span class="s2">&quot;none&quot;</span>                <span class="c1"># [X] X terminator (&quot;none&quot;,&quot;BG&quot; Bruneval-Gonze)</span>
+</pre></div>
+</div>
+<div class="admonition-note callout admonition" id="callout-2">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Chimod=</span> <span class="pre">&quot;Hartree&quot;</span></code> indicates that we compute the response function in the RPA approximation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BndsRnXp</span></code> represents the electronic states included in the response function $\varepsilon$, and is a convergence parameter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NGsBlkXp</span></code> is the number of G-vectors used in the response function $\varepsilon^{-1}_{GG’}$. It is a convergence parameter and can be expressed in number of reciprocal lattice vectors (RL) or energy (Ry, suggested).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LongDrXp</span></code> represents the direction of the long-range auxiliary external electric field used to compute $\varepsilon^{-1}_{GG’}(q)$ at $q,G\rightarrow 0$. In general you have to be mindful of the system symmetries. In our case, we will put <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">|</span> <span class="pre">1</span> <span class="pre">|</span> <span class="pre">1</span></code> to cover all directions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PPAPntXp=</span> <span class="pre">27.21138</span> <span class="pre">eV</span></code> is the energy of the plasmon pole. We don’t normally change this.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XTermKind</span></code> is used to specify a “terminator”: this accelerates numerical convergence with respect to the number of bands <code class="docutils literal notranslate"><span class="pre">BndsRnXp</span></code>.</p></li>
+</ul>
+</div>
+<p>Next, we have the <code class="docutils literal notranslate"><span class="pre">[GW]</span></code> group of parameters controlling the next part of the correlation self-energy calculation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">GbndRnge</span>
+   <span class="mi">1</span> <span class="o">|</span> <span class="mi">300</span> <span class="o">|</span>                         <span class="c1"># [GW] G[W] bands range</span>
+<span class="o">%</span>
+<span class="n">GTermKind</span><span class="o">=</span> <span class="s2">&quot;none&quot;</span>                <span class="c1"># [GW] GW terminator (&quot;none&quot;,&quot;BG&quot; Bruneval-Gonze,&quot;BRS&quot; Berger-Reining-Sottile)</span>
+<span class="n">DysSolver</span><span class="o">=</span> <span class="s2">&quot;n&quot;</span>                   <span class="c1"># [GW] Dyson Equation solver (&quot;n&quot;,&quot;s&quot;,&quot;g&quot;)</span>
+<span class="o">%</span><span class="n">QPkrange</span>                        <span class="c1"># [GW] QP generalized Kpoint/Band indices</span>
+<span class="mi">1</span><span class="o">|</span><span class="mi">7</span><span class="o">|</span><span class="mi">1</span><span class="o">|</span><span class="mi">300</span><span class="o">|</span>
+<span class="o">%</span>
+</pre></div>
+</div>
+<div class="admonition-note callout admonition" id="callout-3">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GbndRnge</span></code> is the number of G-vectors used to build the correlation self-energy. It is a convergence parameter and can be accelerated with <code class="docutils literal notranslate"><span class="pre">GTermKind</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DysSolver=&quot;n&quot;</span></code> specifies the method used to solve the linearised quasiparticle equation. In most cases, we use the Newton method <code class="docutils literal notranslate"><span class="pre">&quot;n&quot;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QPkrange</span></code> indicates the range electronic (nk) states for which the GW correction $\Sigma_{nk}$ is computed. The first two numbers represents the range of k-point indices, the second two the range of band indices.</p></li>
+</ul>
+</div>
+<p>We now take a look at the parameters relative to the Coulomb interaction at small momenta and for 2D systems, which we should <strong>edit now once and for all</strong>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RandQpts</span><span class="o">=</span><span class="mi">1000000</span>                       <span class="c1"># [RIM] Number of random q-points in the BZ</span>
+<span class="n">RandGvec</span><span class="o">=</span> <span class="mi">100</span>                <span class="n">RL</span>    <span class="c1"># [RIM] Coulomb interaction RS components</span>
+<span class="n">CUTGeo</span><span class="o">=</span> <span class="s2">&quot;slab z&quot;</span>                   <span class="c1"># [CUT] Coulomb Cutoff geometry: box/cylinder/sphere/ws/slab X/Y/Z/XY..</span>
+</pre></div>
+</div>
+<div class="admonition-note callout admonition" id="callout-4">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The <strong>[RIM]</strong> keyword refers to a Monte Carlo random integration method performed to avoid numerical instabilities close to $q=0$ and $G=0$ in the $q$-integration of the bare Coulomb interaction - i.e. $4\pi/(q+G)^2$ - for 2D systems.</p></li>
+<li><p>The <strong>[CUT]</strong> keyword refers to the truncation of the Coulomb interaction to avoid spurious interaction between periodically repeated copies of the simulation supercell along the $z$-direction (we are working with a plane-wave code). Keep in mind that the vacuum space between two copies of the system should be converged: here we are using 20 bohr but a value of 40 bohr would be more realistic.</p></li>
+</ul>
+</div>
+<p>Finally, we have the parallel parameters. We are going to discuss them at the end of the parallel section, we can skip them for now.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_and_IO_CPU</span><span class="o">=</span> <span class="s2">&quot;&quot;</span>                 <span class="c1"># [PARALLEL] CPUs for each role</span>
+<span class="n">X_and_IO_ROLEs</span><span class="o">=</span> <span class="s2">&quot;&quot;</span>               <span class="c1"># [PARALLEL] CPUs roles (q,g,k,c,v)</span>
+<span class="n">X_and_IO_nCPU_LinAlg_INV</span><span class="o">=-</span><span class="mi">1</span>      <span class="c1"># [PARALLEL] CPUs for Linear Algebra (if -1 it is automatically set)</span>
+<span class="n">X_Threads</span><span class="o">=</span><span class="mi">0</span>                      <span class="c1"># [OPENMP/X] Number of threads for response functions</span>
+<span class="n">DIP_CPU</span><span class="o">=</span> <span class="s2">&quot;&quot;</span>                      <span class="c1"># [PARALLEL] CPUs for each role</span>
+<span class="n">DIP_ROLEs</span><span class="o">=</span> <span class="s2">&quot;&quot;</span>                    <span class="c1"># [PARALLEL] CPUs roles (k,c,v)</span>
+<span class="n">DIP_Threads</span><span class="o">=</span><span class="mi">0</span>                    <span class="c1"># [OPENMP/X] Number of threads for dipoles</span>
+<span class="n">SE_CPU</span><span class="o">=</span> <span class="s2">&quot;&quot;</span>                       <span class="c1"># [PARALLEL] CPUs for each role</span>
+<span class="n">SE_ROLEs</span><span class="o">=</span> <span class="s2">&quot;&quot;</span>                     <span class="c1"># [PARALLEL] CPUs roles (q,qp,b)</span>
+<span class="n">SE_Threads</span><span class="o">=</span><span class="mi">0</span>                     <span class="c1"># [OPENMP/GW] Number of threads for self-energy</span>
+</pre></div>
+</div>
+<p>In a GW calculation, the most important parameters to be numerically converged are:</p>
+<ul class="simple">
+<li><p>kpoint mesh (requires multiple nscf DFT runs)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BndsRnXp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NGsBlkXp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GbndRnge</span></code></p></li>
+<li><p>[2D system]: vacuum separation with Coulomb cutoff (requires multiple scf+nscf DFT runs)</p></li>
+</ul>
+<p>From the above discussion you can easily guess that many-body perturbation theory calculations are much more numerically expensive than DFT calculations.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="the-first-run">
+<h2>The first run<a class="headerlink" href="#the-first-run" title="Permalink to this heading"></a></h2>
+<p>We will start by running a single GW calculation. Here we will focus on the magnitude of the quasiparticle gap. This means that we only need to calculate two quasi-particle corrections, i.e., valence and conduction bands at the k-point where the minimum gap occurs. This information can be found by inspecting the report file <code class="docutils literal notranslate"><span class="pre">r_setup</span></code> produced when the <code class="docutils literal notranslate"><span class="pre">SAVE</span></code> folder was initialised. Just search for the string ‘Direct Gap’ and you’ll see that the latter occurs at k-point 7 between bands 13 and 14:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="p">[</span><span class="n">X</span><span class="p">]</span> <span class="n">Filled</span> <span class="n">Bands</span>                                  <span class="p">:</span>  <span class="mi">13</span>
+  <span class="p">[</span><span class="n">X</span><span class="p">]</span> <span class="n">Empty</span> <span class="n">Bands</span>                                   <span class="p">:</span>   <span class="mi">14</span>  <span class="mi">300</span>
+  <span class="p">[</span><span class="n">X</span><span class="p">]</span> <span class="n">Direct</span> <span class="n">Gap</span>                                    <span class="p">:</span>  <span class="mf">1.858370</span> <span class="p">[</span><span class="n">eV</span><span class="p">]</span>
+  <span class="p">[</span><span class="n">X</span><span class="p">]</span> <span class="n">Direct</span> <span class="n">Gap</span> <span class="n">localized</span> <span class="n">at</span> <span class="n">k</span>                     <span class="p">:</span>  <span class="mi">7</span>
+</pre></div>
+</div>
+<p>In addition, we’ll set the number of bands in <code class="docutils literal notranslate"><span class="pre">BndsRnXp</span></code> and <code class="docutils literal notranslate"><span class="pre">GbndRnge</span></code> to a small value, just to have it run fast. Hence, we modify the input file accordingly (check <code class="docutils literal notranslate"><span class="pre">BndsRnXp</span></code>, <code class="docutils literal notranslate"><span class="pre">GbndRnge</span></code>, <code class="docutils literal notranslate"><span class="pre">LongDrXp</span></code>, <code class="docutils literal notranslate"><span class="pre">QPkrange</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rim_cut</span>                          <span class="c1"># [R] Coulomb potential</span>
+<span class="n">gw0</span>                              <span class="c1"># [R] GW approximation</span>
+<span class="n">ppa</span>                              <span class="c1"># [R][Xp] Plasmon Pole Approximation for the Screened Interaction</span>
+<span class="n">dyson</span>                            <span class="c1"># [R] Dyson Equation solver</span>
+<span class="n">HF_and_locXC</span>                     <span class="c1"># [R] Hartree-Fock</span>
+<span class="n">em1d</span>                             <span class="c1"># [R][X] Dynamically Screened Interaction</span>
+<span class="n">X_Threads</span><span class="o">=</span><span class="mi">0</span>                      <span class="c1"># [OPENMP/X] Number of threads for response functions</span>
+<span class="n">DIP_Threads</span><span class="o">=</span><span class="mi">0</span>                    <span class="c1"># [OPENMP/X] Number of threads for dipoles</span>
+<span class="n">SE_Threads</span><span class="o">=</span><span class="mi">0</span>                     <span class="c1"># [OPENMP/GW] Number of threads for self-energy</span>
+<span class="n">RandQpts</span><span class="o">=</span><span class="mi">1000000</span>                 <span class="c1"># [RIM] Number of random q-points in the BZ</span>
+<span class="n">RandGvec</span><span class="o">=</span> <span class="mi">100</span>              <span class="n">RL</span>    <span class="c1"># [RIM] Coulomb interaction RS components</span>
+<span class="n">CUTGeo</span><span class="o">=</span> <span class="s2">&quot;slab z&quot;</span>                   <span class="c1"># [CUT] Coulomb Cutoff geometry: box/cylinder/sphere/ws/slab X/Y/Z/XY..</span>
+<span class="o">%</span> <span class="n">CUTBox</span>
+ <span class="mf">0.000000</span> <span class="o">|</span> <span class="mf">0.000000</span> <span class="o">|</span> <span class="mf">0.000000</span> <span class="o">|</span>        <span class="c1"># [CUT] [au] Box sides</span>
+<span class="o">%</span>
+<span class="n">CUTRadius</span><span class="o">=</span> <span class="mf">0.000000</span>              <span class="c1"># [CUT] [au] Sphere/Cylinder radius</span>
+<span class="n">CUTCylLen</span><span class="o">=</span> <span class="mf">0.000000</span>              <span class="c1"># [CUT] [au] Cylinder length</span>
+<span class="n">CUTwsGvec</span><span class="o">=</span> <span class="mf">0.700000</span>              <span class="c1"># [CUT] WS cutoff: number of G to be modified</span>
+<span class="n">EXXRLvcs</span><span class="o">=</span>  <span class="mi">37965</span>           <span class="n">RL</span>    <span class="c1"># [XX] Exchange    RL components</span>
+<span class="n">VXCRLvcs</span><span class="o">=</span>  <span class="mi">37965</span>           <span class="n">RL</span>    <span class="c1"># [XC] XCpotential RL components</span>
+<span class="n">Chimod</span><span class="o">=</span> <span class="s2">&quot;HARTREE&quot;</span>                <span class="c1"># [X] IP/Hartree/ALDA/LRC/PF/BSfxc</span>
+<span class="o">%</span> <span class="n">BndsRnXp</span>
+   <span class="mi">1</span> <span class="o">|</span> <span class="mi">20</span> <span class="o">|</span>                         <span class="c1"># [Xp] Polarization function bands</span>
+<span class="o">%</span>
+<span class="n">NGsBlkXp</span><span class="o">=</span> <span class="mi">1</span>                <span class="n">RL</span>    <span class="c1"># [Xp] Response block size</span>
+<span class="o">%</span> <span class="n">LongDrXp</span>
+ <span class="mf">1.000000</span> <span class="o">|</span> <span class="mf">1.000000</span> <span class="o">|</span> <span class="mf">1.000000</span> <span class="o">|</span>        <span class="c1"># [Xp] [cc] Electric Field</span>
+<span class="o">%</span>
+<span class="n">PPAPntXp</span><span class="o">=</span> <span class="mf">27.21138</span>         <span class="n">eV</span>    <span class="c1"># [Xp] PPA imaginary energy</span>
+<span class="n">XTermKind</span><span class="o">=</span> <span class="s2">&quot;none&quot;</span>                <span class="c1"># [X] X terminator (&quot;none&quot;,&quot;BG&quot; Bruneval-Gonze)</span>
+<span class="o">%</span> <span class="n">GbndRnge</span>
+   <span class="mi">1</span> <span class="o">|</span> <span class="mi">20</span> <span class="o">|</span>                         <span class="c1"># [GW] G[W] bands range</span>
+<span class="o">%</span>
+<span class="n">GTermKind</span><span class="o">=</span> <span class="s2">&quot;none&quot;</span>                <span class="c1"># [GW] GW terminator (&quot;none&quot;,&quot;BG&quot; Bruneval-Gonze,&quot;BRS&quot; Berger-Reining-Sottile)</span>
+<span class="n">DysSolver</span><span class="o">=</span> <span class="s2">&quot;n&quot;</span>                   <span class="c1"># [GW] Dyson Equation solver (&quot;n&quot;,&quot;s&quot;,&quot;g&quot;)</span>
+<span class="o">%</span><span class="n">QPkrange</span>                        <span class="c1"># [GW] QP generalized Kpoint/Band indices</span>
+<span class="mi">7</span><span class="o">|</span><span class="mi">7</span><span class="o">|</span><span class="mi">13</span><span class="o">|</span><span class="mi">14</span><span class="o">|</span>
+<span class="o">%</span>
+</pre></div>
+</div>
+<p>We are now ready to run this calculation. Since you should never run a Yambo calculation on the login node, we will need a submission script to add our job to the queue. A minimal submission script is provided:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vim</span> <span class="n">run_first_job</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=16</span>
+<span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="c1">#SBATCH --partition=cpu</span>
+<span class="c1">#SBATCH --time=0:30:00</span>
+<span class="c1">#SBATCH --account=d2021-135-users</span>
+<span class="c1">#SBATCH --mem-per-cpu=2000MB</span>
+<span class="c1">#SBATCH --job-name=mos2</span>
+<span class="c1">#SBATCH --reservation=maxcpu</span>
+
+<span class="c1"># load yambo and dependencies</span>
+module<span class="w"> </span>purge
+module<span class="w"> </span>use<span class="w"> </span>/ceph/hpc/data/d2021-135-users/modules
+module<span class="w"> </span>load<span class="w"> </span>YAMBO/5.1.1-FOSS-2022a
+<span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="si">${</span><span class="nv">SLURM_CPUS_PER_TASK</span><span class="si">}</span>
+
+<span class="c1"># run yambo</span>
+srun<span class="w"> </span>--mpi<span class="o">=</span>pmix<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">SLURM_NTASKS</span><span class="si">}</span><span class="w"> </span>yambo<span class="w"> </span>-F<span class="w"> </span>gw.in<span class="w"> </span>-J<span class="w"> </span>job_00_first_run<span class="w"> </span>-C<span class="w"> </span>out_00_first_run
+</pre></div>
+</div>
+<p>We will ignore all details regarding parallelization, as it will be covered in the next section. Since there are no lowercase flags after <code class="docutils literal notranslate"><span class="pre">yambo</span></code>, it is not going to generate an input file, but rather, run the one specified by <code class="docutils literal notranslate"><span class="pre">-F</span></code>. Now, go ahead an submit this job</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sbatch run_first_job.sh</span>
+</pre></div>
+</div>
+<p>The status of the jobs can be monitored via:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">squeue -u $USER        # to inspect the status of jobs </span>
+<span class="gp">                       # </span><span class="o">(</span>hint:<span class="w"> </span>make<span class="w"> </span>a<span class="w"> </span>unix<span class="w"> </span>alias,<span class="w"> </span><span class="k">if</span><span class="w"> </span>you<span class="w"> </span>like<span class="o">)</span>
+<span class="go">scancel &lt;jobid&gt;        # to delete jobs in the queue</span>
+</pre></div>
+</div>
+<p>The newly generated databases will be stored in the job directory, as specified by <code class="docutils literal notranslate"><span class="pre">-J</span></code>, while the report, log and output files will be stored in the communications directory (<code class="docutils literal notranslate"><span class="pre">-C</span></code>). As this is your first <code class="docutils literal notranslate"><span class="pre">yambo</span></code> run, take a moment to inspect the report and log files, which you can find inside the <code class="docutils literal notranslate"><span class="pre">-C</span></code> directory. In these report and log files, you can see the steps performed by <code class="docutils literal notranslate"><span class="pre">yambo</span></code>. For instance, the code calculates the screening at every k-point and stores it in the PPA database. By opening the report</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vim out_00_first_run/r-job_00_first_run_HF_and_locXC_gw0_dyson_rim_cut_em1d_ppa</span>
+</pre></div>
+</div>
+<p>you will see</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">07</span><span class="p">]</span> <span class="n">Dynamic</span> <span class="n">Dielectric</span> <span class="n">Matrix</span> <span class="p">(</span><span class="n">PPA</span><span class="p">)</span>
+ <span class="o">====================================</span>
+
+ <span class="p">[</span><span class="n">WR</span><span class="o">./</span><span class="n">job_00_first_run</span><span class="o">//</span><span class="n">ndb</span><span class="o">.</span><span class="n">pp</span><span class="p">]</span><span class="o">-------------------------------</span>
+</pre></div>
+</div>
+<p>Then, the actual GW section will use this screening to construct the correlation part of the self-energy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">09.01</span><span class="p">]</span> <span class="n">G0W0</span> <span class="p">(</span><span class="n">W</span> <span class="n">PPA</span><span class="p">)</span>
+  <span class="o">====================</span>
+
+  <span class="p">[</span>  <span class="n">GW</span>  <span class="p">]</span> <span class="n">Bands</span> <span class="nb">range</span>     <span class="p">:</span>   <span class="mi">1</span>  <span class="mi">20</span>
+  <span class="p">[</span><span class="n">GW</span><span class="o">/</span><span class="n">PPA</span><span class="p">]</span> <span class="n">G</span> <span class="n">damping</span>       <span class="p">:</span>  <span class="mf">0.100000</span> <span class="p">[</span><span class="n">eV</span><span class="p">]</span>
+
+
+  <span class="n">QP</span> <span class="o">@</span> <span class="n">state</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="n">K</span> <span class="nb">range</span><span class="p">:</span>   <span class="mi">7</span>   <span class="mi">7</span>
+  <span class="n">QP</span> <span class="o">@</span> <span class="n">state</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="n">b</span> <span class="nb">range</span><span class="p">:</span>  <span class="mi">13</span>  <span class="mi">14</span>
+
+  <span class="p">[</span><span class="n">RD</span><span class="o">./</span><span class="n">job_00_first_run</span><span class="o">//</span><span class="n">ndb</span><span class="o">.</span><span class="n">pp</span><span class="p">]</span><span class="o">-------------------------------</span>
+</pre></div>
+</div>
+<p>Now, inspect the output file</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vim out_00_first_run/o-job_00_first_run.qp </span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Vxc  =Slater exchange(X)+Perdew &amp; Zunger(C)</span>
+<span class="c1"># Vnlxc=Hartree-Fock</span>
+<span class="c1">#</span>
+<span class="c1">#    K-point            Band               Eo [eV]            E-Eo [eV]          Sc|Eo [eV]</span>
+<span class="c1">#</span>
+         <span class="mi">7</span>                 <span class="mi">13</span>                 <span class="mf">0.000000</span>          <span class="o">-</span><span class="mf">0.025594</span>           <span class="mf">0.544159</span>
+         <span class="mi">7</span>                 <span class="mi">14</span>                 <span class="mf">1.858370</span>           <span class="mf">3.495889</span>          <span class="o">-</span><span class="mf">0.417727</span>
+<span class="c1"># </span>
+<span class="c1"># 11/11/2022 at 08:31 yambo @ cn0343 [start]</span>
+</pre></div>
+</div>
+<p>In this file, <code class="docutils literal notranslate"><span class="pre">Eo</span></code> is our starting point (DFT) while <code class="docutils literal notranslate"><span class="pre">E-Eo</span></code> shows the GW correction one should apply to obtain the quasi-particle energies. In order to calculate the gap (automatically from the command line), we’ll use some simple commands. First, we get everything that is not a <code class="docutils literal notranslate"><span class="pre">#</span></code> symbol <code class="docutils literal notranslate"><span class="pre">grep</span> <span class="pre">-v</span> <span class="pre">'#'</span></code> and we pass that to another command with a “pipe” <code class="docutils literal notranslate"><span class="pre">|</span></code>. Then, <code class="docutils literal notranslate"><span class="pre">tail</span> <span class="pre">-n</span> <span class="pre">1</span></code>/<code class="docutils literal notranslate"><span class="pre">head</span> <span class="pre">-n</span> <span class="pre">1</span></code> will retain the first/last line, and <code class="docutils literal notranslate"><span class="pre">awk</span> <span class="pre">'{print</span> <span class="pre">$3+$4}'</span></code> will get us the sum of the third and fourth columns. Altogether, this would be as follows</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">grep -v &#39;#&#39; out_00_first_run/o-job_00_first_run.qp|head -n 1| awk &#39;{print $3+$4}&#39;</span>
+<span class="go">-0.025594</span>
+<span class="go">grep -v &#39;#&#39; out_00_first_run/o-job_00_first_run.qp|tail -n 1| awk &#39;{print $3+$4}&#39;</span>
+<span class="go">5.35426</span>
+</pre></div>
+</div>
+<p>These two command give us the quasiparticle energies we’ve calculated - their difference is the GW-corrected optical gap.</p>
+</section>
+<hr class="docutils" />
+<section id="gw-convergence">
+<h2>GW convergence<a class="headerlink" href="#gw-convergence" title="Permalink to this heading"></a></h2>
+<p>In this part of the tutorial, we will study convergence with respect to some of the parameters mentioned above. In order to complete this tutorial within a single hands-on session, we will restrict ourselves to a very coarse $k$-point grid.
+Hence, we’ll perform our convergence studies on top of a DFT calculation done with a 6 $\times$ 6 $\times$ 1 k-point grid and without spin-orbit coupling: the <code class="docutils literal notranslate"><span class="pre">SAVE</span></code> we generated earlier.
+While this will speed up calculations and require few CPU cores, you should be aware that such coarse sampling of the BZ is severely underconverged and should only be used for educational purposes.
+Let’s move into the appropriate directory</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd ../02_GW_convergence</span>
+</pre></div>
+</div>
+<section id="response-function-varepsilon-1-gg-bands-and-g-vectors">
+<h3>Response function <span class="math notranslate nohighlight">\(\varepsilon^{-1}_{GG'}\)</span> - Bands and G-vectors<a class="headerlink" href="#response-function-varepsilon-1-gg-bands-and-g-vectors" title="Permalink to this heading"></a></h3>
+<p>We are now ready to start our convergence tests. We’ll begin with the variables controlling the polarization function, i.e., <code class="docutils literal notranslate"><span class="pre">NGsBlkXp</span></code> for the number of G-vectors and <code class="docutils literal notranslate"><span class="pre">BndsRnXp</span></code> for the number of bands. For this, we will keep <code class="docutils literal notranslate"><span class="pre">GbndRnge</span></code> constant at a reasonably high value - you can inspect the input <code class="docutils literal notranslate"><span class="pre">i01-GW</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vim i01-GW</span>
+</pre></div>
+</div>
+<p>and check that you have:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">GbndRnge</span>
+   <span class="mi">1</span> <span class="o">|</span> <span class="mi">80</span> <span class="o">|</span>                         <span class="c1"># [GW] G[W] bands range</span>
+<span class="o">%</span>
+</pre></div>
+</div>
+<p>Since we need to run <code class="docutils literal notranslate"><span class="pre">yambo</span></code> for several values of <code class="docutils literal notranslate"><span class="pre">NGsBlkXp</span></code> and <code class="docutils literal notranslate"><span class="pre">BndsRnXp</span></code>, it makes sense to use two nested loops. That is exactly what we did in the submission script <a class="reference external" href="https://hackmd.io/h7Rfne3KR4-0W2yJX0yEfA#Slurm-submission-for-convergence-tutorial"><code class="docutils literal notranslate"><span class="pre">run01_converge_pol.sh</span></code></a>. Since this will take a few minutes, save time by submitting it straight away and we’ll have a look at it while it runs:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sbatch run01_converge_pol.sh</span>
+</pre></div>
+</div>
+<div class="admonition-monitoring callout admonition" id="callout-5">
+<p class="admonition-title">Monitoring</p>
+<p>You can monitor that the job is running by the squeue command</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sbatch squeue -u $USER
+</pre></div>
+</div>
+<p>and also by checking the files created in your folder</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ls</span> <span class="o">-</span><span class="n">ltr</span>
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">-rw-rw-r-- 1 enccs035 enccs035  2995 15 nov 13.57 i01-GW_Xp_20_bands_6_Ry</span>
+<span class="go">drwxrwxr-x 2 enccs035 enccs035  4096 15 nov 13.57 job_Xp_20_bands_6_Ry</span>
+<span class="go">drwxrwxr-x 3 enccs035 enccs035  4096 15 nov 13.57 out_Xp_20_bands_6_Ry</span>
+<span class="go">-rw-rw-r-- 1 enccs035 enccs035  2995 15 nov 13.57 i01-GW_Xp_20_bands_8_Ry</span>
+<span class="go">drwxrwxr-x 3 enccs035 enccs035  4096 15 nov 13.57 out_Xp_20_bands_8_Ry</span>
+<span class="go">drwxrwxr-x 2 enccs035 enccs035  4096 15 nov 13.57 job_Xp_20_bands_8_Ry</span>
+<span class="go">-rw-rw-r-- 1 enccs035 enccs035  2996 15 nov 13.58 i01-GW_Xp_20_bands_10_Ry</span>
+<span class="go">drwxrwxr-x 3 enccs035 enccs035  4096 15 nov 13.58 out_Xp_20_bands_10_Ry</span>
+<span class="go">drwxrwxr-x 2 enccs035 enccs035  4096 15 nov 13.58 job_Xp_20_bands_10_Ry</span>
+<span class="go">-rw-rw-r-- 1 enccs035 enccs035  2996 15 nov 13.58 i01-GW_Xp_20_bands_12_Ry</span>
+<span class="go">drwxrwxr-x 3 enccs035 enccs035  4096 15 nov 13.58 out_Xp_20_bands_12_Ry</span>
+<span class="go">drwxrwxr-x 2 enccs035 enccs035  4096 15 nov 13.58 job_Xp_20_bands_12_Ry</span>
+<span class="go">-rw-rw-r-- 1 enccs035 enccs035   195 15 nov 13.58 summary_01_20bands.txt</span>
+<span class="go">-rw-rw-r-- 1 enccs035 enccs035  2995 15 nov 13.58 i01-GW_Xp_40_bands_6_Ry</span>
+<span class="go">...</span>
+</pre></div>
+</div>
+<p>Finally you can monitor how runs are proceeding by looking into the log files</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tail</span> <span class="o">-</span><span class="n">f</span> <span class="n">out_Xp_</span><span class="o">*</span><span class="n">_bands_</span><span class="o">*/</span><span class="n">LOG</span><span class="o">/*</span><span class="n">_1</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">==&gt;</span> <span class="n">out_Xp_20_bands_6_Ry</span><span class="o">/</span><span class="n">LOG</span><span class="o">/</span><span class="n">l</span><span class="o">-</span><span class="n">job_Xp_20_bands_6_Ry_HF_and_locXC_gw0_dyson_rim_cut_em1d_ppa_CPU_1</span> <span class="o">&lt;==</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">TIMING</span><span class="p">]</span>                                          <span class="n">io_WF</span> <span class="p">:</span>      <span class="mf">1.1353</span><span class="n">s</span> <span class="n">CPU</span> <span class="p">(</span><span class="mi">34</span> <span class="n">calls</span><span class="p">,</span>   <span class="mf">0.033</span> <span class="n">sec</span> <span class="n">avg</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">TIMING</span><span class="p">]</span>                                    <span class="n">WF_load_FFT</span> <span class="p">:</span>      <span class="mf">1.1538</span><span class="n">s</span> <span class="n">CPU</span> <span class="p">(</span> <span class="mi">7</span> <span class="n">calls</span><span class="p">,</span>   <span class="mf">0.165</span> <span class="n">sec</span> <span class="n">avg</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">TIMING</span><span class="p">]</span>                                    <span class="n">io_KB_pwscf</span> <span class="p">:</span>      <span class="mf">1.1918</span><span class="n">s</span> <span class="n">CPU</span> <span class="p">(</span> <span class="mi">6</span> <span class="n">calls</span><span class="p">,</span>   <span class="mf">0.199</span> <span class="n">sec</span> <span class="n">avg</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">TIMING</span><span class="p">]</span>                              <span class="n">DIPOLE_transverse</span> <span class="p">:</span>      <span class="mf">2.4771</span><span class="n">s</span> <span class="n">CPU</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">TIMING</span><span class="p">]</span>                                    <span class="n">io_fragment</span> <span class="p">:</span>      <span class="mf">2.6220</span><span class="n">s</span> <span class="n">CPU</span> <span class="p">(</span><span class="mi">46</span> <span class="n">calls</span><span class="p">,</span>   <span class="mf">0.057</span> <span class="n">sec</span> <span class="n">avg</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">TIMING</span><span class="p">]</span>                                           <span class="n">io_X</span> <span class="p">:</span>      <span class="mf">3.1953</span><span class="n">s</span> <span class="n">CPU</span> <span class="p">(</span><span class="mi">19</span> <span class="n">calls</span><span class="p">,</span>   <span class="mf">0.168</span> <span class="n">sec</span> <span class="n">avg</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">TIMING</span><span class="p">]</span>                                        <span class="n">Dipoles</span> <span class="p">:</span>      <span class="mf">4.4012</span><span class="n">s</span> <span class="n">CPU</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="n">Memory</span> <span class="n">Overview</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="n">Game</span> <span class="n">Over</span> <span class="o">&amp;</span> <span class="n">Game</span> <span class="n">summary</span>
+ <span class="o">&lt;</span><span class="mi">15</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">TIMING</span><span class="p">]</span>            <span class="p">[</span><span class="n">Time</span><span class="o">-</span><span class="n">Profile</span><span class="p">]:</span> <span class="mi">15</span><span class="n">s</span>
+
+<span class="o">==&gt;</span> <span class="n">out_Xp_20_bands_8_Ry</span><span class="o">/</span><span class="n">LOG</span><span class="o">/</span><span class="n">l</span><span class="o">-</span><span class="n">job_Xp_20_bands_8_Ry_HF_and_locXC_gw0_dyson_rim_cut_em1d_ppa_CPU_1</span> <span class="o">&lt;==</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="n">X</span><span class="nd">@q</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">|</span>                                        <span class="o">|</span> <span class="p">[</span><span class="mi">000</span><span class="o">%</span><span class="p">]</span> <span class="o">--</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">--</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="n">X</span><span class="nd">@q</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">|</span><span class="c1">########################################| [100%] --(E) --(X)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">PARALLEL</span> <span class="n">distribution</span> <span class="k">for</span> <span class="n">RL</span> <span class="n">vectors</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="n">on</span> <span class="mi">2</span> <span class="n">CPU</span><span class="p">]</span> <span class="n">Loaded</span><span class="o">/</span><span class="n">Total</span> <span class="p">(</span><span class="n">Percentual</span><span class="p">):</span><span class="mi">31878</span><span class="o">/</span><span class="mi">64009</span><span class="p">(</span><span class="mi">50</span><span class="o">%</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">PARALLEL</span> <span class="n">distribution</span> <span class="k">for</span> <span class="n">RL</span> <span class="n">vectors</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="n">on</span> <span class="mi">2</span> <span class="n">CPU</span><span class="p">]</span> <span class="n">Loaded</span><span class="o">/</span><span class="n">Total</span> <span class="p">(</span><span class="n">Percentual</span><span class="p">):</span><span class="mi">18975</span><span class="o">/</span><span class="mi">64009</span><span class="p">(</span><span class="mi">30</span><span class="o">%</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">X</span><span class="o">-</span><span class="n">CG</span><span class="p">]</span> <span class="n">R</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="n">Tot</span> <span class="n">o</span><span class="o">/</span><span class="n">o</span><span class="p">(</span><span class="n">of</span> <span class="n">R</span><span class="p">):</span>   <span class="mi">153</span>   <span class="mi">504</span>   <span class="mi">100</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="n">Xo</span><span class="nd">@q</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">|</span>                                        <span class="o">|</span> <span class="p">[</span><span class="mi">000</span><span class="o">%</span><span class="p">]</span> <span class="o">--</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">--</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="n">Xo</span><span class="nd">@q</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">|</span><span class="c1">########################################| [100%] --(E) --(X)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">PARALLEL</span> <span class="n">distribution</span> <span class="k">for</span> <span class="n">X</span> <span class="n">Frequencies</span> <span class="n">on</span> <span class="mi">1</span> <span class="n">CPU</span><span class="p">]</span> <span class="n">Loaded</span><span class="o">/</span><span class="n">Total</span> <span class="p">(</span><span class="n">Percentual</span><span class="p">):</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">(</span><span class="mi">100</span><span class="o">%</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="n">X</span><span class="nd">@q</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">|</span>                                        <span class="o">|</span> <span class="p">[</span><span class="mi">000</span><span class="o">%</span><span class="p">]</span> <span class="o">--</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">--</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="n">X</span><span class="nd">@q</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">|</span><span class="c1">########################################| [100%] --(E) --(X)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="n">PARALLEL</span> <span class="n">distribution</span> <span class="k">for</span> <span class="n">RL</span> <span class="n">vectors</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="n">on</span> <span class="mi">2</span> <span class="n">CPU</span><span class="p">]</span> <span class="n">Loaded</span><span class="o">/</span><span class="n">Total</span> <span class="p">(</span><span class="n">Percentual</span><span class="p">):</span><span class="mi">31878</span><span class="o">/</span><span class="mi">64009</span><span class="p">(</span><span class="mi">50</span><span class="o">%</span><span class="p">)</span>
+ <span class="o">&lt;</span><span class="mi">11</span><span class="n">s</span><span class="o">&gt;</span> <span class="n">P1</span><span class="p">:</span> <span class="p">[</span><span class="mi">08</span><span class="p">]</span> <span class="n">Local</span> <span class="n">Exchange</span><span class="o">-</span><span class="n">Correlation</span> <span class="o">+</span> <span class="n">Non</span><span class="o">-</span><span class="n">Local</span> <span class="n">Fock</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s now have look into the job we just submitted.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vim</span> <span class="n">run01_converge_pol</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>First, we defined the double loop and we intialize a summary file for each iteration of the outer loop by printing a header to it. The input file <code class="docutils literal notranslate"><span class="pre">i01-GW</span></code> is used as a template for every calculation in the loops, so we assign it to a variable.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">file0</span><span class="o">=</span><span class="s1">&#39;i01-GW&#39;</span>
+
+<span class="k">for</span><span class="w"> </span>POL_BANDS<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">40</span><span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="m">80</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;NGsBlkXp [Ry]   E_vale [eV]   E_cond [eV]&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>summary_01_<span class="si">${</span><span class="nv">POL_BANDS</span><span class="si">}</span>bands.txt
+
+<span class="k">for</span><span class="w"> </span>NGsBlkXp_Ry<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">12</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+
+<span class="o">(</span>...<span class="o">)</span>
+
+<span class="k">done</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+<p>Inside the loops, we generate some useful labels which will come in handy to distinguish between runs. Then, we pass the variables from the loops to the <code class="docutils literal notranslate"><span class="pre">sed</span></code> command, in order to generate new files in an automated way - <code class="docutils literal notranslate"><span class="pre">sed</span></code> replaces any matching string with whatever is provided by the loop variable. Next, we run <code class="docutils literal notranslate"><span class="pre">yambo</span></code> using the labels to specify different job <code class="docutils literal notranslate"><span class="pre">-J</span></code> and communications <code class="docutils literal notranslate"><span class="pre">-C</span></code> directories every time. Finally, we get the quasiparticle energies with <code class="docutils literal notranslate"><span class="pre">grep</span></code> commands as shown before and append a new line to the summary file. So, inside each loop, we have</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">label=Xp_${POL_BANDS}_bands_${NGsBlkXp_Ry}_Ry</span>
+<span class="go">jdir=job_${label}</span>
+<span class="go">cdir=out_${label}</span>
+<span class="go">filein=i01-GW_${label}</span>
+
+<span class="go">sed &quot;s/NGsBlkXp=.*/NGsBlkXp=${NGsBlkXp_Ry} Ry/;</span>
+<span class="go">      /% BndsRnXp/{n;s/.*/  1 |  ${POL_BANDS} |/}&quot; $file0 &gt; $filein</span>
+
+<span class="gp"># </span>run<span class="w"> </span>yambo
+<span class="go">srun --mpi=pmix -n ${SLURM_NTASKS} yambo -F $filein -J $jdir -C $cdir</span>
+
+<span class="go">E_GW_v=`grep -v &#39;#&#39; ${cdir}/o-${jdir}.qp|head -n 1| awk &#39;{print $3+$4}&#39;`</span>
+<span class="go">E_GW_c=`grep -v &#39;#&#39; ${cdir}/o-${jdir}.qp|tail -n 1| awk &#39;{print $3+$4}&#39;`</span>
+
+
+<span class="go">echo ${NGsBlkXp_Ry} &#39;        &#39; ${E_GW_v} &#39;        &#39; ${E_GW_c} &gt;&gt; summary_01_${POL_BANDS}bands.txt</span>
+</pre></div>
+</div>
+<p>Finally, let us plot this data. First, check that the job has finished with</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">squeue -u $USER</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="nv">$USER</span>@vglogin0005<span class="w"> </span>02_GW_convergence<span class="o">]</span>$<span class="w"> </span>squeue<span class="w"> </span>-u<span class="w"> </span>enccs035
+<span class="w">             </span>JOBID<span class="w"> </span>PARTITION<span class="w">     </span>NAME<span class="w">     </span>USER<span class="w"> </span>ST<span class="w">       </span>TIME<span class="w">  </span>NODES<span class="w"> </span>NODELIST<span class="o">(</span>REASON<span class="o">)</span>
+<span class="o">[</span><span class="nv">$USER</span>@vglogin0005<span class="w"> </span>02_GW_convergence<span class="o">]</span>$<span class="w"> </span>
+</pre></div>
+</div>
+<p>and verify that the energies were extracted correctly by inspecting the summary files. Remember to load the python module if you haven’t done so yet, and then plot:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">module purge</span>
+<span class="go">module load matplotlib/3.2.1-foss-2020a-Python-3.8.2</span>
+<span class="go">python plot-01.py</span>
+</pre></div>
+</div>
+<p>The plot will produce a <code class="docutils literal notranslate"><span class="pre">fig-01.png</span></code> file.
+You can copy and open it in your local machine with something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[WARNING: run this on another terminal in your local machine, fixing $USER]
+scp $USER@login.vega.izum.si:/exa5/data/d2021-135-users/$USER/YAMBO_TUTORIAL/02_GW_convergence/fig-01.png ./
+</pre></div>
+</div>
+<p><img alt="" src="../_images/directgap_bands.png" /></p>
+<p>For the purpose of the tutorial, we will choose 80 bands and 10 Ry as our converged parameters and move on. This would imply an acceptable error of 7 meV. To retain the chosen variables, we’ll make a copy of the corresponding input file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="n">i01</span><span class="o">-</span><span class="n">GW_Xp_80_bands_10_Ry</span> <span class="n">i02</span><span class="o">-</span><span class="n">GW</span>
+</pre></div>
+</div>
+</section>
+<section id="self-energy-sigma-c-bands">
+<h3>Self-energy <span class="math notranslate nohighlight">\(\Sigma^c\)</span> - Bands<a class="headerlink" href="#self-energy-sigma-c-bands" title="Permalink to this heading"></a></h3>
+<p>We will now proceed to converge the number of bands for the correlation part of the self-energy, i.e., <code class="docutils literal notranslate"><span class="pre">GbndRnge</span></code>. This step is actually simpler, since it only involves one loop. This is coded in the provided script <code class="docutils literal notranslate"><span class="pre">run02_converge_Gbnds.noBG.sh</span></code>. You can look into it</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vim run02_converge_Gbnds.noBG.sh</span>
+</pre></div>
+</div>
+<p>and go ahead and submit it.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sbatch run02_converge_Gbnds.noBG.sh</span>
+</pre></div>
+</div>
+<div class="admonition-optional-use-the-terminator-to-accelerate-convergence solution important dropdown admonition" id="solution-9">
+<p class="admonition-title">[OPTIONAL]: Use the terminator to accelerate convergence</p>
+<p>While that runs, we’ll have a look at the so-called Bruneval-Gonze (BG) terminator, which is a method to accelerate convergence with respect to empty bands. The variable that controls this for the bands in the correlation self-energy is <code class="docutils literal notranslate"><span class="pre">GTermKind</span></code>. This is currently set to “none” in <code class="docutils literal notranslate"><span class="pre">i02-GW</span></code>, so create a new input file <code class="docutils literal notranslate"><span class="pre">i02-GW_BG</span></code> and set this variable to “BG”. We can do this in the command line by simply typing</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sed &#39;s/GTermKind=.*/GTermKind= &quot;BG&quot;/&#39; i02-GW &gt; i02-GW_BG</span>
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">XTermKind</span></code> also offers the same terminator for the sum over bands of the polarization function (we just chose not to use it in the previous section of this excercise, and we’ll keep it as “none”). Now, copy the last submission script and edit it to run the same convergence test using the BG terminator.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cp run02_converge_Gbnds.noBG.sh run03_converge_Gbnds.BG.sh</span>
+</pre></div>
+</div>
+<p>Try and do this yourself first, and then continue reading to check your understanding.
+You’ll have to change the input file template, i.e., use <code class="docutils literal notranslate"><span class="pre">i02-GW_BG</span></code> where the terminator has been activated. Modify also the name of the newly generated input files in order to avoid overwriting. Change the name of the summary file for the same reason and, finally, modify the communications and job directories of <code class="docutils literal notranslate"><span class="pre">yambo</span></code>. Make sure you’ve done all the changes as outlined below.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">file0=&#39;i02-GW_BG&#39;</span>
+<span class="go">summaryfile=summary_03_BG.txt</span>
+
+<span class="gp gp-VirtualEnv">(...)</span>
+
+<span class="go">label=Gbands_${G_BANDS}_BG</span>
+<span class="go">filein=i02-GW_${G_BANDS}_Gbands_BG</span>
+</pre></div>
+</div>
+<p>Now submit your newly edited script</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sbatch</span> <span class="n">run03_converge_Gbnds</span><span class="o">.</span><span class="n">BG</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+</div>
+<p>While this runs, check if the previous job has finished, i.e., you should have a complete <code class="docutils literal notranslate"><span class="pre">summary_02_noBG.txt</span></code> file by now.
+For a visual result, proceed to plot them with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">plot</span><span class="o">-</span><span class="mf">02.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>You should get
+<img alt="" src="../_images/BG_vs_noBG.png" /></p>
+<p>You can copy and open it in your local machine with something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[WARNING: run this on another terminal in your local machine, fixing $USER]
+scp $USER@login.vega.izum.si:/exa5/data/d2021-135-users/$USER/YAMBO_TUTORIAL/02_GW_convergence/fig-02.png ./
+</pre></div>
+</div>
+<div class="admonition-optional solution important dropdown admonition" id="solution-10">
+<p class="admonition-title">OPTIONAL</p>
+<p>If you also did the optional step, you can compare <code class="docutils literal notranslate"><span class="pre">summary_02_noBG.txt</span></code> with <code class="docutils literal notranslate"><span class="pre">summary_03_BG.txt</span></code> once <code class="docutils literal notranslate"><span class="pre">run03_converge_Gbnds.BG.sh</span></code> has finished - you’ll see the effect of the terminator immediately.
+Just open the <code class="docutils literal notranslate"><span class="pre">plot-02.py</span></code> script and uncomment the line <code class="docutils literal notranslate"><span class="pre">#list_of_files</span> <span class="pre">=</span> <span class="pre">['summary_02_noBG.txt','summary_03_BG.txt']</span></code>, then rerun it with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">plot-02.py</span></code>.
+You can see that the terminator does a great job at accelerating convergence, and it allows us to use 60 bands incurring an error of only 3 meV (while the latter would have been larger than 0.1 eV had we not used the terminator).</p>
+</div>
+<p>We’ll end the convergence part of the tutorial with an important point about k-points convergence. The latter is the most cumbersome and computationally intensive among the various convergence test, and it involves re-running the DFT step. For this reason (and for this reason only) it was ignored in this tutorial. However, it absolutely cannot be overlooked since it is crucial for the accuracy of the calculated GW corrections. You can read about $k$-points convergence in GW and, importantly, a very efficient workaround for 2D systems in a recent publication (<a class="reference external" href="https://arxiv.org/abs/2205.11946">here</a>). MoS$_2$ was one of the materials studied there, and it shows that our result, obtained with a 6x6x1 k-grid, is simply <em>off the chart</em> (blue line).</p>
+<p><img alt="" src="../_images/Guandalini_etal.png" />
+<em>Guandalini, D’Amico, Ferretti &amp; Varsano. ArXiv:2205.11946v2</em></p>
+<div class="admonition-optional-use-the-rim-w-accelerator solution important dropdown admonition" id="solution-11">
+<p class="admonition-title">[OPTIONAL]: Use the RIM-W accelerator</p>
+<p>However you can try to get a reasonable correction via the RIM-W approach.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cp i02-GW_80_Gbands  i04-GW_80_Gbands_rimw</span>
+<span class="go">vim i04-GW_80_Gbands_rimw</span>
+</pre></div>
+</div>
+<p>Then, you just need to add the following two variables to the input file</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RIM_W</span>
+<span class="n">RandGvecW</span><span class="o">=</span> <span class="mi">15</span>           <span class="n">RL</span>
+</pre></div>
+</div>
+<p>and prepare a submission script</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cp  run02_converge_Gbnds.noBG.sh  run04_converge_rimw.sh</span>
+<span class="go">vim run04_converge_rimw.sh</span>
+</pre></div>
+</div>
+<p>and edit it, by removing the loop and changin the input file and jobname</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=16</span>
+<span class="c1">#SBATCH --cpus-per-task=1</span>
+<span class="c1">#SBATCH --partition=cpu</span>
+<span class="c1">#SBATCH --time=0:30:00</span>
+<span class="c1">#SBATCH --account=d2021-135-users</span>
+<span class="c1">#SBATCH --mem-per-cpu=2000MB</span>
+<span class="c1">#SBATCH --job-name=mos2</span>
+<span class="c1">#SBATCH --reservation=maxcpu</span>
+
+<span class="c1"># load yambo and dependencies</span>
+module<span class="w"> </span>purge
+module<span class="w"> </span>use<span class="w"> </span>/ceph/hpc/data/d2021-135-users/modules
+module<span class="w"> </span>load<span class="w"> </span>YAMBO/5.1.1-FOSS-2022a
+<span class="nb">export</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="si">${</span><span class="nv">SLURM_CPUS_PER_TASK</span><span class="si">}</span>
+
+<span class="nv">summaryfile</span><span class="o">=</span>summary_04_rimw.txt
+
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;E_vale [eV]        E_cond [eV]      GAP [eV]&#39;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="nv">$summaryfile</span>
+
+<span class="nv">G_BANDS</span><span class="o">=</span><span class="m">80</span>
+
+<span class="nv">label</span><span class="o">=</span>Gbands_<span class="si">${</span><span class="nv">G_BANDS</span><span class="si">}</span>_rimw
+<span class="nv">jdir</span><span class="o">=</span>job_<span class="si">${</span><span class="nv">label</span><span class="si">}</span>
+<span class="nv">cdir</span><span class="o">=</span>out_<span class="si">${</span><span class="nv">label</span><span class="si">}</span>
+<span class="nv">filein</span><span class="o">=</span>i04-GW_<span class="si">${</span><span class="nv">G_BANDS</span><span class="si">}</span>_Gbands_rimw
+
+<span class="c1"># run yambo</span>
+srun<span class="w"> </span>--mpi<span class="o">=</span>pmix<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">SLURM_NTASKS</span><span class="si">}</span><span class="w"> </span>yambo<span class="w"> </span>-F<span class="w"> </span><span class="nv">$filein</span><span class="w"> </span>-J<span class="w"> </span><span class="nv">$jdir</span><span class="w"> </span>-C<span class="w"> </span><span class="nv">$cdir</span>
+
+<span class="nv">E_GW_v</span><span class="o">=</span><span class="sb">`</span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">cdir</span><span class="si">}</span>/o-<span class="si">${</span><span class="nv">jdir</span><span class="si">}</span>.qp<span class="p">|</span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3+$4}&#39;</span><span class="sb">`</span>
+<span class="nv">E_GW_c</span><span class="o">=</span><span class="sb">`</span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">cdir</span><span class="si">}</span>/o-<span class="si">${</span><span class="nv">jdir</span><span class="si">}</span>.qp<span class="p">|</span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3+$4}&#39;</span><span class="sb">`</span>
+
+<span class="nv">GAP_GW</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$E_GW_c</span><span class="w"> </span>-<span class="w"> </span><span class="nv">$E_GW_v</span><span class="w"> </span><span class="p">|</span>bc<span class="sb">`</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="si">${</span><span class="nv">E_GW_v</span><span class="si">}</span><span class="w"> </span><span class="s1">&#39;        &#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">E_GW_c</span><span class="si">}</span><span class="w"> </span><span class="s1">&#39;        &#39;</span><span class="w"> </span><span class="si">${</span><span class="nv">GAP_GW</span><span class="si">}</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="nv">$summaryfile</span>
+</pre></div>
+</div>
+<p>and then run</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sbatch run04_converge_rimw.sh</span>
+</pre></div>
+</div>
+<p>How much do you get for the band gap ?</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="gw-parallel-strategies">
+<h2>GW parallel strategies<a class="headerlink" href="#gw-parallel-strategies" title="Permalink to this heading"></a></h2>
+<section id="mpi-parallelization">
+<h3>MPI parallelization<a class="headerlink" href="#mpi-parallelization" title="Permalink to this heading"></a></h3>
+<p>For this section, let us enter the <code class="docutils literal notranslate"><span class="pre">03_GW_parallel</span></code> directory. If you were in the <code class="docutils literal notranslate"><span class="pre">02_GW_convegence</span></code> folder just do</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd ../03_GW_parallel</span>
+</pre></div>
+</div>
+<p>and inspect the input <code class="docutils literal notranslate"><span class="pre">gw.in</span></code>. You will see that we set low values for most of the convergence parameters except bands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vim gw.in</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FFTGvecs</span><span class="o">=</span> <span class="mi">20</span>       <span class="n">Ry</span>    <span class="c1"># [FFT] Plane-waves</span>
+<span class="n">EXXRLvcs</span><span class="o">=</span> <span class="mi">2</span>        <span class="n">Ry</span>    <span class="c1"># [XX] Exchange RL components</span>
+<span class="n">VXCRLvcs</span><span class="o">=</span> <span class="mi">2</span>        <span class="n">Ry</span>    <span class="c1"># [XC] XCpotential RL components</span>
+<span class="o">%</span> <span class="n">BndsRnXp</span>
+    <span class="mi">1</span> <span class="o">|</span>  <span class="mi">300</span> <span class="o">|</span>               <span class="c1"># [Xp] Polarization function bands</span>
+<span class="o">%</span>
+<span class="n">NGsBlkXp</span><span class="o">=</span> <span class="mi">1</span>            <span class="n">Ry</span>    <span class="c1"># [Xp] Response block size</span>
+<span class="o">%</span> <span class="n">GbndRnge</span>
+    <span class="mi">1</span> <span class="o">|</span>  <span class="mi">300</span> <span class="o">|</span>               <span class="c1"># [GW] G[W] bands range</span>
+<span class="o">%</span>
+<span class="o">%</span><span class="n">QPkrange</span>                    <span class="c1"># [GW] QP generalized Kpoint/Band indices</span>
+  <span class="mi">1</span><span class="o">|</span> <span class="mi">19</span><span class="o">|</span> <span class="mi">23</span><span class="o">|</span> <span class="mi">30</span><span class="o">|</span>
+<span class="o">%</span>
+</pre></div>
+</div>
+<p>Note that we also added <code class="docutils literal notranslate"><span class="pre">FFTGvecs</span></code> to reduce the size of the Fourier transforms (the default corresponds to Quantum ESPRESSO <code class="docutils literal notranslate"><span class="pre">ecutwfc</span></code>, i.e. 60 Ry in this case).</p>
+<p>In addition, we have deleted all the parallel parameters since we will be setting them via the submission script.</p>
+<p>Actually we are now dealing with a heavier system than before: as you can see from the <code class="docutils literal notranslate"><span class="pre">QPkrange</span></code> values, we have switched to a 12x12x1 $k$-point grid - having 19 points in the irreducible Brillouin zone - and turned spin-orbit coupling on in the DFT calculation - now the top valence band is number 26 instead of 13 because the bands are spin-polarized.</p>
+<p>The inspected file should look like <a class="reference external" href="https://hackmd.io/&#64;palful/HkU0xblHj#GW-input-file-for-parallel-section">this one</a>.</p>
+<p>For this part of the tutorial, we will be using the <code class="docutils literal notranslate"><span class="pre">slurm</span></code> submission script <a class="reference external" href="https://hackmd.io/&#64;palful/HkU0xblHj#Slurm-submission-script-on-VEGA"><code class="docutils literal notranslate"><span class="pre">job_parallel.sh</span></code></a>, which is available in the calculation directory.
+If you inspect it, you will see that the script adds additional variables to the yambo input file.
+These variables control the parallel execution of the code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DIP_CPU</span><span class="o">=</span> <span class="s2">&quot;1 $ncpu 1&quot;</span>       <span class="c1"># [PARALLEL] CPUs for each role</span>
+<span class="n">DIP_ROLEs</span><span class="o">=</span> <span class="s2">&quot;k c v&quot;</span>         <span class="c1"># [PARALLEL] CPUs roles (k,c,v)</span>
+<span class="n">DIP_Threads</span><span class="o">=</span>  <span class="mi">0</span>            <span class="c1"># [OPENMP/X] Number of threads for dipoles</span>
+<span class="n">X_CPU</span><span class="o">=</span> <span class="s2">&quot;1 1 1 $ncpu 1&quot;</span>     <span class="c1"># [PARALLEL] CPUs for each role</span>
+<span class="n">X_ROLEs</span><span class="o">=</span> <span class="s2">&quot;q g k c v&quot;</span>       <span class="c1"># [PARALLEL] CPUs roles (q,g,k,c,v)</span>
+<span class="n">X_nCPU_LinAlg_INV</span><span class="o">=</span> <span class="mi">1</span>   <span class="c1"># [PARALLEL] CPUs for Linear Algebra</span>
+<span class="n">X_Threads</span><span class="o">=</span>  <span class="mi">0</span>              <span class="c1"># [OPENMP/X] Number of threads for response functions</span>
+<span class="n">SE_CPU</span><span class="o">=</span> <span class="s2">&quot; 1 $ncpu 1&quot;</span>       <span class="c1"># [PARALLEL] CPUs for each role</span>
+<span class="n">SE_ROLEs</span><span class="o">=</span> <span class="s2">&quot;q qp b&quot;</span>         <span class="c1"># [PARALLEL] CPUs roles (q,qp,b)</span>
+<span class="n">SE_Threads</span><span class="o">=</span>  <span class="mi">0</span>             <span class="c1"># [OPENMP/GW] Number of threads for self-energy</span>
+</pre></div>
+</div>
+<p>The keyword <code class="docutils literal notranslate"><span class="pre">DIP</span></code> refers to the calculations of the screening matrix elements (also called “dipoles”) needed for the screening function, <code class="docutils literal notranslate"><span class="pre">X</span></code> is the screening function (it stands for $\chi$ since it is a response function), <code class="docutils literal notranslate"><span class="pre">SE</span></code> the self-energy.
+These three sections of the code can be parallelised independently.</p>
+<div class="admonition-note callout admonition" id="callout-6">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>In this subsection we are mainly concerned with the <strong>[PARALLEL]</strong> variables which refer to MPI <em>tasks</em>.</p></li>
+<li><p>We will see later an example of <strong>[OPENMP]</strong> parallelisation (i.e., adding <em>threads</em>).</p></li>
+</ul>
+</div>
+<p>We start by calculating the QP corrections using 16 MPI tasks and a single openMP thread. Therefore, edit the submission script as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=16</span>
+<span class="c1">#SBATCH --cpus-per-task=1</span>
+</pre></div>
+</div>
+<p>and submit the job</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sbatch job_parallel.sh</span>
+</pre></div>
+</div>
+<p>This will create a new input file and run it. The calculation databases and the human-readable files will be put in separate directories. Check the location of the report <code class="docutils literal notranslate"><span class="pre">r-*</span></code> file and the log <code class="docutils literal notranslate"><span class="pre">l-*</span></code> files, and inspect them while the calculation runs.
+For simplicity you could just type</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">tail -f run_MPI16_OMP1.out/LOG/l-*_CPU_1</span>
+</pre></div>
+</div>
+<p>to monitor the progress in the master thread (<code class="docutils literal notranslate"><span class="pre">Ctrl+C</span></code> to exit).
+As you can see, the run takes some time, even though we are using minimal parameters.</p>
+<p>Meanwhile, we can run other jobs increasing the parallelisation. Let’s employ 128 CPUs (i.e., half a CPU node on Vega). We’ll use 128 MPI tasks, still with a single openMP thread. To this end modify the <code class="docutils literal notranslate"><span class="pre">job_parallel.sh</span></code> script changing</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=128</span>
+<span class="c1">#SBATCH --cpus-per-task=1</span>
+</pre></div>
+</div>
+<p>This time the code should be much faster. Once the run is over, try to run the simulation also on 32 and 64 MPI tasks. Each time, change<code class="docutils literal notranslate"><span class="pre">ntasks-per-node</span></code> to this number. Finally, you can try to produce a scaling plot.</p>
+<p>The timings are contained in the <code class="docutils literal notranslate"><span class="pre">r-*</span></code> report files. You can already have a look at them typing</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">grep Time-Profile run_MPI*/r-*</span>
+</pre></div>
+</div>
+<p>The python script <a class="reference external" href="https://hackmd.io/&#64;palful/HkU0xblHj#parse_ytiming.py"><code class="docutils literal notranslate"><span class="pre">parse_ytiming.py</span></code></a> is useful for the post-processing of report files. You can already find it in the directory, together with the reports for the longer calculations with 1, 2, 4 and 8 MPI tasks which have been provided.</p>
+<p>If you didn’t do so already, load the python module</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">module purge</span>
+<span class="go">module load matplotlib/3.2.1-foss-2020a-Python-3.8.2</span>
+</pre></div>
+</div>
+<p>Then, after your jobs have finished, run the script as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">parse_ytiming</span><span class="o">.</span><span class="n">py</span> <span class="n">run_MPI</span>
+</pre></div>
+</div>
+<p>to look for a report file in each <code class="docutils literal notranslate"><span class="pre">run_MPI*.out</span></code> folder. Make sure you have only one report file per folder.
+You can also play with the script to make it print detailed timing information, however you should already see that it produced a png plot showing times-to-completion on y axis against number of MPI tasks on the x axis.</p>
+<p><img alt="" src="../_images/scaling.png" /></p>
+<p>What can we learn from this plot? In particular, try to answer the following questions:</p>
+<ul class="simple">
+<li><p>Up to which number of MPI tasks our system efficiently scales? At which point adding more threads starts to become a waste of resources?</p></li>
+<li><p>How could we change our parallelisation strategy to improve the scaling even more?</p></li>
+</ul>
+<div class="admonition-note callout admonition" id="callout-7">
+<p class="admonition-title">Note</p>
+<p>Keep in mind that the MPI scaling we are seeing here is not the true yambo scaling, but depends on the small size of our tutorial system. In a realistic calculation for a large-sized system, <strong>yambo has been shown to scale well up to tens of thousands of MPI tasks</strong>!</p>
+</div>
+</section>
+<section id="hybrid-parallelization-strategy">
+<h3>Hybrid parallelization strategy<a class="headerlink" href="#hybrid-parallelization-strategy" title="Permalink to this heading"></a></h3>
+<p>It turns out that for this system it’s not a good idea to use more than 32 MPI tasks. But we still have 128 CPUs available for this run. How to optimize the calaculation even more? We can try using OpenMP threads.</p>
+<p>This is turned on by modifying <code class="docutils literal notranslate"><span class="pre">cpus-per-task</span></code> in the submission file. The product of the number of OpenMP threads and MPI tasks is equal to the total number of CPUs.
+Therefore, we can distribute 128 cpus with 32 MPI tasks (efficient MPI scaling, see above) and then use 4 OpenMP threads:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=32</span>
+<span class="c1">#SBATCH --cpus-per-task=4</span>
+</pre></div>
+</div>
+<p>Actually, we don’t need to change the related openMP variables for the yambo input, since the value <code class="docutils literal notranslate"><span class="pre">0</span></code> means “use the value of <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code>” and we have now set this environment variable to <code class="docutils literal notranslate"><span class="pre">4</span></code> via our script.
+Otherwise, any positive number can directly specify the number of threads to be used in each section of the code.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DIP_Threads</span><span class="o">=</span>  <span class="mi">0</span>     <span class="c1"># [OPENMP/X] Number of threads for dipoles</span>
+<span class="o">...</span>
+<span class="n">X_Threads</span><span class="o">=</span>  <span class="mi">0</span>       <span class="c1"># [OPENMP/X] Number of threads for response functions</span>
+<span class="o">...</span>
+<span class="n">SE_Threads</span><span class="o">=</span>  <span class="mi">0</span>      <span class="c1"># [OPENMP/GW] Number of threads for self-energy</span>
+</pre></div>
+</div>
+<p>You can try to run this calculation and check if it is faster than the pure 128 MPI one from before.
+You should find a massive gain: in our case, the pure <code class="docutils literal notranslate"><span class="pre">MPI128_OMP1</span></code> took 01m-02s, while the hybrid <code class="docutils literal notranslate"><span class="pre">MPI32_OMP4</span></code> took just 37s, a 40% speedup.</p>
+<p>You can also try any other thread combinations including the pure openMP scaling, and compare the timings.</p>
+<div class="admonition-note callout admonition" id="callout-8">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>In real-life calculations running on $n_{cores} &gt; 100$, as we have seen, it may be a good idea to adopt a hybrid approach.</p></li>
+<li><p>The most efficient scaling can depend both on your system and on the HPC facility you’re running on. For a full CPU node on Vega (256 cores), using a large-scale system, we have found that 16 tasks times 16 threads gives the best performance.</p></li>
+<li><p>OpenMP can help lower memory requirements within a node. You can try to increase the OpenMP share of threads if getting Out Of Memory errors.</p></li>
+</ul>
+</div>
+<p>As mentioned above, we can conclude that the “best” parallelisation strategy is in general both system-dependent and cluster-dependent. If working on massive systems, it may be well worth your while to do preliminary parallel tests in order to work out the most efficient way to run these jobs.</p>
+</section>
+<section id="optional-comparing-different-parallelisation-schemes">
+<h3>[OPTIONAL]: Comparing different parallelisation schemes<a class="headerlink" href="#optional-comparing-different-parallelisation-schemes" title="Permalink to this heading"></a></h3>
+<details>
+<p>Up to now we always parallelised over a single parameter, i.e. <code class="docutils literal notranslate"><span class="pre">c</span></code> or <code class="docutils literal notranslate"><span class="pre">qp</span></code>. However, Yambo allows for tuning the parallelisation scheme over several parameters broadly corresponding to “loops” (i.e., summations or discrete integrations) in the code.</p>
+<p>To this end you can open again the <code class="docutils literal notranslate"><span class="pre">run_parallel.sh</span></code> script and modify the section where the yambo input variables are set.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">X_CPU</span></code> sets how the MPI Tasks are distributed in the calculation of the response function. The possibilities are shown in the <code class="docutils literal notranslate"><span class="pre">X_ROLEs</span></code>. The same holds for <code class="docutils literal notranslate"><span class="pre">SE_CPU</span></code> and <code class="docutils literal notranslate"><span class="pre">SE_ROLEs</span></code> which control how MPI Tasks are distributed in the calculation of the self-energy.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>X_CPU= &quot;1 1 1 $ncpu 1&quot;      # [PARALLEL] CPUs for each role
+X_ROLEs= &quot;q g k c v&quot;        # [PARALLEL] CPUs roles (q,g,k,c,v)
+X_nCPU_LinAlg_INV= $ncpu    # [PARALLEL] CPUs for Linear Algebra
+X_Threads=  0               # [OPENMP/X] Number of threads for response functions
+DIP_Threads=  0             # [OPENMP/X] Number of threads for dipoles
+SE_CPU= &quot;1 $ncpu 1&quot;         # [PARALLEL] CPUs for each role
+SE_ROLEs= &quot;q qp b&quot;          # [PARALLEL] CPUs roles (q,qp,b)
+SE_Threads=  0              # [OPENMP/GW] Number of threads for self-energy
+</pre></div>
+</div>
+<p>You can try different parallelization schemes and check the performances of Yambo. In doing so, you should also change the jobname <code class="docutils literal notranslate"><span class="pre">label=MPI${ncpu}_OMP${nthreads}</span></code> in the <code class="docutils literal notranslate"><span class="pre">run_parallel.sh</span></code> script to avoid confusion with previous calculations.</p>
+<p>You may then check how speed, memory and load balance between the CPUs are affected. You could modify the script <a class="reference external" href="https://hackmd.io/&#64;palful/HkU0xblHj#parse_ytiming.py"><code class="docutils literal notranslate"><span class="pre">parse_ytiming.py</span></code></a> to parse the new data, read and distinguish between more file names, new parallelisation options, etc.</p>
+<div class="admonition-note callout admonition" id="callout-9">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The product of the numbers entering each variable (i.e. <code class="docutils literal notranslate"><span class="pre">X_CPU</span></code> and <code class="docutils literal notranslate"><span class="pre">SE_CPU</span></code>) times the number of threads should always match the total number of cores (unless you want to overload the cores taking advantage of multi-threads).</p></li>
+<li><p>Using the <code class="docutils literal notranslate"><span class="pre">X_Threads</span></code> and <code class="docutils literal notranslate"><span class="pre">SE_Threads</span></code> variables you can think about setting different hybrid schemes between the screening and the self-energy runlevels.</p></li>
+<li><p>Memory scales better if you parallelize on bands (<code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">v</span> <span class="pre">b</span></code>).</p></li>
+<li><p>Parallelization on $k$-points performs similarly to parallelization on bands, but requires more memory.</p></li>
+<li><p>Parallelization on $q$-points requires much less communication between the MPI tasks. It may be useful if you run on more than one node and the inter-node connection is slow.</p></li>
+</ul>
+</div>
+</details>
+</section>
+</section>
+<hr class="docutils" />
+<section id="full-gw-band-structure">
+<h2>Full GW band structure<a class="headerlink" href="#full-gw-band-structure" title="Permalink to this heading"></a></h2>
+<section id="running-on-gpus">
+<h3>Running on GPUs<a class="headerlink" href="#running-on-gpus" title="Permalink to this heading"></a></h3>
+<p>This is the final section of the tutorial, in which we want to compute the full correction to the band structure of single-layer MoS2. In order to get somewhat realistic results, we will use the larger values for the convergence parameters we have identified in the convergence section. In addition, we also increased the vacuum separation (to 30 au) and the k-point mesh (to 18x18x1) in the DFT calculation, and of course we consider spin-orbit coupling.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd ../04_GW_bands</span>
+</pre></div>
+</div>
+<p>Now we have a heavier calculation, and we have to do it not just for the band gap, but the entire band structure which includes 37 kpoints in the irreducible Brillouin zone, two spin-orbit-split valence bands, and two spin-orbit-split conduction bands. Let us check the new input:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vim gw.in</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">QPkrange</span>                        <span class="c1"># [GW] QP generalized Kpoint/Band indices</span>
+<span class="mi">1</span><span class="o">|</span><span class="mi">37</span><span class="o">|</span><span class="mi">25</span><span class="o">|</span><span class="mi">28</span><span class="o">|</span>
+<span class="o">%</span>
+</pre></div>
+</div>
+<p>This is a massive calculation, so run it right now and we’ll discuss it in the meantime:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sbatch gpu_job.sh</span>
+</pre></div>
+</div>
+<p>As you might have guessed from the name of the submission script, we are here using yet another capability of yambo: running on GPUs instead of CPUs. This usually leads to extreme speedups in the calculations. Fortunately, the Vega cluster also has some GPU nodes!</p>
+<p>As you can see from the submission script,</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vim gpu_job.sh</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --nodes=2</span>
+<span class="c1">#SBATCH --ntasks-per-node=4</span>
+<span class="c1">#SBATCH --ntasks-per-socket=2</span>
+<span class="c1">#SBATCH --cpus-per-task=64</span>
+<span class="c1">#SBATCH --gres=gpu:4</span>
+</pre></div>
+</div>
+<p>each GPU node contains four GPUs (<code class="docutils literal notranslate"><span class="pre">gres=gpu:4</span></code>). In yambo, each GPU corresponds to a single MPI task, therefore we have <code class="docutils literal notranslate"><span class="pre">ntasks-per-node=4</span></code>. OpenMP threading is allowed - but not too much, otherwise we lose efficiency - and in fact, even though we are filling all CPUs of the node (<code class="docutils literal notranslate"><span class="pre">ntasks-per-socket=64</span></code>), we are using just <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">OMP_NUM_THREADS=8</span></code>.</p>
+<p>In addition, you will see that in order to run on GPUs we are now using a different executable than before, obtained with a GPU-specific compilation of the code, which is loaded with a different module: <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">load</span> <span class="pre">YAMBO/5.1.1-OMPI-4.0.5-NVHPC-21.2-CUDA-11.2.1</span></code>.</p>
+<p>We are also, for the first time, using more than one node (<code class="docutils literal notranslate"><span class="pre">nodes=2</span></code>). In conclusion, we are running over 8 GPU cards, distributed with 8 MPI tasks, and using 8 threads.</p>
+</section>
+<section id="the-results">
+<h3>The results<a class="headerlink" href="#the-results" title="Permalink to this heading"></a></h3>
+<p>After about 6 minutes the calculation should be over and the results collected in folder <code class="docutils literal notranslate"><span class="pre">GW_bnds</span></code>. The quasiparticle corrections are stored in human-readable form in the file <code class="docutils literal notranslate"><span class="pre">o-GW_bnds.QP</span></code>, and in netCDF format in the quasiparticle database <code class="docutils literal notranslate"><span class="pre">ndb.QP</span></code>.</p>
+<p>In order to visualize the results in the form of a GW band structure, we will first interpolate the calculated points - recall that we have just 37 points, few of which lie on high-symmetry lines - with <code class="docutils literal notranslate"><span class="pre">ypp</span></code>, the yambo pre- and post-processing executable.</p>
+<div class="admonition-note callout admonition" id="callout-10">
+<p class="admonition-title">Note</p>
+<p>We also have a python-based interface for advanced treatment of all the Yambo databases, called Yambopy. You can check it out on the <a class="reference external" href="https://www.yambo-code.eu/wiki/index.php/First_steps_in_Yambopy">yambo wiki</a>.</p>
+</div>
+<p>Let us load the yambo module if needed</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">module purge</span>
+<span class="go">module use /ceph/hpc/data/d2021-135-users/modules</span>
+<span class="go">module load YAMBO/5.1.1-FOSS-2022a</span>
+</pre></div>
+</div>
+<p>We can review the options with <code class="docutils literal notranslate"><span class="pre">ypp</span> <span class="pre">-h</span></code> and generate an input file for band structure interpolation with</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ypp -s b -F ypp_bands.in</span>
+</pre></div>
+</div>
+<p>Let us modify the resulting input file by selecting the ‘boltztrap’ approach to interpolation, the last two valence and first two conduction bands, and a path in the Brillouin zone along the the points $\Gamma$-M-K-$\Gamma$. We also set 100 points for each high-symmetry line.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">electrons</span>                        <span class="c1"># [R] Electronic properties</span>
+<span class="n">bnds</span>                             <span class="c1"># [R] Bands</span>
+<span class="n">PROJECT_mode</span><span class="o">=</span> <span class="s2">&quot;none&quot;</span>             <span class="c1"># Instruct ypp how to project the DOS. ATOM, LINE, PLANE.</span>
+<span class="n">INTERP_mode</span><span class="o">=</span> <span class="s2">&quot;BOLTZ&quot;</span>                <span class="c1"># Interpolation mode (NN=nearest point, BOLTZ=boltztrap aproach)</span>
+<span class="n">INTERP_Shell_Fac</span><span class="o">=</span> <span class="mf">20.00000</span>       <span class="c1"># The bigger it is a higher number of shells is used</span>
+<span class="n">INTERP_NofNN</span><span class="o">=</span> <span class="mi">1</span>                  <span class="c1"># Number of Nearest sites in the NN method</span>
+<span class="n">OutputAlat</span><span class="o">=</span> <span class="mf">5.90008</span>             <span class="c1"># [a.u.] Lattice constant used for &quot;alat&quot; ouput format</span>
+<span class="n">cooIn</span><span class="o">=</span> <span class="s2">&quot;rlu&quot;</span>                     <span class="c1"># Points coordinates (in) cc/rlu/iku/alat</span>
+<span class="n">cooOut</span><span class="o">=</span> <span class="s2">&quot;rlu&quot;</span>                    <span class="c1"># Points coordinates (out) cc/rlu/iku/alat</span>
+<span class="o">%</span> <span class="n">BANDS_bands</span>
+   <span class="mi">25</span> <span class="o">|</span> <span class="mi">28</span> <span class="o">|</span>                         <span class="c1"># Number of bands</span>
+<span class="o">%</span>
+<span class="n">CIRCUIT_E_DB_path</span><span class="o">=</span> <span class="s2">&quot;none&quot;</span>        <span class="c1"># SAVE obtained from the QE `bands` run (alternative to %BANDS_kpts)</span>
+<span class="n">BANDS_path</span><span class="o">=</span> <span class="s2">&quot;&quot;</span>                   <span class="c1"># High-Symmetry points labels (G,M,K,L...) also using composed positions (0.5xY+0.5xL).</span>
+<span class="n">BANDS_steps</span><span class="o">=</span> <span class="mi">100</span>                  <span class="c1"># Number of divisions</span>
+<span class="c1">#BANDS_built_in                # Print the bands of the generating points of the circuit using the nearest internal point</span>
+<span class="o">%</span><span class="n">BANDS_kpts</span>                      <span class="c1"># K points of the bands circuit</span>
+ <span class="mf">0.00000</span> <span class="o">|</span><span class="mf">0.00000</span> <span class="o">|</span><span class="mf">0.00000</span> <span class="o">|</span>
+ <span class="mf">0.00000</span> <span class="o">|</span><span class="mf">0.50000</span> <span class="o">|</span><span class="mf">0.00000</span> <span class="o">|</span>
+ <span class="mf">0.33333</span> <span class="o">|</span><span class="mf">0.33333</span> <span class="o">|</span><span class="mf">0.00000</span> <span class="o">|</span>
+ <span class="mf">0.00000</span> <span class="o">|</span><span class="mf">0.00000</span> <span class="o">|</span><span class="mf">0.00000</span> <span class="o">|</span>
+<span class="o">%</span>
+</pre></div>
+</div>
+<p>Now, let’s run ypp:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ypp -F ypp_bands.in</span>
+</pre></div>
+</div>
+<p>This run will produce the file <code class="docutils literal notranslate"><span class="pre">o.bands_interpolated</span></code>. You can inspect it and see that it contains a plottable band structure, but beware: these are the DFT eigevalues! We didn’t tell <code class="docutils literal notranslate"><span class="pre">ypp</span></code> where to look for the quasiparticle corrections, so it went into the <code class="docutils literal notranslate"><span class="pre">SAVE</span></code> folder and interpolated the DFT data.
+Let’s rename the output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mv o.bands_interpolated o.DFT_bands</span>
+<span class="go">mkdir DFT_bands</span>
+<span class="go">mv o.spin* o.magn* DFT_bands/</span>
+</pre></div>
+</div>
+<p>In order to interpolate the quasiparticle database, we append its location to the <code class="docutils literal notranslate"><span class="pre">ypp</span></code> input:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vim ypp_bands.in</span>
+</pre></div>
+</div>
+<p>add this line at the end</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">GfnQPdb</span><span class="o">=</span> <span class="s2">&quot;E &lt; ./GW_bnds/ndb.QP&quot;</span>
+</pre></div>
+</div>
+<p>and run <code class="docutils literal notranslate"><span class="pre">ypp</span></code> again.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ypp -F ypp_bands.in</span>
+</pre></div>
+</div>
+<p>When it’s done, let’s rename the new output as</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mv o.bands_interpolated o.GW_bands</span>
+<span class="go">mkdir GW_bands</span>
+<span class="go">mv o.spin* o.magn* GW_bands/</span>
+</pre></div>
+</div>
+<p>Now we are ready to visualize the band structures. In order to do so, you can use the script <a class="reference download internal" download="" href="../_downloads/3294b81e09508a8d9dad74ad902ac262/plot_bands.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">plot_bands.py</span></code></span></a> that should be already available in the directory.</p>
+<p>We load the python module</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">module purge</span>
+<span class="go">module load matplotlib/3.2.1-foss-2020a-Python-3.8.2</span>
+</pre></div>
+</div>
+<p>and run the script as</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python plt_bands.py o.DFT_bands o.GW_bands 4</span>
+</pre></div>
+</div>
+<p>It should produce a <code class="docutils literal notranslate"><span class="pre">GW_bands.png</span></code> file containing the following visualization.</p>
+<p><img alt="" src="../_images/GW_bands.png" />
+You can copy and open it in your local machine with something like</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span><span class="o">[</span>WARNING:<span class="w"> </span>run<span class="w"> </span>this<span class="w"> </span>on<span class="w"> </span>another<span class="w"> </span>terminal<span class="w"> </span><span class="k">in</span><span class="w"> </span>your<span class="w"> </span><span class="nb">local</span><span class="w"> </span>machine,<span class="w"> </span>fixing<span class="w"> </span><span class="nv">$USER</span><span class="o">]</span>
+<span class="go">scp $USER@login.vega.izum.si:/exa5/data/d2021-135-users/$USER/YAMBO_TUTORIAL/04_GW_bands/gw_bands.png ./</span>
+</pre></div>
+</div>
+<p>You may compare this plot with a converged result from <a class="reference external" href="https://arxiv.org/abs/1606.03017">this paper</a> (also done with Yambo):</p>
+<p><img alt="" src="../_images/GW_bands_converged.png" />
+<em>Dashed lines: DFT, thick lines: GW.</em></p>
+<p>As you can see, the general result is not too bad, but there are some differences both at the DFT and GW levels. The magnitude of the band gap is too large, and the relative energy of the two conduction band minima is not correct. One obvious issue is the lack of convergence of our tutorial calculations. As we know, we should include more vacuum space and many, many more $k$-points. Additionally, this is a transition metal dichalcogenide: for this class of systems, the details of the band structure can strongly depend on small variations in the lattice parameters and on the type of pseudopotential used. A great deal of care must be taken when performing these calculations!</p>
+</section>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<p>In order to learn more about Yambo, we suggest visiting the <a class="reference external" href="https://www.yambo-code.eu/wiki/index.php/Main_Page">Yambo wiki</a>. If you have issues and questions about installing and running the code, you can write them on the <a class="reference external" href="https://www.yambo-code.eu/forum/index.php">Yambo forum</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lectures-3/" class="btn btn-neutral float-left" title="Lectures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lectures-4/" class="btn btn-neutral float-right" title="Lectures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculations with linear-scaling BigDFT code &mdash; Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_lesson.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_rtd_theme_ext_color_contrast.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/overrides.css" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/minipres.js"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../../../_static/togglebutton.js"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script data-domain="enccs.github.io/efficient-materials-modelling-on-hpc" defer="defer" src="https://plausible.io/js/script.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="Quick Reference" href="../../../quick-reference/" />
+    <link rel="prev" title="Calculations with cubic-scaling BigDFT code" href="../3.CubicScaling-H2O/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../" class="icon icon-home">
+            Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT
+              <img src="../../../_static/ENCCS.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Day 1 - MAX-CoE and Quantum ESPRESSO</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-1/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../espresso-tutorial/">Tutorial: Quantum ESPRESSO on HPC systems</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 2 - Quantum ESPRESSO and AiiDA</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-2/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../espresso-tutorial-phonons/">Tutorial: Phonons, EELS and magnons for HPC and GPUs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 3 - Yambo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-3/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../yambo-tutorial/">Yambo tutorial: Quasiparticles in the GW approximation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Day 4 - BigDFT</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../lectures-4/">Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1.SystemGenFirstCalcs/">Introductory PyBigDFT tour - Basic functionalities and first calculations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../2.RemoteManagerInitialTutorial/">Remote manager tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3.CubicScaling-H2O/">Calculations with cubic-scaling BigDFT code</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Calculations with linear-scaling BigDFT code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#remote-calculation-of-a-dataset-of-different-runs-of-the-water-molecule">Remote calculation of a dataset of different runs of the water molecule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analysis-of-the-runs">Analysis of the runs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#total-dipole">Total Dipole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#time-to-solution">Time to solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#density-of-states">Density of States</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#run-of-the-full-system">Run of the full system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-plot-of-the-scaling">Example plot of the Scaling</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick-reference/">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/">Instructor’s guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../">Efficient materials modelling on HPC with Quantum ESPRESSO, Yambo and BigDFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Calculations with linear-scaling BigDFT code</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/ENCCS/Efficient-materials-modelling-on-HPC/blob/main/content/code/bigdft/4.LinearScaling-H2O.ipynb" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="calculations-with-linear-scaling-bigdft-code">
+<h1>Calculations with linear-scaling BigDFT code<a class="headerlink" href="#calculations-with-linear-scaling-bigdft-code" title="Permalink to this heading"></a></h1>
+<blockquote>
+<div><p>This material is adapted from <a class="reference external" href="https://github.com/BigDFT-group/bigdft-school/">work by Luigi Genovese, Laura Ratcliff and others</a></p>
+</div></blockquote>
+<p>In this tutorial we will build upon the cubic scaling tutorial to show how to run the linear scaling (LS) version of BigDFT. We are going to use the same .xyz files for water that we used for cubic scaling BigDFT.</p>
+<p>LS-BigDFT can only use semi-local functionals (no hybrid functionals), so for the purposes of this tutorial we will stick with using PBE.
+We will focus on the comparison of performance between the CS and the LS version for systems which are compatible with both algorithms.</p>
+<section id="remote-calculation-of-a-dataset-of-different-runs-of-the-water-molecule">
+<h2>Remote calculation of a dataset of different runs of the water molecule<a class="headerlink" href="#remote-calculation-of-a-dataset-of-different-runs-of-the-water-molecule" title="Permalink to this heading"></a></h2>
+<p>We can use the function from the cubic scaling notebook as inspiration, but since we will be modifying more input parameters than in the cubic scaling case, we define the function to recieve the input dictionary as an argument, to allow greater flexibility.
+The <code class="docutils literal notranslate"><span class="pre">Inputfile</span></code> class can be handled by the methods which are described in <a class="reference external" href="https://l_sim.gitlab.io/bigdft-suite/PyBigDFT/build/html/BigDFT.InputActions.html">this</a> page.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calculate_single_point</span><span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">run_directory</span><span class="o">=</span><span class="s1">&#39;Calculations&#39;</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">BigDFT</span> <span class="kn">import</span> <span class="n">Calculators</span> <span class="k">as</span> <span class="n">C</span>
+    <span class="kn">from</span> <span class="nn">futile.Utils</span> <span class="kn">import</span> <span class="n">create_tarball</span>
+    <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+    <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span>
+
+    <span class="c1"># create the calculator</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">SystemCalculator</span><span class="p">(</span><span class="n">skip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># launch the calculation and retrieve the logfile instance</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">inp</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">posinp</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">run_dir</span><span class="o">=</span><span class="n">run_directory</span><span class="p">)</span>
+    <span class="c1"># we create a tarfile that contains the logfile as well as the information about the timing</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">join</span><span class="p">(</span><span class="n">run_directory</span><span class="p">,</span><span class="s1">&#39;log-&#39;</span><span class="o">+</span><span class="n">run_name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">timefile</span> <span class="ow">in</span> <span class="p">[</span><span class="n">join</span><span class="p">(</span><span class="n">run_directory</span><span class="p">,</span><span class="s1">&#39;data-&#39;</span><span class="o">+</span><span class="n">run_name</span><span class="p">,</span><span class="s1">&#39;time-&#39;</span><span class="o">+</span><span class="n">run_name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">),</span>
+                     <span class="n">join</span><span class="p">(</span><span class="n">run_directory</span><span class="p">,</span><span class="s1">&#39;time-&#39;</span><span class="o">+</span><span class="n">run_name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">)]:</span>
+        <span class="k">if</span> <span class="n">isfile</span><span class="p">(</span><span class="n">timefile</span><span class="p">):</span>
+            <span class="n">files</span> <span class="o">+=</span> <span class="p">[</span><span class="n">timefile</span><span class="p">]</span>
+            <span class="k">break</span>
+    <span class="n">create_tarball</span><span class="p">(</span><span class="n">run_name</span><span class="o">+</span><span class="s1">&#39;.tar.gz&#39;</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">)</span>
+    
+    <span class="c1"># return the energy</span>
+    <span class="k">return</span> <span class="n">log</span><span class="o">.</span><span class="n">energy</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As with cubic scaling BigDFT, we now create a dataset of remote functions to execute the pool of jobs into Vega, from this notebook. In order to save rerunning the cubic scaling calculations, we also keep the same directories as before.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#if you are in a Google colab session</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
+    <span class="n">in_colab</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">in_colab</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;We are in a google colab session: &#39;</span><span class="p">,</span><span class="n">in_colab</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">in_colab</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;pip&#39;</span><span class="p">,</span> <span class="s1">&#39;install&#39;</span><span class="p">,</span> <span class="s1">&#39;-U&#39;</span><span class="p">,</span><span class="s1">&#39;pybigdft&#39;</span><span class="p">,</span><span class="s1">&#39;pyfutile&#39;</span><span class="p">,</span><span class="s1">&#39;py3Dmol&#39;</span><span class="p">,</span><span class="s1">&#39;remotemanager&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We are in a google colab session:  False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">in_colab</span><span class="p">:</span>
+  <span class="kn">from</span> <span class="nn">remotemanager</span> <span class="kn">import</span> <span class="n">URL</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="n">URL</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="c1"># import the vega URL from the previous notebook</span>
+  <span class="kn">import</span> <span class="nn">yaml</span>
+  <span class="kn">from</span> <span class="nn">remotemanager.connection.computers</span> <span class="kn">import</span> <span class="n">Vega</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;vega.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ifile</span><span class="p">:</span>
+      <span class="n">vega_spec</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">Loader</span><span class="p">)</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="n">Vega</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;vega&#39;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">vega_spec</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+      <span class="nb">setattr</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">7</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>   <span class="c1"># import the vega URL from the previous notebook</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>   <span class="kn">import</span> <span class="nn">yaml</span>
+<span class="ne">----&gt; </span><span class="mi">7</span>   <span class="kn">from</span> <span class="nn">remotemanager.connection.computers</span> <span class="kn">import</span> <span class="n">Vega</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>   <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;vega.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ifile</span><span class="p">:</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span>       <span class="n">vega_spec</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">Loader</span><span class="p">)</span>
+
+<span class="ne">ImportError</span>: cannot import name &#39;Vega&#39; from &#39;remotemanager.connection.computers&#39; (/opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages/remotemanager/connection/computers/__init__.py)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s set up a loop over two calculations - linear is true and false (i.e. cubic scaling).</p>
+<p>You will notice that running LS-BigDFT only requires a single change to the input file - this is because we are loading a <em>profile</em>, which itself sets a number of parameters relating to LS-BigDFT. Depending on the system and properties you are interested in calculating, you may need to make further changes, as we will see below, but for many scenarios this set of parameters is already robust enough and sufficient to run a single point calculation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">user</span> <span class="o">=</span> <span class="s1">&#39;eugenovesel&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget<span class="w"> </span>https://raw.githubusercontent.com/BigDFT-group/bigdft-school/main/packaging/install.py<span class="w"> </span><span class="m">2</span>&gt;<span class="w"> </span>/dev/null
+<span class="kn">import</span> <span class="nn">install</span>
+<span class="k">if</span> <span class="n">in_colab</span><span class="p">:</span>
+  <span class="n">install</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s1">&#39;data/H2O-LS.tar.xz&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Executing: wget https://gitlab.com/luigigenovese/bigdft-school/-/raw/main/data/H2O-LS.tar.xz -O H2O-LS.tar.xz
+--2022-11-16 19:57:41--  https://gitlab.com/luigigenovese/bigdft-school/-/raw/main/data/H2O-LS.tar.xz
+Resolving gitlab.com (gitlab.com)... 172.65.251.78, 2606:4700:90:0:f22e:fbec:5bed:a9b9
+Connecting to gitlab.com (gitlab.com)|172.65.251.78|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 458572 (448K) [application/octet-stream]
+Saving to: ‘H2O-LS.tar.xz’
+
+     0K .......... .......... .......... .......... .......... 11% 13.7M 0s
+    50K .......... .......... .......... .......... .......... 22% 13.7M 0s
+   100K .......... .......... .......... .......... .......... 33% 55.7M 0s
+   150K .......... .......... .......... .......... .......... 44% 39.1M 0s
+   200K .......... .......... .......... .......... .......... 55% 25.6M 0s
+   250K .......... .......... .......... .......... .......... 66% 45.9M 0s
+   300K .......... .......... .......... .......... .......... 78% 48.9M 0s
+   350K .......... .......... .......... .......... .......... 89%  443M 0s
+   400K .......... .......... .......... .......... .......   100% 42.0M=0.01s
+
+2022-11-16 19:57:42 (30.3 MB/s) - ‘H2O-LS.tar.xz’ saved [458572/458572]
+
+
+Executing: mkdir -p /content
+
+Executing: tar xJf H2O-LS.tar.xz -C .
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">relpath</span>
+<span class="kn">from</span> <span class="nn">BigDFT</span> <span class="kn">import</span> <span class="n">Inputfiles</span> <span class="k">as</span> <span class="n">I</span>
+<span class="kn">from</span> <span class="nn">remotemanager</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="n">local_dir</span> <span class="o">=</span> <span class="s1">&#39;H2O-linear-single&#39;</span>
+<span class="n">remote_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/ceph/hpc/data/d2021-135-users/bigdft-school/</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">/H2O-single-LS&#39;</span> <span class="c1">#use your own directory for new calculations</span>
+<span class="n">force_reinitialization</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">in_colab</span> <span class="c1"># in case you rerun this cell multiple times</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;H2O-1.xyz&#39;</span>
+<span class="n">all_runs</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">function</span> <span class="o">=</span> <span class="n">calculate_single_point</span><span class="p">,</span>
+                   <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="p">,</span>
+                   <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;H2O-single-LS&#39;</span><span class="p">,</span>
+                   <span class="n">remote_dir</span> <span class="o">=</span> <span class="n">remote_dir</span><span class="p">,</span>
+                   <span class="n">local_dir</span> <span class="o">=</span> <span class="n">local_dir</span><span class="p">,</span>
+                   <span class="n">extra_files_send</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                   <span class="n">block_reinit</span> <span class="o">=</span> <span class="n">force_reinitialization</span><span class="p">)</span>
+
+<span class="c1">#we collect the run names for future reuse</span>
+<span class="n">run_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># the we append the runs we would like to perform</span>
+<span class="n">functional</span> <span class="o">=</span> <span class="s1">&#39;PBE&#39;</span>
+
+<span class="k">for</span> <span class="n">linear</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+    <span class="c1">#identify a name for the run</span>
+    <span class="n">run_name</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="n">functional</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;linear&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">linear</span> <span class="k">else</span> <span class="p">[]))</span>
+    
+    <span class="c1"># create a reasonable set of input parameters for the molecule - these are the same as the cubic scaling case</span>
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">Inputfile</span><span class="p">()</span>
+    <span class="n">inp</span><span class="o">.</span><span class="n">set_xc</span><span class="p">(</span><span class="n">functional</span><span class="p">)</span>
+    <span class="n">inp</span><span class="o">.</span><span class="n">set_hgrid</span><span class="p">(</span><span class="mf">0.4</span><span class="p">)</span>
+    <span class="n">inp</span><span class="o">.</span><span class="n">set_psp_nlcc</span><span class="p">()</span>
+
+    <span class="c1"># activate the linear scaling mode if required</span>
+    <span class="k">if</span> <span class="n">linear</span><span class="p">:</span>
+        <span class="n">inp</span><span class="p">[</span><span class="s2">&quot;import&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>        
+    
+    <span class="c1"># we then pass the input dictionary to our function</span>
+    <span class="n">func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">inp</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span>
+
+    <span class="n">run_args</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;jobname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_name</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;mpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;omp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># minutes</span>
+    
+    <span class="n">all_runs</span><span class="o">.</span><span class="n">append_run</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">func_kwargs</span><span class="p">,</span> 
+                        <span class="n">extra_files_recv</span><span class="o">=</span><span class="p">[</span><span class="n">run_name</span><span class="o">+</span><span class="s1">&#39;.tar.gz&#39;</span><span class="p">],</span>
+                        <span class="o">**</span><span class="n">run_args</span><span class="p">)</span>
+    <span class="n">run_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_name</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:remotemanager.logging.Dataset:no transport specified for this dataset, creating basic rsync
+WARNING:remotemanager.logging.Dataset:no serialiser specified,creating basic json
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#for slow connections</span>
+<span class="c1"># all_runs.url.timeout=120</span>
+<span class="c1"># all_runs.url.max_timeouts=20</span>
+<span class="c1"># all_runs.url.raise_errors=False #to override ssh error messages</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_runs</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># if you want to redo the calculation you can put force=True)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>run already completed, skipping
+run already completed, skipping
+run already completed, skipping
+</pre></div>
+</div>
+</div>
+</div>
+<p>Both runs should be very quick, once they’re done we can copy back the results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="c1"># while not all_runs.all_finished:</span>
+<span class="c1">#     time.sleep(1)</span>
+<span class="n">all_runs</span><span class="o">.</span><span class="n">fetch_results</span><span class="p">(</span><span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energies</span> <span class="o">=</span> <span class="n">all_runs</span><span class="o">.</span><span class="n">results</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can print out the energy values for reference, as well as the difference in energy - we can see that the LS value is a few mHa higher than the value for the cubic scaling case.</p>
+<p>Of course, the total energy itself is often not of interest, and we typically expect the energy error to be smaller when looking at energy differences, due to error cancellation.</p>
+<p>In the case where greater accuracy is required, it is also possible to modify the localisation radii which define the regions in which the support functions leave - the larger the radii, the closer to the cubic scaling value, although this typically implies an increase in cost. For the interested party, this is demonstrated in the 2.B notebook of bigdft-school/CCP-tutorials.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">energies</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[-17.601346664765046, -17.60611945369108, -17.60134666476504]
+0.004772788926032945
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="analysis-of-the-runs">
+<h2>Analysis of the runs<a class="headerlink" href="#analysis-of-the-runs" title="Permalink to this heading"></a></h2>
+<p>After those runs have been executed we can compare different quantities among the various runs, for illustrative purposes.
+We will highlight:</p>
+<ol class="arabic simple">
+<li><p>The Density of States</p></li>
+<li><p>The Molecule dipole</p></li>
+<li><p>The profiling of the different timing categories</p></li>
+</ol>
+<p>We start by unpacking the received data</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#this is useful in colab</span>
+<span class="o">!</span>wget<span class="w"> </span>https://raw.githubusercontent.com/BigDFT-group/bigdft-school/main/Enccs_tutorials/analysis.py<span class="w"> </span><span class="m">2</span>&gt;<span class="w"> </span>/dev/null
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">analysis</span> <span class="kn">import</span> <span class="n">extract_results</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the data are unpacked in a &quot;Calculations&quot; subdirectory (see above arguments)</span>
+<span class="n">extract_results</span><span class="p">(</span><span class="s1">&#39;H2O-linear-single&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We read the different logfiles</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">BigDFT.Logfiles</span> <span class="kn">import</span> <span class="n">Logfile</span> <span class="k">as</span> <span class="n">L</span>
+<span class="n">logs</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;H2O-1-&#39;</span><span class="p">):</span> <span class="n">L</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;H2O-linear-single&#39;</span><span class="p">,</span><span class="s1">&#39;Calculations&#39;</span><span class="p">,</span><span class="s1">&#39;log-&#39;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">run_names</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Where we see the localization effect of the Hybrid functional with respect to the energies of the semilocal ones.</p>
+<section id="total-dipole">
+<h3>Total Dipole<a class="headerlink" href="#total-dipole" title="Permalink to this heading"></a></h3>
+<p>We can also again print the dipoles - we see here again the similarity between LS and cubic scaling results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">analysis</span> <span class="kn">import</span> <span class="n">dipole_info</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">dipole_info</span><span class="p">(</span><span class="n">log</span><span class="p">)</span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">logs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-e9068f83-ea34-4c41-9309-334be83415f5">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x (AU)</th>
+      <th>y (AU)</th>
+      <th>z (AU)</th>
+      <th>Norm (Debye)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>PBE-linear</th>
+      <td>0.60</td>
+      <td>0.34</td>
+      <td>-0.19</td>
+      <td>1.83</td>
+    </tr>
+    <tr>
+      <th>PBE</th>
+      <td>0.59</td>
+      <td>0.34</td>
+      <td>-0.19</td>
+      <td>1.78</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-e9068f83-ea34-4c41-9309-334be83415f5')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-e9068f83-ea34-4c41-9309-334be83415f5 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-e9068f83-ea34-4c41-9309-334be83415f5');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<p>Here we see the polarizability effect induced by the environment.</p>
+</section>
+<section id="time-to-solution">
+<h3>Time to solution<a class="headerlink" href="#time-to-solution" title="Permalink to this heading"></a></h3>
+<p>We can also inspect the different timings for this runs, to understand how the computational resources have been used in the different approximations</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">times</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;H2O-1-&#39;</span><span class="p">):</span> <span class="n">join</span><span class="p">(</span><span class="s1">&#39;H2O-linear-single&#39;</span><span class="p">,</span><span class="s1">&#39;Calculations&#39;</span><span class="p">,</span><span class="s1">&#39;data-&#39;</span><span class="o">+</span><span class="n">name</span> <span class="k">if</span> <span class="s1">&#39;linear&#39;</span> <span class="ow">in</span> <span class="n">name</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;time-&#39;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">run_names</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">analysis</span> <span class="kn">import</span> <span class="n">get_total_time_info</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Using the same function as for the cubic scaling notebook, we can extract a timing breakdown of the two runs.  Notice that the breakdown is different between the two codes, while LS-BigDFT also takes longer than cubic scaling BigDFT. This is not surprising for such a small system, as we are well below the crossover point.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">table</span><span class="o">=</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">name</span><span class="p">:</span><span class="n">get_total_time_info</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">times</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span><span class="o">.</span><span class="n">T</span>
+<span class="n">table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-a8b528b2-9949-4d16-be9f-99f3cd4e27eb">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>INIT</th>
+      <th>WFN_OPT</th>
+      <th>LAST</th>
+      <th>Total</th>
+      <th>WFN_OPT %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>PBE-linear</th>
+      <td>2.1</td>
+      <td>7.2</td>
+      <td>0.001</td>
+      <td>9.3</td>
+      <td>77.1</td>
+    </tr>
+    <tr>
+      <th>PBE</th>
+      <td>1.0</td>
+      <td>1.7</td>
+      <td>0.240</td>
+      <td>3.0</td>
+      <td>57.2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-a8b528b2-9949-4d16-be9f-99f3cd4e27eb')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-a8b528b2-9949-4d16-be9f-99f3cd4e27eb button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-a8b528b2-9949-4d16-be9f-99f3cd4e27eb');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">analysis</span> <span class="kn">import</span> <span class="n">plot_timings</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can then compare the two different calculations, noticing that the algorithm is not the same.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_timings</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>EXCEPTION FOUND &#39;Linear Algebra&#39;
+category Linear Algebra not present everywhere
+EXCEPTION FOUND &#39;chebyshev matrix expansion&#39;
+category chebyshev matrix expansion not present everywhere
+EXCEPTION FOUND &#39;sparse matrix communications&#39;
+category sparse matrix communications not present everywhere
+EXCEPTION FOUND &#39;sparse matrix manipulation&#39;
+category sparse matrix manipulation not present everywhere
+</pre></div>
+</div>
+<img alt="../../../_images/73e6f2522736ffb4fede84f3ed9ae72db68df24beebfa579f0bb2acfcafc27d3.png" src="../../../_images/73e6f2522736ffb4fede84f3ed9ae72db68df24beebfa579f0bb2acfcafc27d3.png" />
+</div>
+</div>
+<p>For such a small system, we see that the Linear Scaling algorithm it is considerably slower than the cubic scaling one.
+Each category of systems has a so-called “crossover point” in term of its number of atoms, after which the LS algorithm will become more convenient.</p>
+</section>
+<section id="density-of-states">
+<h3>Density of States<a class="headerlink" href="#density-of-states" title="Permalink to this heading"></a></h3>
+<p>So far the only quantity we haven’t looked at yet from the cubic scaling notebook is the DoS. This is deliberate - if you run the cell below, you will see that we get an error message.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">BigDFT.DoS</span> <span class="kn">import</span> <span class="n">DoS</span>
+<span class="n">dos</span> <span class="o">=</span> <span class="n">DoS</span><span class="p">(</span><span class="n">logfiles_dict</span><span class="o">=</span><span class="n">logs</span><span class="p">)</span>
+<span class="n">dos</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">40</span><span class="o">-</span><span class="mi">031</span><span class="n">d1458ba24</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">BigDFT.DoS</span> <span class="kn">import</span> <span class="n">DoS</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">dos</span> <span class="o">=</span> <span class="n">DoS</span><span class="p">(</span><span class="n">logfiles_dict</span><span class="o">=</span><span class="n">logs</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">dos</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+
+<span class="nn">/usr/local/lib/python3.7/dist-packages/BigDFT/DoS.py</span> in <span class="ni">__init__</span><span class="nt">(self, bandarrays, energies, evals, logfiles_dict, units, reference_fermi_level, label, sigma, fermi_level, norm, sdos, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">164</span>             <span class="n">shifts</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="g g-Whitespace">    </span><span class="mi">165</span>             <span class="k">for</span> <span class="n">lb</span><span class="p">,</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">logfiles_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="ne">--&gt; </span><span class="mi">166</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">append_from_bandarray</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">evals</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">lb</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">167</span>                 <span class="k">if</span> <span class="n">reference_fermi_level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">168</span>                     <span class="n">sh</span> <span class="o">=</span> <span class="n">reference_fermi_level</span> <span class="o">-</span> <span class="n">log</span><span class="o">.</span><span class="n">fermi_level</span>
+
+<span class="ne">AttributeError</span>: &#39;Logfile&#39; object has no attribute &#39;evals&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>One of the parameters set by the <code class="docutils literal notranslate"><span class="pre">linear</span></code> profile is the <code class="docutils literal notranslate"><span class="pre">linear_method</span></code> keyword, which sets the approach used for kernel optimisation.</p>
+<p>The linear scaling profile uses the Fermi Operator Expansion (FOE) approach, which is the recommended approach in most cases, particularly for very large systems. However, two other approaches are also available: direct minimisation of the Kohn Sham (KS) coefficients (DIRMIN), and diagonalisation (DIAG). These other approaches may be useful in different scenarios, as we will see.</p>
+<p>Since FOE works directly with the density kernel, not the coefficients, in a standard calculation, we don’t have access to the eigenvalues and hence cannot plot the DoS.  This is what the error message is telling us – we don’t have any <code class="docutils literal notranslate"><span class="pre">evals</span></code> which are the eigenvalues.</p>
+<p>If we want to plot the DoS we could use the diagonalisation approach instead, or we can still use FOE, and just tell BigDFT to do a single diagonalisation at the end. Let’s do that and rerun the calculation, by appending the calculation to the dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create again the input dictionary</span>
+<span class="n">inp</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">Inputfile</span><span class="p">()</span>
+<span class="n">inp</span><span class="o">.</span><span class="n">set_xc</span><span class="p">(</span><span class="n">functional</span><span class="p">)</span>
+<span class="n">inp</span><span class="o">.</span><span class="n">set_hgrid</span><span class="p">(</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">inp</span><span class="o">.</span><span class="n">set_psp_nlcc</span><span class="p">()</span>
+<span class="n">inp</span><span class="p">[</span><span class="s2">&quot;import&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>    
+
+<span class="c1"># update the input dictionary by switching on subspace diagonalisation</span>
+<span class="n">inp</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;lin_general&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subspace_diag&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}})</span>
+
+<span class="c1"># identify a name for the new run</span>
+<span class="n">run_name</span> <span class="o">=</span> <span class="s1">&#39;H2O-1-PBE-linear-dos&#39;</span>
+<span class="n">func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">inp</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span>
+
+<span class="n">run_args</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;jobname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_name</span>
+<span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;mpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;omp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># minutes</span>
+
+<span class="n">all_runs</span><span class="o">.</span><span class="n">append_run</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">func_kwargs</span><span class="p">,</span> 
+                    <span class="n">extra_files_recv</span><span class="o">=</span><span class="p">[</span><span class="n">run_name</span><span class="o">+</span><span class="s1">&#39;.tar.gz&#39;</span><span class="p">],</span>
+                    <span class="o">**</span><span class="n">run_args</span><span class="p">)</span>
+<span class="n">run_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_name</span><span class="p">)</span>   
+</pre></div>
+</div>
+</div>
+</div>
+<p>As expected, we should see that two of the jobs are already submitted, so it’s just the new calculation which should be submitted to the queue.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_runs</span><span class="o">.</span><span class="n">run</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>run already completed, skipping
+run already completed, skipping
+run already completed, skipping
+</pre></div>
+</div>
+</div>
+</div>
+<p>It should again be quick, so we can then fetch the results back.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">in_colab</span><span class="p">:</span>
+  <span class="n">all_runs</span><span class="o">.</span><span class="n">fetch_results</span><span class="p">(</span><span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energies</span> <span class="o">=</span> <span class="n">all_runs</span><span class="o">.</span><span class="n">results</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s print the energies - we can see that the extra diagonalisation at the end of the run made negligible difference to the total energy, as we might expect.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">energies</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[-17.601346664765046, -17.60611945369108, -17.60134666476504]
+-7.105427357601002e-15
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s also do the same processing steps as before.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the data are unpacked in a &quot;Calculations&quot; subdirectory (see above arguments)</span>
+<span class="n">extract_results</span><span class="p">(</span><span class="s1">&#39;H2O-linear-single&#39;</span><span class="p">)</span>
+
+<span class="c1"># #patch the yaml files from a mistake in the case of low profiling depth</span>
+<span class="c1"># !sed -i s/^\ *\:\ null/\ \ \ \ null/g H2O-linear-single/Calculations/time*</span>
+
+<span class="kn">from</span> <span class="nn">BigDFT.Logfiles</span> <span class="kn">import</span> <span class="n">Logfile</span> <span class="k">as</span> <span class="n">L</span>
+<span class="n">logs</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;H2O-1-&#39;</span><span class="p">):</span> <span class="n">L</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;H2O-linear-single&#39;</span><span class="p">,</span><span class="s1">&#39;Calculations&#39;</span><span class="p">,</span><span class="s1">&#39;log-&#39;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">run_names</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally let’s look at the DoS. Note that the Fermi level is not automatically retrieved for LS-BigDFT, so we’ll use the cubic scaling Fermi level.</p>
+<p>We can see that the two DoS look very similar, albeit with a small shift. The cubic scaling case also does not have any empty states - this is because we did not explicitly ask for them.</p>
+<p>On the other hand, the LS empty states should not be relied upon for a standard LS calculation. In the case where they are required - it is possible to use the direct minimisation approach to optimise the support functions to represent some low energy virtual states. This is explained in the 4.C tutorial of the bigdft-school/CCP-tutorials repository.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># here we modify the dict to ignore the initial LS calculation, and to rename the logs</span>
+<span class="n">dos</span> <span class="o">=</span> <span class="n">DoS</span><span class="p">(</span><span class="n">logfiles_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Linear&#39;</span><span class="p">:</span> <span class="n">logs</span><span class="p">[</span><span class="s1">&#39;PBE-linear-dos&#39;</span><span class="p">],</span> <span class="s1">&#39;Cubic&#39;</span><span class="p">:</span> <span class="n">logs</span><span class="p">[</span><span class="s1">&#39;PBE&#39;</span><span class="p">]},</span>
+          <span class="n">fermi_level</span><span class="o">=</span><span class="n">logs</span><span class="p">[</span><span class="s1">&#39;PBE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fermi_level</span><span class="p">)</span>
+<span class="n">dos</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f6e85a30cd0&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/99845092847a679286f70e13865ceb025b9d3a0352b0c1739aec51011ab76a5e.png" src="../../../_images/99845092847a679286f70e13865ceb025b9d3a0352b0c1739aec51011ab76a5e.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="run-of-the-full-system">
+<h2>Run of the full system<a class="headerlink" href="#run-of-the-full-system" title="Permalink to this heading"></a></h2>
+<p>Let’s now look at the full system, which we will again run using both cubic and LS BigDFT. To save compute time, we will skip the diagonalisation step, i.e. we will not be able to calculate the DoS.</p>
+<p>We will use the same settings in terms of MPI and OpenMP as for the cubic notebook, but again changing the code to pass the input file directly to the function.</p>
+<p>We will also increase the grid spacing to 0.5 - this is to allow us to explore the performance of a larger system (with more orbitals) without making the walltime too high.</p>
+<p>Finally, since we want to measure the performance of the WFN_OPT section, we will furtherreduce the cost of the LS calculation by turning off matrix outputs, as well as the multipole calculation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">local_dir</span> <span class="o">=</span> <span class="s1">&#39;H2O-linear-many&#39;</span>
+<span class="n">remote_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/ceph/hpc/data/d2021-135-users/bigdft-school/</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">/H2O-many-LS&#39;</span> <span class="c1">#use your own directory for new calculations</span>
+<span class="n">force_reinitialization</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">in_colab</span> <span class="c1"># in case you rerun this cell multiple times</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;H2O-32-free.xyz&#39;</span>
+<span class="n">all_large_runs</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">function</span> <span class="o">=</span> <span class="n">calculate_single_point</span><span class="p">,</span>
+                   <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="p">,</span>
+                   <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;H2O-many-LS&#39;</span><span class="p">,</span>
+                   <span class="n">remote_dir</span> <span class="o">=</span> <span class="n">remote_dir</span><span class="p">,</span>
+                   <span class="n">local_dir</span> <span class="o">=</span> <span class="n">local_dir</span><span class="p">,</span>
+                   <span class="n">extra_files_send</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                   <span class="n">block_reinit</span> <span class="o">=</span> <span class="n">force_reinitialization</span><span class="p">)</span>
+
+<span class="c1">#we collect the run names for future reuse</span>
+<span class="n">large_run_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># the we append the runs we would like to perform</span>
+<span class="k">for</span> <span class="n">linear</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+    <span class="c1">#identify a name for the run</span>
+    <span class="n">run_name</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="n">functional</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s1">&#39;linear&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">linear</span> <span class="k">else</span> <span class="p">[]))</span>
+    
+    <span class="c1"># create a reasonable set of input parameters for the molecule - these are the same as the cubic scaling case</span>
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">Inputfile</span><span class="p">()</span>
+    <span class="n">inp</span><span class="o">.</span><span class="n">set_xc</span><span class="p">(</span><span class="n">functional</span><span class="p">)</span>
+    <span class="n">inp</span><span class="o">.</span><span class="n">set_hgrid</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">inp</span><span class="o">.</span><span class="n">set_psp_nlcc</span><span class="p">()</span>
+
+    <span class="c1"># activate the linear scaling mode if required</span>
+    <span class="k">if</span> <span class="n">linear</span><span class="p">:</span>
+        <span class="n">inp</span><span class="p">[</span><span class="s2">&quot;import&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>  
+        <span class="n">inp</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;lin_general&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;output_mat&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;charge_multipoles&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}})</span>
+    
+    <span class="c1"># we then pass the input dictionary to our function</span>
+    <span class="n">func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">inp</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span>
+    
+
+    <span class="n">run_args</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;jobname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_name</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;mpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;omp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15</span> <span class="c1"># minutes</span>
+    
+    <span class="n">all_large_runs</span><span class="o">.</span><span class="n">append_run</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">func_kwargs</span><span class="p">,</span> 
+                        <span class="n">extra_files_recv</span><span class="o">=</span><span class="p">[</span><span class="n">run_name</span><span class="o">+</span><span class="s1">&#39;.tar.gz&#39;</span><span class="p">],</span>
+                        <span class="o">**</span><span class="n">run_args</span><span class="p">)</span>
+    <span class="n">large_run_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:remotemanager.logging.Dataset:no transport specified for this dataset, creating basic rsync
+WARNING:remotemanager.logging.Dataset:no serialiser specified,creating basic json
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_large_runs</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>run already completed, skipping
+run already completed, skipping
+</pre></div>
+</div>
+</div>
+</div>
+<p>These calculations will take slightly longer, so it may help to monitor the queue on Vega while they are running.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># while not all_large_runs.all_finished:</span>
+<span class="c1">#     time.sleep(1)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">in_colab</span><span class="p">:</span>
+  <span class="n">all_large_runs</span><span class="o">.</span><span class="n">fetch_results</span><span class="p">(</span><span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s extract the results and plot a table of the times, as before. To avoid scrolling back and forth, we’ll also reproduce the times for the single molecule.</p>
+<p>Notice that even though the LS calculation is still slower than the cubic scaling calculation, the difference is much smaller. In other words, we are still below the crossover, but getting closer.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">extract_results</span><span class="p">(</span><span class="s1">&#39;H2O-linear-many&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">large_logs</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;H2O-32-free-&#39;</span><span class="p">):</span> <span class="n">L</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;H2O-linear-many&#39;</span><span class="p">,</span><span class="s1">&#39;Calculations&#39;</span><span class="p">,</span><span class="s1">&#39;log-&#39;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">))</span>
+              <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">large_run_names</span><span class="p">)}</span>
+
+<span class="n">large_times</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;H2O-32-free-&#39;</span><span class="p">):</span> <span class="n">join</span><span class="p">(</span><span class="s1">&#39;H2O-linear-many&#39;</span><span class="p">,</span><span class="s1">&#39;Calculations&#39;</span><span class="p">,</span><span class="s1">&#39;time-&#39;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">large_run_names</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">table</span><span class="o">=</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">name</span><span class="p">:</span><span class="n">get_total_time_info</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">large_times</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span><span class="o">.</span><span class="n">T</span>
+<span class="n">table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-68dbfade-9138-4564-af68-cd013032b61e">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>INIT</th>
+      <th>WFN_OPT</th>
+      <th>LAST</th>
+      <th>Total</th>
+      <th>WFN_OPT %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>PBE-linear</th>
+      <td>25.0</td>
+      <td>41.0</td>
+      <td>0.001</td>
+      <td>66.0</td>
+      <td>61.6</td>
+    </tr>
+    <tr>
+      <th>PBE</th>
+      <td>4.4</td>
+      <td>33.0</td>
+      <td>2.800</td>
+      <td>40.0</td>
+      <td>82.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-68dbfade-9138-4564-af68-cd013032b61e')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-68dbfade-9138-4564-af68-cd013032b61e button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-68dbfade-9138-4564-af68-cd013032b61e');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">table</span><span class="o">=</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">name</span><span class="p">:</span><span class="n">get_total_time_info</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">times</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span><span class="o">.</span><span class="n">T</span>
+<span class="n">table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-5359697b-010b-4240-ae0f-255eaa352cf8">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>INIT</th>
+      <th>WFN_OPT</th>
+      <th>LAST</th>
+      <th>Total</th>
+      <th>WFN_OPT %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>PBE-linear</th>
+      <td>2.1</td>
+      <td>7.2</td>
+      <td>0.001</td>
+      <td>9.3</td>
+      <td>77.1</td>
+    </tr>
+    <tr>
+      <th>PBE</th>
+      <td>1.0</td>
+      <td>1.7</td>
+      <td>0.240</td>
+      <td>3.0</td>
+      <td>57.2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-5359697b-010b-4240-ae0f-255eaa352cf8')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-5359697b-010b-4240-ae0f-255eaa352cf8 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-5359697b-010b-4240-ae0f-255eaa352cf8');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+</section>
+<section id="example-plot-of-the-scaling">
+<h2>Example plot of the Scaling<a class="headerlink" href="#example-plot-of-the-scaling" title="Permalink to this heading"></a></h2>
+<p>Finally, let’s look in more detail about the scalability of the LS code. There are a few key details concerning the parallelisation of LS-BigDFT:</p>
+<ul class="simple">
+<li><p>GPUs: Not available with LS-BigDFT.</p></li>
+<li><p>OpenMP: Up to 8 threads can typically be used without too large a loss of efficiency, but for low memory nodes it may be necessary to use more threads to avoid under-occupying a node.</p></li>
+<li><p>MPI: MPI tasks are primarily parellelised over SFs (also in places over KS orbitals as in CS-BigDFT), so there is a strict maximum upper limit of MPI tasks which can be used. For best performance, it is better to have at leat 5-10 SFs per MPI.</p></li>
+</ul>
+<p>We can check the parallelisation setup of the current runs by inspecting various useful fields of the LS logfile:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">log</span> <span class="o">=</span> <span class="n">large_logs</span><span class="p">[</span><span class="s1">&#39;PBE-linear&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;MPI tasks = &#39;</span><span class="p">,</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">[</span><span class="s1">&#39;Number of MPI tasks&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;OpenMP threads = &#39;</span><span class="p">,</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">[</span><span class="s1">&#39;Maximal OpenMP threads per MPI task&#39;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Orbitals repartition&#39;</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">[</span><span class="s1">&#39;Orbitals Repartition&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Support function repartition&#39;</span><span class="p">,</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">[</span><span class="s1">&#39;Support Function Repartition&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MPI tasks =  32
+OpenMP threads =  4
+Orbitals repartition {&#39;MPI tasks  0- 31&#39;: 4}
+Support function repartition {&#39;Minimum&#39;: 5, &#39;Maximum&#39;: 8, &#39;Average&#39;: 6.0}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Above we can see the information about how many MPI tasks we used as well as how many threads per task - this agrees with what we requested. We can also see how both the orbitals and support functions are divided amongst MPI tasks - as an absolute minimum, each task should have at least one support function, but this will not be very efficient. Let’s do a few final calculations with different number of MPI tasks in total, keeping the number of threads constant. For the sake of this tutorial, we will use a single node, but this can of course easily be generalised.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">local_dir</span> <span class="o">=</span> <span class="s1">&#39;H2O-linear-scaling&#39;</span>
+<span class="n">remote_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/ceph/hpc/data/d2021-135-users/bigdft-school/</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">/H2O-scaling-LS&#39;</span> <span class="c1">#use your own directory for new calculations</span>
+
+<span class="n">force_reinitialization</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">in_colab</span> <span class="c1"># in case you rerun this cell multiple times</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;H2O-32-free.xyz&#39;</span>
+<span class="n">all_scaling_runs</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">function</span> <span class="o">=</span> <span class="n">calculate_single_point</span><span class="p">,</span>
+                   <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="p">,</span>
+                   <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;H2O-scaling-LS&#39;</span><span class="p">,</span>
+                   <span class="n">remote_dir</span> <span class="o">=</span> <span class="n">remote_dir</span><span class="p">,</span>
+                   <span class="n">local_dir</span> <span class="o">=</span> <span class="n">local_dir</span><span class="p">,</span>
+                   <span class="n">extra_files_send</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                   <span class="n">block_reinit</span> <span class="o">=</span> <span class="n">force_reinitialization</span><span class="p">)</span>
+<span class="c1">#we collect the run names for future reuse</span>
+<span class="n">scaling_run_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># the we append the runs we would like to perform</span>
+<span class="k">for</span> <span class="n">nmpi</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">]:</span>
+    <span class="c1">#identify a name for the run</span>
+    <span class="n">run_name</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="n">functional</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">nmpi</span><span class="p">)])</span>
+    
+    <span class="c1"># create a reasonable set of input parameters for the molecule - these are the same as the cubic scaling case</span>
+    <span class="n">inp</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">Inputfile</span><span class="p">()</span>
+    <span class="n">inp</span><span class="o">.</span><span class="n">set_xc</span><span class="p">(</span><span class="n">functional</span><span class="p">)</span>
+    <span class="n">inp</span><span class="o">.</span><span class="n">set_hgrid</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">inp</span><span class="o">.</span><span class="n">set_psp_nlcc</span><span class="p">()</span>
+    <span class="n">inp</span><span class="p">[</span><span class="s2">&quot;import&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>  
+    <span class="n">inp</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;lin_general&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;output_mat&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;charge_multipoles&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}})</span>
+    
+    <span class="c1"># we then pass the input dictionary to our function</span>
+    <span class="n">func_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">inp</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span>
+
+    <span class="n">run_args</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;jobname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_name</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;mpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nmpi</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;omp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">run_args</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15</span> <span class="c1"># minutes</span>
+    
+    <span class="n">all_scaling_runs</span><span class="o">.</span><span class="n">append_run</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">func_kwargs</span><span class="p">,</span> 
+                        <span class="n">extra_files_recv</span><span class="o">=</span><span class="p">[</span><span class="n">run_name</span><span class="o">+</span><span class="s1">&#39;.tar.gz&#39;</span><span class="p">],</span>
+                        <span class="o">**</span><span class="n">run_args</span><span class="p">)</span>
+    <span class="n">scaling_run_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_name</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:remotemanager.logging.Dataset:no transport specified for this dataset, creating basic rsync
+WARNING:remotemanager.logging.Dataset:no serialiser specified,creating basic json
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_scaling_runs</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>run already completed, skipping
+run already completed, skipping
+run already completed, skipping
+run already completed, skipping
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s extract the results and make a simple plot of the scaling.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># while not all_scaling_runs.all_finished:</span>
+<span class="c1">#     time.sleep(1)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">in_colab</span><span class="p">:</span>
+  <span class="n">all_scaling_runs</span><span class="o">.</span><span class="n">fetch_results</span><span class="p">(</span><span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">all_scaling_energies</span><span class="o">=</span><span class="n">all_scaling_runs</span><span class="o">.</span><span class="n">results</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">extract_results</span><span class="p">(</span><span class="s1">&#39;H2O-linear-scaling&#39;</span><span class="p">)</span>
+
+     
+<span class="n">scaling_logs</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">L</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;H2O-linear-scaling&#39;</span><span class="p">,</span><span class="s1">&#39;Calculations&#39;</span><span class="p">,</span><span class="s1">&#39;log-&#39;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">))</span>
+              <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">scaling_run_names</span><span class="p">)}</span>
+        
+<span class="n">scaling_times</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">join</span><span class="p">(</span><span class="s1">&#39;H2O-linear-scaling&#39;</span><span class="p">,</span><span class="s1">&#39;Calculations&#39;</span><span class="p">,</span><span class="s1">&#39;time-&#39;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;.yaml&#39;</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">scaling_run_names</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">})</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+
+<span class="n">wfn_opt_times</span> <span class="o">=</span> <span class="p">[{</span><span class="n">name</span><span class="p">:</span><span class="n">get_total_time_info</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">scaling_times</span><span class="o">.</span><span class="n">items</span><span class="p">()}[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;WFN_OPT&#39;</span><span class="p">]</span>
+                 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">scaling_run_names</span><span class="p">]</span>
+<span class="n">nmpi</span> <span class="o">=</span> <span class="p">[</span><span class="n">scaling_logs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">log</span><span class="p">[</span><span class="s1">&#39;Number of MPI tasks&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">scaling_run_names</span><span class="p">]</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nmpi</span><span class="p">,</span> <span class="n">wfn_opt_times</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;WFN_OPT Time (s)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Number of MPI tasks&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nmpi</span><span class="p">,</span> <span class="p">[</span><span class="n">wfn_opt_times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">wfn_opt_times</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="c1"># also plot the ideal speedup</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nmpi</span><span class="p">,</span> <span class="p">[</span><span class="n">n</span><span class="o">/</span><span class="n">nmpi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nmpi</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Speedup&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Number of MPI tasks&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/9ec92c9ec3871a8197e43641bfe0bc55db70debe95177b0383989e083186760e.png" src="../../../_images/9ec92c9ec3871a8197e43641bfe0bc55db70debe95177b0383989e083186760e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_timings</span><span class="p">(</span><span class="n">scaling_times</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/f8bf13ad1dc6f6fbafa987e22130eee44c74b4ed1d59dc6baa625355837573ae.png" src="../../../_images/f8bf13ad1dc6f6fbafa987e22130eee44c74b4ed1d59dc6baa625355837573ae.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_timings</span><span class="p">(</span><span class="n">scaling_times</span><span class="p">,</span><span class="n">plottype</span><span class="o">=</span><span class="s1">&#39;Percent&#39;</span><span class="p">,</span><span class="n">nokey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/64d9ca85bc525176c94e52a63caf0ad7ad28ee0f8e304d5b02b57444b2f9c965.png" src="../../../_images/64d9ca85bc525176c94e52a63caf0ad7ad28ee0f8e304d5b02b57444b2f9c965.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../3.CubicScaling-H2O/" class="btn btn-neutral float-left" title="Calculations with cubic-scaling BigDFT code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../quick-reference/" class="btn btn-neutral float-right" title="Quick Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, The contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
