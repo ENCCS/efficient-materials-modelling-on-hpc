@@ -1,0 +1,58 @@
+ Warning: Only a single CPU will be used!
+
+     Program TDDFPT_PP v.7.1 starts on 10Nov2022 at 14:53:17 
+
+     This program is part of the open-source Quantum ESPRESSO suite
+     for quantum simulation of materials; please cite
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 21 395502 (2009);
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 29 465901 (2017);
+         "P. Giannozzi et al., J. Chem. Phys. 152 154105 (2020);
+          URL http://www.quantum-espresso.org", 
+     in publications or presentations arising from this work. More details at
+     http://www.quantum-espresso.org/quote
+
+     Parallel version (MPI & OpenMP), running on       1 processor cores
+     Number of MPI processes:                 1
+     Threads/MPI process:                     1
+
+     MPI processes distributed on     1 nodes
+     177269 MiB available memory on the printing compute node when the environment starts
+
+
+     Reading   5000 Lanczos steps for direction 1
+       5000 steps will be considered
+
+
+     Polarization direction:1
+     Lanczos coefficients:
+     Average =    20.13903404
+     Average oscillation amplitude =     0.00368158
+     Average alpha =    -0.00048503    -0.00000000
+     Average alpha oscillation amplitude =    -0.00014046    -0.00000000
+     Average gamma =    20.13903404    -0.00000000
+     Average gamma oscillation amplitude =     0.00368158     0.00000000
+     Extrapolation =                      osc
+      ip =   1
+     Average beta =    20.13903404
+     Average beta oscillation amplitude =     0.00368158
+     Average alpha =     0.00000000     0.00000000
+     Average alpha oscillation amplitude =     0.00000000     0.00000000
+     Average gamma =    20.13903404     0.00000000
+     Average gamma oscillation amplitude =     0.00368158     0.00000000
+
+     Data ready, starting to calculate observables...
+
+     Broadening =      0.50000000 meV
+
+     Output file name: Femag.plot_chi.dat  
+
+     chi_i_j: magnetization-magnetization tensor  in units of mu_B^2 / meV
+
+     TDDFPT_PP    :      0.31s CPU      0.67s WALL
+
+
+   This run was terminated on:  14:53:17  10Nov2022            
+
+=------------------------------------------------------------------------------=
+   JOB DONE.
+=------------------------------------------------------------------------------=
